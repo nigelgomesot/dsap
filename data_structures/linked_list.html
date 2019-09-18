@@ -256,6 +256,24 @@
 
           this.head = prev;
         }
+
+        reverseCopyList() {
+            let currNode = this.head;
+            let newListCurrNode = null;
+            let newListNextNode = null;
+
+            while (currNode) {
+                let newListCurrNode = new Node(currNode.value, newListNextNode);
+                currNode = currNode.next;
+                newListNextNode = newListCurrNode;
+            }
+
+            let ll = new LinkedList();
+
+            ll.head = newListNextNode;
+
+            return ll;
+        }
     };
     
     
@@ -465,6 +483,19 @@
             let expectedValues = '3,2,1';
             
             eq(list.values(), expectedValues);
+        },
+        'it reverse copies the list': function() {
+            list = new LinkedList();
+
+            list.addTail(1);
+            list.addTail(2);
+            list.addTail(3);
+
+            let newList = list.reverseCopyList()
+
+            let expectedValues = '3,2,1';
+
+            eq(newList.values(), expectedValues);
         },
         
         '': function() {
