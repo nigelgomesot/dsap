@@ -274,6 +274,36 @@
 
             return ll;
         }
+
+        copyList() {
+            let newNode = null;
+            let headNode = null;
+            let tailNode = null;
+            let currNode = this.head;
+
+            if(!currNode) {
+                return null;
+            }
+
+            newNode = new Node(currNode.value, null);
+
+            headNode = newNode;
+            tailNode = headNode;
+            currNode = currNode.next;
+
+            while(currNode) {
+                newNode = new Node(currNode.value, null);
+                tailNode.next = newNode;
+                tailNode = newNode;
+
+                currNode = currNode.next;
+            }
+
+            let ll2 = new LinkedList();
+            ll2.head = headNode;
+
+            return ll2;
+        }
     };
     
     
@@ -497,7 +527,20 @@
 
             eq(newList.values(), expectedValues);
         },
-        
+        'it copies the list': function() {
+            list = new LinkedList();
+
+            list.addTail(1);
+            list.addTail(2);
+            list.addTail(3);
+
+            let newList = list.copyList()
+
+            let expectedValues = '1,2,3';
+
+            eq(newList.values(), expectedValues);
+        },
+
         '': function() {
             fail();
         },
