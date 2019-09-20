@@ -304,10 +304,55 @@
 
             return ll2;
         }
+
+        makeCircularLoop() {
+          let currNode = this.head;
+
+          while (currNode) {
+            if (currNode.next === null) {
+              currNode.next = this.head;
+
+              return;
+            }
+
+            currNode = currNode.next;
+          }
+        }
+
+    makeInnerLoop() {
+          let currNode = this.head;
+
+          while (currNode.next) {
+            if (currNode.next.next === null) {
+              currNode.next.next = currNode;
+
+              return;
+            }
+
+            currNode = currNode.next;
+          }
+        }
+
+        detectLoopType() {
+          let slowPtr = this.head;
+          let fastPtr = this.head;
+
+          while (fastPtr.next && fastPtr.next.next) {
+            if ((fastPtr.next === this.head) || (fastPtr.next.next === this.head)) {
+              return 'circular_loop';
+            }
+
+            slowPtr = slowPtr.next;
+            fastPtr = fastPtr.next.next;
+
+            if (slowPtr === fastPtr) {
+              return 'inner_loop';
+            }
+          }
+
+          return 'no_loop';
+        }
     };
-    
-    
-    
     
     
     
@@ -540,11 +585,50 @@
 
             eq(newList.values(), expectedValues);
         },
+        'it detects circular loop': function() {
+            list = new LinkedList();
+
+            list.addTail(1);
+            list.addTail(2);
+            list.addTail(3);
+
+            list.makeCircularLoop();
+
+            let expectedLoopType = 'circular_loop';
+            let actualLoopType = list.detectLoopType();
+
+            eq(actualLoopType, expectedLoopType);
+        },
+        'it detects inner loop': function() {
+            list = new LinkedList();
+
+            list.addTail(1);
+            list.addTail(2);
+            list.addTail(3);
+
+            list.makeInnerLoop();
+
+            let expectedLoopType = 'inner_loop';
+            let actualLoopType = list.detectLoopType();
+
+            eq(actualLoopType, expectedLoopType);
+        },
+        'it detects no loop': function() {
+            list = new LinkedList();
+
+            list.addTail(1);
+            list.addTail(2);
+            list.addTail(3);
+
+            let expectedLoopType = 'no_loop';
+            let actualLoopType = list.detectLoopType();
+
+            eq(actualLoopType, expectedLoopType);
+        },
 
         '': function() {
             fail();
         },
-        
     });
     
     
