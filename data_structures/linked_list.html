@@ -352,6 +352,22 @@
 
           return 'no_loop';
         }
+
+        detectLoopPoint() {
+        	let slowPtr = this.head;
+        	let fastPtr = this.head;
+
+        	while (fastPtr.next && fastPtr.next.next) {
+        		slowPtr = slowPtr.next;
+        		fastPtr = fastPtr.next.next;
+
+        		if (slowPtr === fastPtr) {
+        			return slowPtr
+        		}
+        	}
+
+        	return null;
+        }
     };
     
     
@@ -625,20 +641,25 @@
 
             eq(actualLoopType, expectedLoopType);
         },
+        'it detects loop point': function() {
+        	list = new LinkedList();
 
+        	list.addTail(1);
+            list.addTail(2);
+            list.addTail(3);
+
+            list.makeCircularLoop();
+
+            let actualLoopPoint = list.detectLoopPoint();
+
+            let expectedLoopPointValue = 1;
+            eq(actualLoopPoint.value, expectedLoopPointValue);
+        },
         '': function() {
             fail();
         },
-    });
-    
-    
-    
-    
-    
-  </script>
 
-  <style type="text/css">
-      
-  </style>
+    });
+  	</script>
 </body>
 </html>
