@@ -113,6 +113,18 @@
 
       this.length++;
     }
+
+    remove() {
+      if (this.isEmpty()) {
+        throw new Error('queue is empty');
+      }
+
+      let headValue = this.head.value;
+      this.head = this.head.next;
+      this.length--;
+
+      return headValue;
+    }
   };
 
   console.clear();
@@ -138,7 +150,6 @@
 
       eq(queue.isEmpty(), true);
     },
-
     'it enqueues a node': function() {
       let queue = new Queue();
 
@@ -153,6 +164,31 @@
 
       eq(queue.tail, node2);
       eq(queue.size(), 2);
+    },
+    'it dequeues a node': function() {
+      let queue = new Queue();
+
+      let expectedErrorMessage = 'queue is empty';
+      let actualErrorMessage;
+      try {
+        queue.remove();
+      } catch(err) {
+        actualErrorMessage = err.message;
+      }
+
+      eq(actualErrorMessage, expectedErrorMessage);
+
+      let node1 = new Node('node1')
+      queue.add(node1);
+
+      eq(queue.size(), 1);
+
+      let result = queue.remove();
+
+      eq(queue.isEmpty(), true);
+
+      let expectedResult = 'node1'
+      eq(result, expectedResult);
     }
   });
   </script>
