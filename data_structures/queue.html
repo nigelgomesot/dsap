@@ -125,6 +125,18 @@
 
       return headValue;
     }
+
+    values() {
+      let valuesArray = [];
+      let currNode = this.head;
+
+      while (currNode) {
+        valuesArray.push(currNode.value);
+        currNode = currNode.next;
+      }
+
+      return valuesArray.join(',');
+    }
   };
 
   console.clear();
@@ -189,7 +201,24 @@
 
       let expectedResult = 'node1'
       eq(result, expectedResult);
+    },
+    'it returns values in string format': function() {
+      let queue = new Queue();
+
+      let node1 = new Node(1);
+      queue.add(node1);
+
+      let node2 = new Node(2);
+      queue.add(node2);
+
+      let node3 = new Node(3);
+      queue.add(node3);
+
+      let expectedValues = '1,2,3';
+
+      eq(queue.values(), expectedValues);
     }
+
   });
   </script>
 </body>
