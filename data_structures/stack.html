@@ -106,6 +106,18 @@
       this.head = node;
       this.length++;
     }
+
+    pop() {
+      if (this.isEmpty()) {
+        throw new Error('stack is empty');
+      }
+
+      let value = this.head.value;
+      this.head = this.head.next;
+      this.length--;
+
+      return value;
+    }
   }
 
   console.clear();
@@ -154,8 +166,31 @@
 
       let expectedSize = 1;
       eq(stack.size(), expectedSize);
-    }
+    },
+    'it pops from the stack': function() {
+      let stack = new Stack();
 
+      let expectedErrorMessage = 'stack is empty';
+      let actualErrorMessage;
+      try {
+        stack.pop();
+      } catch(err) {
+        actualErrorMessage = err.message;
+      }
+
+      eq(actualErrorMessage, expectedErrorMessage);
+
+      let value = 'value';
+      stack.push(value);
+
+      let result = stack.pop();
+
+      let expectedResult = value;
+      eq(result, expectedResult);
+
+      let expectedSize = 0;
+      eq(stack.size(), expectedSize);
+    }
 
   });
   </script>
