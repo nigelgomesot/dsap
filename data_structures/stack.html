@@ -118,6 +118,20 @@
 
       return value;
     }
+
+    values() {
+      let values = [];
+
+      let currNode = this.head;
+
+      while (currNode) {
+        values.push(currNode.value);
+
+        currNode = currNode.next;
+      }
+
+      return values.join(',');
+    }
   }
 
   console.clear();
@@ -190,6 +204,16 @@
 
       let expectedSize = 0;
       eq(stack.size(), expectedSize);
+    },
+    'it returns values as string': function() {
+      let stack = new Stack();
+
+      stack.push('1');
+      stack.push('2');
+      stack.push('3');
+
+      let expectedValues = '3,2,1';
+      eq(stack.values(), expectedValues);
     }
 
   });
