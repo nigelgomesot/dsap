@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+  <script type="text/javascript">
+  // REF: https://github.com/Hemant-Jain-Author/Data-Structures-and-Algorithms-using-JavaScript/blob/master/Stack/StackLL.js
+  // REF: https://github.com/gordonmzhu/jstinytest/blob/master/tinytest.js
+
+  // TinyTest START
+  var TinyTestHelpers = {
+    renderStats: function(tests, failures) {
+      let numberOfTests = Object.keys(tests).length;
+      let successes = numberOfTests - failures;
+      let summaryStr = 'Total Tests: ' + numberOfTests
+              + ', Success: ' + successes
+              + ', Failures: ' + failures;
+
+      summaryEle = document.createElement('h1');
+      summaryEle.textContent = summaryStr;
+      document.body.appendChild(summaryEle);
+    }
+  };
+
+  var TinyTest = {
+
+    run: function(tests) {
+      var failures = 0;
+      for (var testName in tests) {
+        var testAction = tests[testName];
+        try {
+          testAction.apply(this);
+          console.log('%c' + testName, "color: green;");
+        } catch (e) {
+          failures++;
+          console.groupCollapsed('%c' + testName, "color: red;");
+          console.error(e.stack);
+          console.groupEnd();
+        }
+      }
+      setTimeout(function() { // Give document a chance to complete
+        if (window.document && document.body) {
+          document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+          TinyTestHelpers.renderStats(tests, failures);
+        }
+      }, 0);
+    },
+  
+    fail: function(msg) {
+      throw new Error('fail(): ' + msg);
+    },
+  
+    assert: function(value, msg) {
+      if (!value) {
+        throw new Error('assert(): ' + msg);
+      }
+    },
+  
+    assertEquals: function(expected, actual) {
+      if (expected != actual) {
+        throw new Error('assertEquals() "' + expected + '" != "' + actual + '"');
+      }
+    },
+  
+    assertStrictEquals: function(expected, actual) {
+      if (expected !== actual) {
+        throw new Error('assertStrictEquals() "' + expected + '" !== "' + actual + '"');
+      }
+    },
+  
+  };
+  
+  var fail         = TinyTest.fail.bind(TinyTest),
+    assert       = TinyTest.assert.bind(TinyTest),
+    assertEquals     = TinyTest.assertEquals.bind(TinyTest),
+    eq         = TinyTest.assertEquals.bind(TinyTest),
+    assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
+    tests        = TinyTest.run.bind(TinyTest);
+  
+  // TinyTest END
+
+  class Node {
+    constructor(value, next) {
+      this.value = value;
+      this.next = next;
+    }
+  }
+
+  class Stack {
+    constructor() {
+      this.head = null;
+      this.length = 0;
+    }
+
+    isEmpty() {
+      return this.length === 0;
+    }
+
+    size() {
+      return this.length;
+    }
+
+    push(value) {
+      let node = new Node(value, this.head);
+      this.head = node;
+      this.length++;
+    }
+
+    pop() {
+      if (this.isEmpty()) {
+        throw new Error('stack is empty');
+      }
+
+      let value = this.head.value;
+      this.head = this.head.next;
+      this.length--;
+
+      return value;
+    }
+
+    values() {
+      let values = [];
+
+      let currNode = this.head;
+
+      while (currNode) {
+        values.push(currNode.value);
+
+        currNode = currNode.next;
+      }
+
+      return values.join(',');
+    }
+
+    insertAtBottom(value) {
+      if (this.isEmpty()) {
+        this.push(value);
+        return;
+      }
+
+      let currValue = this.pop()
+      this.insertAtBottom(value);
+      this.push(currValue);
+    }
+  }
+
+  console.clear();
+  tests({
+    'it creates a node': function() {
+      let value = 'value';
+      let next  = 'next';
+
+      let node = new Node(value, next);
+
+      let expectedValue = value;
+      eq(node.value, expectedValue);
+
+      let expectedNext = next;
+      eq(node.next, expectedNext);
+    },
+    'it creates a stack': function() {
+      let stack = new Stack();
+
+      let expectedHead = null;
+      eq(stack.head, expectedHead);
+
+      let expectedLength = 0;
+      eq(stack.length, expectedLength);
+    },
+    'it checks stack is empty': function() {
+      let stack = new Stack();
+
+      expectedIsEmpty = true;
+      eq(stack.isEmpty(), true);
+    },
+    'it returns size': function() {
+        let stack = new Stack();
+
+        expectedSize = 0;
+        eq(stack.size(), expectedSize);
+    },
+    'it pushes on the stack': function() {
+      let stack = new Stack();
+      let value = 'node';
+
+      stack.push(value);
+
+      let expectedHeadValue = value;
+      eq(stack.head.value, expectedHeadValue);
+
+      let expectedSize = 1;
+      eq(stack.size(), expectedSize);
+    },
+    'it pops from the stack': function() {
+      let stack = new Stack();
+
+      let expectedErrorMessage = 'stack is empty';
+      let actualErrorMessage;
+      try {
+        stack.pop();
+      } catch(err) {
+        actualErrorMessage = err.message;
+      }
+
+      eq(actualErrorMessage, expectedErrorMessage);
+
+      let value = 'value';
+      stack.push(value);
+
+      let result = stack.pop();
+
+      let expectedResult = value;
+      eq(result, expectedResult);
+
+      let expectedSize = 0;
+      eq(stack.size(), expectedSize);
+    },
+    'it returns values as string': function() {
+      let stack = new Stack();
+
+      stack.push('1');
+      stack.push('2');
+      stack.push('3');
+
+      let expectedValues = '3,2,1';
+      eq(stack.values(), expectedValues);
+    },
+    'it inserts at bottom': function() {
+      let stack = new Stack();
+
+      stack.insertAtBottom('1');
+
+      let expectedValues = '1';
+      eq(stack.values(), expectedValues);
+
+      stack.insertAtBottom('2');
+      expectedValues = '1,2';
+      eq(stack.values(), expectedValues);
+    }
+
+  });
+  </script>
+</body>
+</html>
