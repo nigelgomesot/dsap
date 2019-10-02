@@ -132,6 +132,17 @@
 
       return values.join(',');
     }
+
+    insertAtBottom(value) {
+      if (this.isEmpty()) {
+        this.push(value);
+        return;
+      }
+
+      let currValue = this.pop()
+      this.insertAtBottom(value);
+      this.push(currValue);
+    }
   }
 
   console.clear();
@@ -213,6 +224,18 @@
       stack.push('3');
 
       let expectedValues = '3,2,1';
+      eq(stack.values(), expectedValues);
+    },
+    'it inserts at bottom': function() {
+      let stack = new Stack();
+
+      stack.insertAtBottom('1');
+
+      let expectedValues = '1';
+      eq(stack.values(), expectedValues);
+
+      stack.insertAtBottom('2');
+      expectedValues = '1,2';
       eq(stack.values(), expectedValues);
     }
 
