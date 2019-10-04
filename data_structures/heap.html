@@ -80,33 +80,46 @@
   
   // TinyTest END
   
-  class Node {
-    constructor(value, next) {
-      this.value = value;
-      this.next = next;
-    }
-  };
-
   class Heap {
     constructor(isMinHeap) {
       this.isMinHeap = isMinHeap;
       this.list = [];
       this.length = 0;
     }
+
+    add(value) {
+      this.list[this.length] = value;
+      this.length++;
+      this.percolateUp(this.length - 1);
+    }
+
+    percolateUp(child) {
+      parent = Math.floor((child - 1) / 2);
+
+      if (parent < 0) {
+        return;
+      }
+
+      if (this.compare(this.list[parent], this.list[child])) {
+        let temp = this.list[child];
+        this.list[child] = this.list[parent];
+        this.list[parent] = temp;
+
+        this.percolateUp(parent);
+      }
+    }
+
+    compare(value1, value2) {
+      if (this.isMinHeap) {
+        return (value1 - value2) > 0;
+      } else {
+        return (value2 - value1) > 0;
+      }
+    }
   }
 
   console.clear();
   tests({
-    'it creates a Node': function() {
-      let value = 'value';
-      let next = 'next';
-
-      let node = new Node(value, next);
-
-      eq(node.value, value);
-      eq(node.next, next);
-    },
-
     'it creates an empty Heap': function() {
       let isMinHeap = true;
       let heap = new Heap(isMinHeap);
@@ -115,6 +128,21 @@
       eq(heap.list.length, 0);
       eq(heap.length, 0);
     },
+    'it adds to heap': function() {
+      let isMinHeap = true;
+      let heap = new Heap(isMinHeap);
+
+      let value = 20;
+      heap.add(value);
+
+      eq(heap.length, 1);
+
+      value = 10;
+      heap.add(value);
+
+      eq(heap.length, 2);
+    }
+
   });
   </script>
 </body>
