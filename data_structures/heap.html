@@ -116,6 +116,16 @@
         return (value2 - value1) > 0;
       }
     }
+
+    isEmpty() {
+      return this.length === 0;
+    }
+
+    remove() {
+      if (this.isEmpty()) {
+        throw new TypeError('heap is empty');
+      }
+    }
   }
 
   console.clear();
@@ -141,6 +151,30 @@
       heap.add(value);
 
       eq(heap.length, 2);
+    },
+    'it checks heap is empty': function() {
+      let heap = new Heap(true);
+
+      eq(heap.isEmpty(), true);
+
+      heap.add(10);
+
+      eq(heap.isEmpty(), false);
+    },
+    'it removes from heap': function() {
+      let isMinHeap = true;
+      let heap = new Heap(isMinHeap);
+
+
+      let expectedErrorMessage = 'heap is empty';
+      let actualErrorMessage;
+      try {
+        heap.remove();
+      } catch(err) {
+        actualErrorMessage = err.message;
+      }
+
+      eq(actualErrorMessage, expectedErrorMessage);
     }
 
   });
