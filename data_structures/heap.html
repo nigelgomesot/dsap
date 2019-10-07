@@ -125,6 +125,34 @@
       if (this.isEmpty()) {
         throw new TypeError('heap is empty');
       }
+
+      let removedValue = this.list[0];
+      this.list[0] = this.list[this.length - 1];
+      this.length--;
+      this.percolateDown(0);
+
+      return removedValue;
+    }
+
+    percolateDown(parent) {
+      let lChild = (2 * parent) + 1;
+      let rChild = lChild + 1;
+      let child = -1;
+
+      if (lChild <= this.length) {
+        child = lChild;
+      }
+
+      if ((rChild <= this.length) && (this.compare(this.list[lChild], this.list[rChild]))) {
+        child = rChild;
+      }
+
+      if ((child != -1) && (this.compare(this.list[parent], this.list[child]))) {
+        let temp = this.list[child];
+        this.list[child] = this.list[parent];
+        this.list[parent] = temp;
+        this.percolateDown(child);
+      }
     }
   }
 
@@ -165,7 +193,6 @@
       let isMinHeap = true;
       let heap = new Heap(isMinHeap);
 
-
       let expectedErrorMessage = 'heap is empty';
       let actualErrorMessage;
       try {
@@ -175,6 +202,19 @@
       }
 
       eq(actualErrorMessage, expectedErrorMessage);
+
+      heap.add(10);
+      heap.add(20);
+
+      let removedValue = heap.remove();
+
+      eq(removedValue, 10);
+      eq(heap.length, 1);
+
+      removedValue = heap.remove();
+
+      eq(removedValue, 20);
+      eq(heap.length, 0);
     }
 
   });
