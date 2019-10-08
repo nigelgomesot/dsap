@@ -215,6 +215,25 @@
 
       eq(removedValue, 20);
       eq(heap.length, 0);
+    },
+    'it sorts the elements': function() {
+      // TODO: sort the heap
+      let heap = new Heap(true);
+
+      let array = [20, 10, 40, 30];
+
+      for (let i = 0; i < array.length; i++) {
+        heap.add(array[i]);
+      }
+
+      for (let i = 0; i < heap.length; i++) {
+        array[i] = heap.remove();
+      }
+
+      let expectedArrayValues = '10,20,30,40';
+      let actualArrayValues = array.join(',');
+
+      eq(actualArrayValues, expectedArrayValues);
     }
 
   });
