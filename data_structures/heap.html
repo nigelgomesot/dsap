@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+  <script type="text/javascript">
+  // REF: https://github.com/Hemant-Jain-Author/Data-Structures-and-Algorithms-using-JavaScript/blob/master/Heap/Heap.js
+  // REF: https://github.com/gordonmzhu/jstinytest/blob/master/tinytest.js
+
+  // TinyTest START
+  var TinyTestHelpers = {
+    renderStats: function(tests, failures) {
+      let numberOfTests = Object.keys(tests).length;
+      let successes = numberOfTests - failures;
+      let summaryStr = 'Total Tests: ' + numberOfTests
+              + ', Success: ' + successes
+              + ', Failures: ' + failures;
+
+      summaryEle = document.createElement('h1');
+      summaryEle.textContent = summaryStr;
+      document.body.appendChild(summaryEle);
+    }
+  };
+  
+  var TinyTest = {
+
+    run: function(tests) {
+      var failures = 0;
+      for (var testName in tests) {
+        var testAction = tests[testName];
+        try {
+          testAction.apply(this);
+          console.log('%c' + testName, "color: green;");
+        } catch (e) {
+          failures++;
+          console.groupCollapsed('%c' + testName, "color: red;");
+          console.error(e.stack);
+          console.groupEnd();
+        }
+      }
+      setTimeout(function() { // Give document a chance to complete
+        if (window.document && document.body) {
+          document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+          TinyTestHelpers.renderStats(tests, failures);
+        }
+      }, 0);
+    },
+  
+    fail: function(msg) {
+      throw new Error('fail(): ' + msg);
+    },
+  
+    assert: function(value, msg) {
+      if (!value) {
+        throw new Error('assert(): ' + msg);
+      }
+    },
+  
+    assertEquals: function(expected, actual) {
+      if (expected != actual) {
+        throw new Error('assertEquals() "' + expected + '" != "' + actual + '"');
+      }
+    },
+  
+    assertStrictEquals: function(expected, actual) {
+      if (expected !== actual) {
+        throw new Error('assertStrictEquals() "' + expected + '" !== "' + actual + '"');
+      }
+    },
+  
+  };
+  
+  var fail         = TinyTest.fail.bind(TinyTest),
+    assert       = TinyTest.assert.bind(TinyTest),
+    assertEquals     = TinyTest.assertEquals.bind(TinyTest),
+    eq         = TinyTest.assertEquals.bind(TinyTest),
+    assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
+    tests        = TinyTest.run.bind(TinyTest);
+  
+  // TinyTest END
+  
+  class Heap {
+    constructor(isMinHeap) {
+      this.isMinHeap = isMinHeap;
+      this.list = [];
+      this.length = 0;
+    }
+
+    add(value) {
+      this.list[this.length] = value;
+      this.length++;
+      this.percolateUp(this.length - 1);
+    }
+
+    percolateUp(child) {
+      parent = Math.floor((child - 1) / 2);
+
+      if (parent < 0) {
+        return;
+      }
+
+      if (this.compare(this.list[parent], this.list[child])) {
+        let temp = this.list[child];
+        this.list[child] = this.list[parent];
+        this.list[parent] = temp;
+
+        this.percolateUp(parent);
+      }
+    }
+
+    compare(value1, value2) {
+      if (this.isMinHeap) {
+        return (value1 - value2) > 0;
+      } else {
+        return (value2 - value1) > 0;
+      }
+    }
+
+    isEmpty() {
+      return this.length === 0;
+    }
+
+    remove() {
+      if (this.isEmpty()) {
+        throw new TypeError('heap is empty');
+      }
+
+      let removedValue = this.list[0];
+      this.list[0] = this.list[this.length - 1];
+      this.length--;
+      this.percolateDown(0);
+
+      return removedValue;
+    }
+
+    percolateDown(parent) {
+      let lChild = (2 * parent) + 1;
+      let rChild = lChild + 1;
+      let child = -1;
+
+      if (lChild <= this.length) {
+        child = lChild;
+      }
+
+      if ((rChild <= this.length) && (this.compare(this.list[lChild], this.list[rChild]))) {
+        child = rChild;
+      }
+
+      if ((child != -1) && (this.compare(this.list[parent], this.list[child]))) {
+        let temp = this.list[child];
+        this.list[child] = this.list[parent];
+        this.list[parent] = temp;
+        this.percolateDown(child);
+      }
+    }
+  }
+
+  console.clear();
+  tests({
+    'it creates an empty Heap': function() {
+      let isMinHeap = true;
+      let heap = new Heap(isMinHeap);
+
+      eq(heap.isMinHeap, isMinHeap);
+      eq(heap.list.length, 0);
+      eq(heap.length, 0);
+    },
+    'it adds to heap': function() {
+      let isMinHeap = true;
+      let heap = new Heap(isMinHeap);
+
+      let value = 20;
+      heap.add(value);
+
+      eq(heap.length, 1);
+
+      value = 10;
+      heap.add(value);
+
+      eq(heap.length, 2);
+    },
+    'it checks heap is empty': function() {
+      let heap = new Heap(true);
+
+      eq(heap.isEmpty(), true);
+
+      heap.add(10);
+
+      eq(heap.isEmpty(), false);
+    },
+    'it removes from heap': function() {
+      let isMinHeap = true;
+      let heap = new Heap(isMinHeap);
+
+      let expectedErrorMessage = 'heap is empty';
+      let actualErrorMessage;
+      try {
+        heap.remove();
+      } catch(err) {
+        actualErrorMessage = err.message;
+      }
+
+      eq(actualErrorMessage, expectedErrorMessage);
+
+      heap.add(10);
+      heap.add(20);
+
+      let removedValue = heap.remove();
+
+      eq(removedValue, 10);
+      eq(heap.length, 1);
+
+      removedValue = heap.remove();
+
+      eq(removedValue, 20);
+      eq(heap.length, 0);
+    },
+    'it sorts the elements': function() {
+      let heap = new Heap(true);
+
+      let array = [20, 10, 40, 30];
+
+      for (let i = 0; i < array.length; i++) {
+        heap.add(array[i]);
+      }
+
+      for (let i = 0; i < array.length; i++) {
+        array[i] = heap.remove();
+      }
+
+      let expectedArrayValues = '10,20,30,40';
+      let actualArrayValues = array.join(',');
+
+      eq(actualArrayValues, expectedArrayValues);
+    }
+
+  });
+  </script>
+</body>
+</html>
