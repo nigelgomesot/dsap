@@ -128,7 +128,7 @@
 
       eq(tree.root, null);
     },
-    'it inserts node in empty tree': function() {
+    'it inserts node in empty tree at root': function() {
       let tree = new Tree();
 
       let value = 10;
@@ -139,7 +139,7 @@
       eq(typeof(root.lChild), 'undefined');
       eq(typeof(root.rChild), 'undefined');
     },
-    'it inserts node value < parent value at lChild': function() {
+    'it inserts node with value < parent value at lChild': function() {
       let tree = new Tree();
 
       let rootValue = 20;
