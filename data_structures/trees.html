@@ -103,6 +103,8 @@
       }
       if (value < node.value) {
         node.lChild = this.insertNodeUtil(value, node.lChild);
+      } else {
+        node.rChild = this.insertNodeUtil(value, node.rChild);
       }
 
       return node;
@@ -152,7 +154,22 @@
 
       eq((lChild instanceof Node), true)
       eq(lChild.value, lChildValue);
-    }
+    },
+    'it inserts node with value > parent value at rChild': function() {
+      let tree = new Tree();
+
+      let rootValue = 20;
+      tree.insertNode(rootValue);
+
+      let rChildValue = 30;
+      tree.insertNode(rChildValue);
+
+      let rChild = tree.root.rChild;
+
+      eq((rChild instanceof Node), true)
+      eq(rChild.value, rChildValue);
+    },
+
   });
   </script>
 </body>
