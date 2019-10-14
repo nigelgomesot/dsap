@@ -109,6 +109,59 @@
 
       return node;
     }
+
+    setBinaryLevelOrder(array) {
+      this.root = this.setBinaryLevelOrderUtil(array, 0);
+    }
+
+    setBinaryLevelOrderUtil(array, nodeIndex) {
+      let arrayLength = array.length;
+      let node = new Node(array[nodeIndex]);
+      let leftIndex = 2 * nodeIndex + 1;
+      let rightIndex = leftIndex + 1;
+
+      if (leftIndex < arrayLength) {
+        node.lChild = this.setBinaryLevelOrderUtil(array, leftIndex);
+      }
+
+      if (rightIndex < arrayLength) {
+        node.rChild = this.setBinaryLevelOrderUtil(array, rightIndex);
+      }
+
+      return node;
+    }
+
+    getBinaryLevelOrderAsStr() {
+      var array = [];
+      this.getBinaryLevelOrderUtil(array, this.root, 0);
+
+      return array.join(',');
+    }
+
+    getBinaryLevelOrderUtil(array, node, arrayIndex) {
+      if (!node) {
+        return;
+      }
+
+      array[arrayIndex] = node.value;
+
+      let leftIndex = 2 * arrayIndex + 1;
+      let rightIndex = leftIndex + 1;
+      let lChild = node.lChild;
+      let rChild = node.rChild;
+
+
+      if (lChild) {
+        this.getBinaryLevelOrderUtil(array, lChild, leftIndex);
+      }
+
+      if (rChild) {
+        this.getBinaryLevelOrderUtil(array, rChild, rightIndex);
+      }
+
+      return;
+    }
+
   }
   
 
@@ -169,7 +222,18 @@
       eq((rChild instanceof Node), true)
       eq(rChild.value, rChildValue);
     },
+    'it creates a level order binary tree': function() {
+      let array = [1,2,3,4,5];
 
+      let t = new Tree();
+
+      t.setBinaryLevelOrder(array);
+
+      let expectedArrayStr = array.join(',');
+      let actualArrayStr = t.getBinaryLevelOrderAsStr(array);
+
+      eq(actualArrayStr, expectedArrayStr);
+    }
   });
   </script>
 </body>
