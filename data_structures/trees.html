@@ -162,6 +162,20 @@
       return;
     }
 
+    fetchPreOrder() {
+      var array = [];
+      this.fetchPreOrderUtil(this.root, array);
+
+      return array.join(',');
+    }
+
+    fetchPreOrderUtil(node, array) {
+      if (node) {
+        array.push(node.value);
+        this.fetchPreOrderUtil(node.lChild, array);
+        this.fetchPreOrderUtil(node.rChild, array);
+      }
+    }
   }
   
 
@@ -223,16 +237,29 @@
       eq(rChild.value, rChildValue);
     },
     'it creates a level order binary tree': function() {
+      let values = [1,2,3,4,5];
+      let expectedValuesStr = '1,2,3,4,5';
+
+      let t = new Tree();
+
+      t.setBinaryLevelOrder(values);
+
+      values = [];
+      let actualValuesStr = t.getBinaryLevelOrderAsStr(values);
+
+      eq(actualValuesStr, expectedValuesStr);
+    },
+    'it fetches node values in pre order': function() {
       let array = [1,2,3,4,5];
+      let expectedValuesStr = '1,2,4,5,3';
 
       let t = new Tree();
 
       t.setBinaryLevelOrder(array);
 
-      let expectedArrayStr = array.join(',');
-      let actualArrayStr = t.getBinaryLevelOrderAsStr(array);
+      let actualValuesStr = t.fetchPreOrder();
 
-      eq(actualArrayStr, expectedArrayStr);
+      eq(actualValuesStr, expectedValuesStr);
     }
   });
   </script>
