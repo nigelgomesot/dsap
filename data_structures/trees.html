@@ -176,6 +176,36 @@
         this.fetchPreOrderUtil(node.rChild, array);
       }
     }
+
+    fetchPostOrder() {
+      var array = [];
+      this.fetchPostOrderUtil(this.root, array);
+
+      return array.join(',');
+    }
+
+    fetchPostOrderUtil(node, array) {
+      if (node) {
+        this.fetchPreOrderUtil(node.lChild, array);
+        this.fetchPreOrderUtil(node.rChild, array);
+        array.push(node.value);
+      }
+    }
+
+    fetchInOrder() {
+      var array = [];
+      this.fetchInOrderUtil(this.root, array);
+
+      return array.join(',');
+    }
+
+    fetchInOrderUtil(node, array) {
+      if (node) {
+        this.fetchPreOrderUtil(node.lChild, array);
+        array.push(node.value);
+        this.fetchPreOrderUtil(node.rChild, array);
+      }
+    }
   }
   
 
@@ -249,7 +279,7 @@
 
       eq(actualValuesStr, expectedValuesStr);
     },
-    'it fetches node values in pre order': function() {
+    'it fetches node values in pre-order': function() {
       let array = [1,2,3,4,5];
       let expectedValuesStr = '1,2,4,5,3';
 
@@ -258,6 +288,30 @@
       t.setBinaryLevelOrder(array);
 
       let actualValuesStr = t.fetchPreOrder();
+
+      eq(actualValuesStr, expectedValuesStr);
+    },
+    'it fetches node values in post-order': function() {
+      let array = [1,2,3,4,5];
+      let expectedValuesStr = '2,4,5,3,1';
+
+      let t = new Tree();
+
+      t.setBinaryLevelOrder(array);
+
+      let actualValuesStr = t.fetchPostOrder();
+
+      eq(actualValuesStr, expectedValuesStr);
+    },
+    'it fetches node values in in-order': function() {
+      let array = [1,2,3,4,5];
+      let expectedValuesStr = '2,4,5,1,3';
+
+      let t = new Tree();
+
+      t.setBinaryLevelOrder(array);
+
+      let actualValuesStr = t.fetchInOrder();
 
       eq(actualValuesStr, expectedValuesStr);
     }
