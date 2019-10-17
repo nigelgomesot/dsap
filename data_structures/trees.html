@@ -206,6 +206,24 @@
         this.fetchPreOrderUtil(node.rChild, array);
       }
     }
+
+    isPresent(value) {
+     let currNode = this.root;
+
+      while (currNode) {
+        if (currNode.value === value) {
+          return true;
+        }
+        else if (currNode.value > value) {
+          currNode = currNode.lChild;
+        }
+        else {
+          currNode = currNode.rChild;
+        }
+      }
+
+      return false;
+    }
   }
   
 
@@ -314,6 +332,19 @@
       let actualValuesStr = t.fetchInOrder();
 
       eq(actualValuesStr, expectedValuesStr);
+    },
+    'it checks if node value isPresent': function() {
+      let array = [1,2,3,4,5];
+
+      let t = new Tree();
+
+      t.setBinaryLevelOrder(array);
+
+      let isPresent = t.isPresent(3);
+      eq(isPresent, true);
+
+      isPresent = t.isPresent(6);
+      eq(isPresent, false);
     }
   });
   </script>
