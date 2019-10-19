@@ -224,6 +224,51 @@
 
       return false;
     }
+
+    fetchBreadthFirstValues() {
+      let array = [];
+      let queue = new Queue();
+
+      let currNode = this.root;
+
+      if (currNode) {
+        queue.enqueue(currNode);
+      }
+
+      while (queue.size() > 0) {
+        currNode = queue.dequeue();
+
+        array.push(currNode.value);
+
+        if (currNode.lChild) {
+          queue.enqueue(currNode.lChild);
+        }
+
+        if (currNode.rChild) {
+          queue.enqueue(currNode.rChild);
+        }
+      }
+
+      return array.join(',');
+    }
+  }
+
+  class Queue {
+    constructor() {
+      this.items = [];
+    }
+
+    enqueue(item) {
+      this.items.push(item);
+    }
+
+    dequeue() {
+      return this.items.shift();
+    }
+
+    size() {
+     return this.items.length;
+    }
   }
   
 
@@ -289,7 +334,6 @@
       let expectedValuesStr = '1,2,3,4,5';
 
       let t = new Tree();
-
       t.setBinaryLevelOrder(values);
 
       values = [];
@@ -302,7 +346,6 @@
       let expectedValuesStr = '1,2,4,5,3';
 
       let t = new Tree();
-
       t.setBinaryLevelOrder(array);
 
       let actualValuesStr = t.fetchPreOrder();
@@ -326,7 +369,6 @@
       let expectedValuesStr = '2,4,5,1,3';
 
       let t = new Tree();
-
       t.setBinaryLevelOrder(array);
 
       let actualValuesStr = t.fetchInOrder();
@@ -337,7 +379,6 @@
       let array = [1,2,3,4,5];
 
       let t = new Tree();
-
       t.setBinaryLevelOrder(array);
 
       let isPresent = t.isPresent(3);
@@ -345,6 +386,16 @@
 
       isPresent = t.isPresent(6);
       eq(isPresent, false);
+    },
+    'it fetches values in breadth first order': function() {
+      let array = [1,2,3,4,5];
+      let expectedValuesStr = '1,2,3,4,5';
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let actualValuesStr = t.fetchBreadthFirstValues();
+      eq(actualValuesStr, expectedValuesStr);
     }
   });
   </script>
