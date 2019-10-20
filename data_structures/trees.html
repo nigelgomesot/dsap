@@ -225,7 +225,7 @@
       return false;
     }
 
-    fetchBreadthFirstValues() {
+    fetchBFSValues() {
       let array = [];
       let queue = new Queue();
 
@@ -246,6 +246,33 @@
 
         if (currNode.rChild) {
           queue.enqueue(currNode.rChild);
+        }
+      }
+
+      return array.join(',');
+    }
+
+    fetchDFSValues() {
+      let array = [];
+      let stack = [];
+
+      let currNode = this.root;
+
+      if (this.root) {
+        stack.push(currNode);
+      }
+
+      while (stack.length > 0) {
+        currNode = stack.pop();
+
+        array.push(currNode.value);
+
+        if (currNode.rChild) {
+          stack.push(currNode.rChild);
+        }
+
+        if (currNode.lChild) {
+          stack.push(currNode.lChild);
         }
       }
 
@@ -387,14 +414,24 @@
       isPresent = t.isPresent(6);
       eq(isPresent, false);
     },
-    'it fetches values in breadth first order': function() {
+    'it performs Breadth First search': function() {
       let array = [1,2,3,4,5];
       let expectedValuesStr = '1,2,3,4,5';
 
       let t = new Tree();
       t.setBinaryLevelOrder(array);
 
-      let actualValuesStr = t.fetchBreadthFirstValues();
+      let actualValuesStr = t.fetchBFSValues();
+      eq(actualValuesStr, expectedValuesStr);
+    },
+    'it performs Depth First search': function() {
+      let array = [1,2,3,4,5];
+      let expectedValuesStr = '1,2,4,5,3';
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let actualValuesStr = t.fetchDFSValues();
       eq(actualValuesStr, expectedValuesStr);
     }
   });
