@@ -278,6 +278,49 @@
 
       return array.join(',');
     }
+
+    findMinNode(node) {
+      if (!node) {
+        return 100000;
+      }
+
+      while (node.lChild) {
+        node = node.lChild;
+      }
+
+      return node;
+    }
+
+    deleteNode(value) {
+      this.root = this.deleteNodeUtil(this.root, value);
+    }
+
+    deleteNodeUtil(node, value) {
+      if (!node) {
+        return;
+      }
+
+      if (node.value === value) {
+        if (!node.lChild && !node.rChild) {
+          return;
+        } else if (!node.lChild) {
+          return node.rChild;
+        } else if (!node.rChild) {
+          return node.lChild;
+        } else {
+          let minNode = this.findMinNode(node.rChild);
+          let minValue = minNode.value;
+          node.value = minValue;
+          node.rChild = this.deleteNodeUtil(node.rChild, minValue);
+        }
+      } else if (node.value > value) {
+        node.lChild = this.deleteNodeUtil(node.lChild, value);
+      } else if (node.value < value) {
+        node.rChild = this.deleteNodeUtil(node.rChild, value);
+      }
+
+      return node;
+    }
   }
 
   class Queue {
@@ -433,6 +476,17 @@
 
       let actualValuesStr = t.fetchDFSValues();
       eq(actualValuesStr, expectedValuesStr);
+    },
+    'it deletes a node': function() {
+      let array = [1,2,3,4,5];
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let actualValuesStr = t.deleteNode(4);
+
+      let isPresent = t.isPresent(4);
+      eq(isPresent, false);
     }
   });
   </script>
