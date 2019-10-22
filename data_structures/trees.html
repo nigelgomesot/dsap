@@ -321,6 +321,25 @@
 
       return node;
     }
+
+    depth() {
+      return this.depthUtil(this.root);
+    }
+
+    depthUtil(node) {
+      if (!node) {
+        return 0;
+      }
+
+      let lDepth = this.depthUtil(node.lChild);
+      let rDepth = this.depthUtil(node.rChild);
+
+      if (lDepth > rDepth) {
+        return lDepth + 1;
+      } else {
+        return rDepth + 1;
+      }
+    }
   }
 
   class Queue {
@@ -487,6 +506,17 @@
 
       let isPresent = t.isPresent(4);
       eq(isPresent, false);
+    },
+    'it retruns tree depth': function() {
+      let array = [1,2,3,4,5];
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let actualDepth = t.depth();
+
+      let expectedDepth = 3;
+      eq(actualDepth, expectedDepth);
     }
   });
   </script>
