@@ -340,6 +340,34 @@
         return rDepth + 1;
       }
     }
+
+    diameter() {
+      return this.diameterUtil(this.root);
+    }
+
+    diameterUtil(node) {
+      if (!node) {
+        return 0;
+      }
+
+      let lDepth = this.depthUtil(node.lChild);
+      let rDepth = this.depthUtil(node.rChild);
+
+      let diameter = lDepth + rDepth + 1;
+
+      let lDiameter = this.diameterUtil(node.lChild);
+      let rDiameter = this.diameterUtil(node.rChild);
+
+      if (lDiameter > diameter) {
+        diameter = lDiameter;
+      }
+
+      if (rDiameter > diameter) {
+        diameter = rDiameter;
+      }
+
+      return diameter;
+    }
   }
 
   class Queue {
@@ -507,7 +535,7 @@
       let isPresent = t.isPresent(4);
       eq(isPresent, false);
     },
-    'it retruns tree depth': function() {
+    'it returns tree depth': function() {
       let array = [1,2,3,4,5];
 
       let t = new Tree();
@@ -517,6 +545,17 @@
 
       let expectedDepth = 3;
       eq(actualDepth, expectedDepth);
+    },
+    'it returns tree diameter': function() {
+      let array = [1,2,3,4,5];
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let actualDiameter = t.diameter();
+
+      let expectedDiameter = 4;
+      eq(actualDiameter, expectedDiameter);
     }
   });
   </script>
