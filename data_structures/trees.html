@@ -368,6 +368,25 @@
 
       return diameter;
     }
+
+    leafNodeCount() {
+      return this.leafNodeCountUtil(this.root);
+    }
+
+    leafNodeCountUtil(node) {
+      if (!node) {
+        return 0;
+      }
+
+      if (!node.lChild && !node.rChild) {
+        return 1
+      }
+
+      let leftCount = this.leafNodeCountUtil(node.lChild);
+      let rightCount = this.leafNodeCountUtil(node.rChild);
+
+      return (leftCount + rightCount);
+    }
   }
 
   class Queue {
@@ -556,6 +575,17 @@
 
       let expectedDiameter = 4;
       eq(actualDiameter, expectedDiameter);
+    },
+    'it returns leaf node count': function() {
+      let array = [1,2,3,4,5];
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let actualLeafNodeCount = t.leafNodeCount();
+
+      let expectedLeafNodeCount = 3;
+      eq(actualLeafNodeCount, expectedLeafNodeCount);
     }
   });
   </script>
