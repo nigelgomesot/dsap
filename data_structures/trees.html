@@ -387,6 +387,44 @@
 
       return (leftCount + rightCount);
     }
+
+    findMaxNode(node) {
+      if (!node) {
+        return -100000;
+      }
+
+      while (node.rChild) {
+        node = node.rChild;
+      }
+
+      return node;
+    }
+
+    isBST() {
+      return this.isBSTUtil(this.root);
+    }
+
+    isBSTUtil(node) {
+      if (!node) {
+        return true;
+      }
+
+      if (node.lChild) {
+        let lMaxNode = this.findMaxNode(node.lChild);
+        if (lMaxNode.value > node.value) {
+          return false;
+        }
+      }
+
+      if (node.rChild) {
+        let rMinNode = this.findMinNode(node.rChild);
+        if (rMinNode.value < node.value) {
+          return false;
+        }
+      }
+
+      return (this.isBSTUtil(node.lChild) && this.isBSTUtil(node.rChild));
+    }
   }
 
   class Queue {
@@ -586,7 +624,19 @@
 
       let expectedLeafNodeCount = 3;
       eq(actualLeafNodeCount, expectedLeafNodeCount);
+    },
+    'it checks if isBST': function() {
+      let array = [1,2,3,4,5];
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let isBST = t.isBST();
+      eq(isBST, false);
+
+      // TODO: CreateBinaryTree
     }
+
   });
   </script>
 </body>
