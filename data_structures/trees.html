@@ -400,6 +400,26 @@
       return node;
     }
 
+    setBST(array) {
+      this.root = this.setBSTUtil(array, 0, (array.length - 1));
+    }
+
+    setBSTUtil(array, startIndex, endIndex) {
+      let node = null;
+
+      if (startIndex > endIndex) {
+        return node;
+      }
+
+      let midIndex = (startIndex + endIndex)/2;
+
+      node = new Node(array[midIndex]);
+      node.lChild = this.setBSTUtil(array, startIndex, (midIndex - 1));
+      node.rChild = this.setBSTUtil(array, (midIndex + 1), endIndex);
+
+      return node;
+    }
+
     isBST() {
       return this.isBSTUtil(this.root);
     }
@@ -634,7 +654,11 @@
       let isBST = t.isBST();
       eq(isBST, false);
 
-      // TODO: CreateBinaryTree
+      t = new Tree();
+      t.setBST(array);
+
+      isBST = t.isBST();
+      eq(isBST, true);
     }
 
   });
