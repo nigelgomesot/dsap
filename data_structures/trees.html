@@ -445,6 +445,31 @@
 
       return (this.isBSTUtil(node.lChild) && this.isBSTUtil(node.rChild));
     }
+
+    lca(value1, value2) {
+      return this.lcaUtil(this.root, value1, value2);
+    }
+
+    lcaUtil(node, value1, value2) {
+      if (!node) {
+        return null;
+      }
+
+      if (node.value === value1 || node.value === value2) {
+        return node;
+      }
+
+      let lLCA = this.lcaUtil(node.lChild, value1, value2);
+      let rLCA = this.lcaUtil(node.rChild, value1, value2);
+
+      if (lLCA && rLCA) {
+        return node;
+      } else if (lLCA) {
+        return lLCA;
+      } else {
+        return rLCA;
+      }
+    }
   }
 
   class Queue {
@@ -659,6 +684,18 @@
 
       isBST = t.isBST();
       eq(isBST, true);
+    },
+    'it returns LCA node': function() {
+      let array = [1,2,3,4,5];
+      let nodeLCA;
+      let expectedLCAValue;
+      let t;
+
+      t = new Tree();
+      t.setBinaryLevelOrder(array);
+      nodeLCA = t.lca(4,5);
+      expectedLCAValue = 2;
+      eq(nodeLCA.value, expectedLCAValue);
     }
 
   });
