@@ -411,7 +411,7 @@
         return node;
       }
 
-      let midIndex = (startIndex + endIndex)/2;
+      let midIndex = Math.floor((startIndex + endIndex)/2);
 
       node = new Node(array[midIndex]);
       node.lChild = this.setBSTUtil(array, startIndex, (midIndex - 1));
@@ -469,6 +469,27 @@
       } else {
         return rLCA;
       }
+    }
+
+    lcaBST(value1, value2) {
+      return this.lcaBSTUtil(this.root, value1, value2);
+    }
+
+    lcaBSTUtil(node, value1, value2) {
+      if (!node) {
+        return 100000;
+      }
+
+      let nodeValue = node.value;
+      if (nodeValue > value1 && nodeValue > value2) {
+        return this.lcaBSTUtil(node.lChild, value1, value2)
+      }
+
+      if (nodeValue < value1 && nodeValue < value2) {
+        return this.lcaBSTUtil(node.rChild, value1, value2)
+      }
+
+      return node
     }
   }
 
@@ -695,6 +716,18 @@
       t.setBinaryLevelOrder(array);
       nodeLCA = t.lca(4,5);
       expectedLCAValue = 2;
+      eq(nodeLCA.value, expectedLCAValue);
+    },
+    'it returns LCA node in BST': function() {
+      let array = [1,2,3,4,5];
+      let nodeLCA;
+      let expectedLCAValue;
+      let t;
+
+      t = new Tree();
+      t.setBST(array);
+      nodeLCA = t.lcaBST(4,5);
+      expectedLCAValue = 4;
       eq(nodeLCA.value, expectedLCAValue);
     }
 
