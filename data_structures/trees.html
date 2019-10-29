@@ -491,6 +491,29 @@
 
       return node
     }
+
+    trim(minValue, maxValue) {
+      return this.trimUtil(this.root, minValue, maxValue);
+    }
+
+    trimUtil(node, minValue, maxValue) {
+      if (!node) {
+        return null;
+      }
+
+      node.lChild = this.trimUtil(node.lChild, minValue, maxValue);
+      node.rChild = this.trimUtil(node.rChild, minValue, maxValue);
+
+      if (node.value < minValue) {
+        return node.rChild;
+      }
+
+      if (node.value > maxValue) {
+        return node.lChild;
+      }
+
+      return node;
+    }
   }
 
   class Queue {
@@ -729,6 +752,17 @@
       nodeLCA = t.lcaBST(4,5);
       expectedLCAValue = 4;
       eq(nodeLCA.value, expectedLCAValue);
+    },
+    'it trims the tree': function() {
+      let array = [1,2,3,4,5];
+      let t;
+      let minValue = 5;
+      let maxValue = 7;
+      t = new Tree();
+      t.setBST(array);
+      t.trim(minValue, maxValue);
+
+      eq(t.fetchInOrder(), "3,5");
     }
 
   });
