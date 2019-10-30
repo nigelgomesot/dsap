@@ -514,6 +514,27 @@
 
       return node;
     }
+
+    fetchInRange(minValue, maxValue) {
+      let array = [];
+      this.fetchInRangeUtil(this.root, minValue, maxValue, array);
+
+      return array.join(',');
+    }
+
+    fetchInRangeUtil(node, minValue, maxValue, array) {
+      if (!node) {
+        return;
+      }
+
+      this.fetchInRangeUtil(node.lChild, minValue, maxValue, array);
+
+      if (node.value >= minValue && node.value <= maxValue) {
+        array.push(node.value);
+      }
+
+      this.fetchInRangeUtil(node.rChild, minValue, maxValue, array);
+    }
   }
 
   class Queue {
@@ -762,7 +783,19 @@
       t.setBST(array);
       t.trim(minValue, maxValue);
 
-      eq(t.fetchInOrder(), "3,5");
+      eq(t.fetchInOrder(), '3,5');
+    },
+    'it fetches values in range': function() {
+      let array = [1,2,3,4,5];
+      let t;
+      let minValue = 3;
+      let maxValue = 7;
+      t = new Tree();
+      t.setBST(array);
+      let actualValuesStr = t.fetchInRange(minValue, maxValue);
+
+      let expectedValuesStr = '3,4,5';
+      eq(actualValuesStr, expectedValuesStr);
     }
 
   });
