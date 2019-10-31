@@ -535,6 +535,30 @@
 
       this.fetchInRangeUtil(node.rChild, minValue, maxValue, array);
     }
+
+    bstCeilFloor(value) {
+      let node = this.root;
+      let ceil;
+      let floor;
+
+      while (node) {
+        if (node.value === value) {
+          ceil = node.value;
+          floor = node.value;
+          break;
+        }
+
+        if (node.value > value) {
+          ceil = node.value;
+          node = node.lChild;
+        } else {
+          floor = node.value;
+          node = node.rChild;
+        }
+      }
+
+      return { ceil: ceil, floor: floor }
+    }
   }
 
   class Queue {
@@ -796,6 +820,20 @@
 
       let expectedValuesStr = '3,4,5';
       eq(actualValuesStr, expectedValuesStr);
+    },
+    'it returns ceil and floor values': function() {
+      let array = [1,2,3,4,6];
+      let t;
+      let value = 5
+      let expectedCeil = 6;
+      let expectedFloor = 4;
+
+      t = new Tree();
+      t.setBST(array);
+      let result = t.bstCeilFloor(value);
+
+      eq(result.ceil, expectedCeil);
+      eq(result.floor, expectedFloor);
     }
 
   });
