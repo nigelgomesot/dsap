@@ -559,6 +559,32 @@
 
       return { ceil: ceil, floor: floor }
     }
+
+    bstIsPresent(value) {
+      return this.bstIsPresentUtil(this.root, value);
+    }
+
+    bstIsPresentUtil(node, value) {
+      if (!node) {
+        return false;
+      }
+
+      if (node.value === value) {
+        return true;
+      }
+
+      const left = this.bstIsPresentUtil(node.lChild, value);
+      if (left) {
+        return true;
+      }
+
+      const right = this.bstIsPresentUtil(node.rChild, value);
+      if (right) {
+        return true;
+      }
+
+      return false;
+    }
   }
 
   class Queue {
@@ -683,7 +709,7 @@
 
       eq(actualValuesStr, expectedValuesStr);
     },
-    'it checks if node value isPresent': function() {
+    'it checks presence in tree': function() {
       let array = [1,2,3,4,5];
 
       let t = new Tree();
@@ -834,6 +860,19 @@
 
       eq(result.ceil, expectedCeil);
       eq(result.floor, expectedFloor);
+    },
+    'it checks presence in BST': function() {
+      let array = [1,2,3,4,5];
+      let isPresent;
+      let t = new Tree();
+
+      t.setBST(array);
+
+      isPresent = t.bstIsPresent(4);
+      eq(isPresent, true);
+
+      isPresent = t.bstIsPresent(6);
+      eq(isPresent, false);
     }
 
   });
