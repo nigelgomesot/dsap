@@ -585,6 +585,25 @@
 
       return false;
     }
+
+    copy() {
+      let tCopy = new Tree();
+      tCopy.root = this.copyUtil(this.root);
+
+      return tCopy;
+    }
+
+    copyUtil(node) {
+      if (node) {
+        let nodeCopy = new Node(node.value);
+        nodeCopy.lChild = this.copyUtil(node.lChild);
+        nodeCopy.rChild = this.copyUtil(node.rChild);
+
+        return node;
+      } else {
+        return null;
+      }
+    }
   }
 
   class Queue {
@@ -873,6 +892,18 @@
 
       isPresent = t.bstIsPresent(6);
       eq(isPresent, false);
+    },
+    'it copies tree': function() {
+      let array = [1,2,3,4,5];
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let tCopied = t.copy();
+      let actualValuesStr = tCopied.fetchBFSValues();
+
+      let expectedValuesStr = '1,2,3,4,5';
+      eq(actualValuesStr, expectedValuesStr);
     }
 
   });
