@@ -604,6 +604,29 @@
         return null;
       }
     }
+
+    isEqual(tree) {
+      return this.isEqualUtil(this.root, tree.root);
+    }
+
+    isEqualUtil(node1, node2) {
+      if (!node1 && !node2) {
+        return true;
+      }
+
+      if (!node1 || !node2) {
+        return false;
+      }
+
+      if (node1.value === node2.value) {
+        const left = this.isEqualUtil(node1.lChild, node2.lChild);
+        const right = this.isEqualUtil(node1.rChild, node2.rChild);
+
+        return (left && right);
+      }
+
+      return false;
+    }
   }
 
   class Queue {
@@ -904,6 +927,25 @@
 
       let expectedValuesStr = '1,2,3,4,5';
       eq(actualValuesStr, expectedValuesStr);
+    },
+    'it checks tree is equal': function() {
+      let array1 = [1,2,3,4,5];
+      let array2 = [1,2,3,4,5];
+      let t1 = new Tree();
+      let t2 = new Tree();
+
+      t1.setBinaryLevelOrder(array1);
+      t2.setBinaryLevelOrder(array2);
+
+      let isEqual = t1.isEqual(t2);
+      eq(isEqual, true);
+
+      array2 = [1];
+      t2 = new Tree();
+      t2.setBinaryLevelOrder(array2);
+
+      isEqual = t1.isEqual(t2);
+      eq(isEqual, false);
     }
 
   });
