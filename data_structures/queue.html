@@ -139,6 +139,21 @@
     }
   };
 
+  // REF: https://www.geeksforgeeks.org/implementation-queue-javascript/
+  class Queue2 {
+    constructor() {
+      this.items = [];
+    }
+
+    enqueue(item) {
+      this.items.push(item);
+    }
+
+    dequeue() {
+      return this.items.shift();
+    }
+  }
+
   console.clear();
   tests({
     'it creates a Node': function() {
@@ -217,6 +232,35 @@
       let expectedValues = '1,2,3';
 
       eq(queue.values(), expectedValues);
+    },
+    'it creates queue2 with empty items': function() {
+      let queue2 = new Queue2();
+
+      eq(queue2.items.length,0);
+    },
+    'it enqueues item in queue2 at end': function() {
+      let queue2 = new Queue2();
+
+      queue2.enqueue(1);
+      queue2.enqueue(2);
+
+      eq(queue2.items[0], 1);
+      eq(queue2.items[1], 2);
+    },
+    'it dequeues item in queue2 from start': function() {
+      let queue2 = new Queue2();
+
+      queue2.enqueue(1);
+      queue2.enqueue(2);
+
+      eq(queue2.items[0], 1);
+      eq(queue2.items[1], 2);
+
+      let item = queue2.dequeue();
+
+      eq(item, 1);
+      eq(queue2.items.length, 1);
+      eq(queue2.items[0], 2);
     }
 
   });

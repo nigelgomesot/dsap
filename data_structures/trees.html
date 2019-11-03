@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+  <script type="text/javascript">
+  // REF: https://github.com/Hemant-Jain-Author/Data-Structures-and-Algorithms-using-JavaScript/blob/master/Tree/Tree.js
+  // REF: https://github.com/gordonmzhu/jstinytest/blob/master/tinytest.js
+
+  // TinyTest START
+  var TinyTestHelpers = {
+    renderStats: function(tests, failures) {
+      let numberOfTests = Object.keys(tests).length;
+      let successes = numberOfTests - failures;
+      let summaryStr = 'Total Tests: ' + numberOfTests
+              + ', Success: ' + successes
+              + ', Failures: ' + failures;
+
+      summaryEle = document.createElement('h1');
+      summaryEle.textContent = summaryStr;
+      document.body.appendChild(summaryEle);
+    }
+  };
+  
+  var TinyTest = {
+
+    run: function(tests) {
+      var failures = 0;
+      for (var testName in tests) {
+        var testAction = tests[testName];
+        try {
+          testAction.apply(this);
+          console.log('%c' + testName, "color: green;");
+        } catch (e) {
+          failures++;
+          console.groupCollapsed('%c' + testName, "color: red;");
+          console.error(e.stack);
+          console.groupEnd();
+        }
+      }
+      setTimeout(function() { // Give document a chance to complete
+        if (window.document && document.body) {
+          document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+          TinyTestHelpers.renderStats(tests, failures);
+        }
+      }, 0);
+    },
+  
+    fail: function(msg) {
+      throw new Error('fail(): ' + msg);
+    },
+  
+    assert: function(value, msg) {
+      if (!value) {
+        throw new Error('assert(): ' + msg);
+      }
+    },
+  
+    assertEquals: function(expected, actual) {
+      if (expected != actual) {
+        throw new Error('assertEquals() "' + expected + '" != "' + actual + '"');
+      }
+    },
+  
+    assertStrictEquals: function(expected, actual) {
+      if (expected !== actual) {
+        throw new Error('assertStrictEquals() "' + expected + '" !== "' + actual + '"');
+      }
+    },
+  
+  };
+  
+  var fail         = TinyTest.fail.bind(TinyTest),
+    assert       = TinyTest.assert.bind(TinyTest),
+    assertEquals     = TinyTest.assertEquals.bind(TinyTest),
+    eq         = TinyTest.assertEquals.bind(TinyTest),
+    assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
+    tests        = TinyTest.run.bind(TinyTest);
+  
+  // TinyTest END
+  
+  class Node {
+    constructor(value, lChild, rChild) {
+      this.value = value;
+      this.lChild = lChild;
+      this.rChild = rChild;
+    }
+  };
+
+  class Tree {
+    constructor() {
+      this.root = null;
+    }
+
+    insertNode(value) {
+      this.root = this.insertNodeUtil(value, this.root);
+    }
+
+    insertNodeUtil(value, node) {
+      if (!node) {
+        return new Node(value);
+      }
+      if (value < node.value) {
+        node.lChild = this.insertNodeUtil(value, node.lChild);
+      } else {
+        node.rChild = this.insertNodeUtil(value, node.rChild);
+      }
+
+      return node;
+    }
+
+    setBinaryLevelOrder(array) {
+      this.root = this.setBinaryLevelOrderUtil(array, 0);
+    }
+
+    setBinaryLevelOrderUtil(array, nodeIndex) {
+      let arrayLength = array.length;
+      let node = new Node(array[nodeIndex]);
+      let leftIndex = 2 * nodeIndex + 1;
+      let rightIndex = leftIndex + 1;
+
+      if (leftIndex < arrayLength) {
+        node.lChild = this.setBinaryLevelOrderUtil(array, leftIndex);
+      }
+
+      if (rightIndex < arrayLength) {
+        node.rChild = this.setBinaryLevelOrderUtil(array, rightIndex);
+      }
+
+      return node;
+    }
+
+    getBinaryLevelOrderAsStr() {
+      var array = [];
+      this.getBinaryLevelOrderUtil(array, this.root, 0);
+
+      return array.join(',');
+    }
+
+    getBinaryLevelOrderUtil(array, node, arrayIndex) {
+      if (!node) {
+        return;
+      }
+
+      array[arrayIndex] = node.value;
+
+      let leftIndex = 2 * arrayIndex + 1;
+      let rightIndex = leftIndex + 1;
+      let lChild = node.lChild;
+      let rChild = node.rChild;
+
+
+      if (lChild) {
+        this.getBinaryLevelOrderUtil(array, lChild, leftIndex);
+      }
+
+      if (rChild) {
+        this.getBinaryLevelOrderUtil(array, rChild, rightIndex);
+      }
+
+      return;
+    }
+
+    fetchPreOrder() {
+      var array = [];
+      this.fetchPreOrderUtil(this.root, array);
+
+      return array.join(',');
+    }
+
+    fetchPreOrderUtil(node, array) {
+      if (node) {
+        array.push(node.value);
+        this.fetchPreOrderUtil(node.lChild, array);
+        this.fetchPreOrderUtil(node.rChild, array);
+      }
+    }
+
+    fetchPostOrder() {
+      var array = [];
+      this.fetchPostOrderUtil(this.root, array);
+
+      return array.join(',');
+    }
+
+    fetchPostOrderUtil(node, array) {
+      if (node) {
+        this.fetchPreOrderUtil(node.lChild, array);
+        this.fetchPreOrderUtil(node.rChild, array);
+        array.push(node.value);
+      }
+    }
+
+    fetchInOrder() {
+      var array = [];
+      this.fetchInOrderUtil(this.root, array);
+
+      return array.join(',');
+    }
+
+    fetchInOrderUtil(node, array) {
+      if (node) {
+        this.fetchPreOrderUtil(node.lChild, array);
+        array.push(node.value);
+        this.fetchPreOrderUtil(node.rChild, array);
+      }
+    }
+
+    isPresent(value) {
+     let currNode = this.root;
+
+      while (currNode) {
+        if (currNode.value === value) {
+          return true;
+        }
+        else if (currNode.value > value) {
+          currNode = currNode.lChild;
+        }
+        else {
+          currNode = currNode.rChild;
+        }
+      }
+
+      return false;
+    }
+
+    fetchBFSValues() {
+      let array = [];
+      let queue = new Queue();
+
+      let currNode = this.root;
+
+      if (currNode) {
+        queue.enqueue(currNode);
+      }
+
+      while (queue.size() > 0) {
+        currNode = queue.dequeue();
+
+        array.push(currNode.value);
+
+        if (currNode.lChild) {
+          queue.enqueue(currNode.lChild);
+        }
+
+        if (currNode.rChild) {
+          queue.enqueue(currNode.rChild);
+        }
+      }
+
+      return array.join(',');
+    }
+
+    fetchDFSValues() {
+      let array = [];
+      let stack = [];
+
+      let currNode = this.root;
+
+      if (this.root) {
+        stack.push(currNode);
+      }
+
+      while (stack.length > 0) {
+        currNode = stack.pop();
+
+        array.push(currNode.value);
+
+        if (currNode.rChild) {
+          stack.push(currNode.rChild);
+        }
+
+        if (currNode.lChild) {
+          stack.push(currNode.lChild);
+        }
+      }
+
+      return array.join(',');
+    }
+
+    findMinNode(node) {
+      if (!node) {
+        return 100000;
+      }
+
+      while (node.lChild) {
+        node = node.lChild;
+      }
+
+      return node;
+    }
+
+    deleteNode(value) {
+      this.root = this.deleteNodeUtil(this.root, value);
+    }
+
+    deleteNodeUtil(node, value) {
+      if (!node) {
+        return;
+      }
+
+      if (node.value === value) {
+        if (!node.lChild && !node.rChild) {
+          return;
+        } else if (!node.lChild) {
+          return node.rChild;
+        } else if (!node.rChild) {
+          return node.lChild;
+        } else {
+          let minNode = this.findMinNode(node.rChild);
+          let minValue = minNode.value;
+          node.value = minValue;
+          node.rChild = this.deleteNodeUtil(node.rChild, minValue);
+        }
+      } else if (node.value > value) {
+        node.lChild = this.deleteNodeUtil(node.lChild, value);
+      } else if (node.value < value) {
+        node.rChild = this.deleteNodeUtil(node.rChild, value);
+      }
+
+      return node;
+    }
+
+    depth() {
+      return this.depthUtil(this.root);
+    }
+
+    depthUtil(node) {
+      if (!node) {
+        return 0;
+      }
+
+      let lDepth = this.depthUtil(node.lChild);
+      let rDepth = this.depthUtil(node.rChild);
+
+      if (lDepth > rDepth) {
+        return lDepth + 1;
+      } else {
+        return rDepth + 1;
+      }
+    }
+
+    diameter() {
+      return this.diameterUtil(this.root);
+    }
+
+    diameterUtil(node) {
+      if (!node) {
+        return 0;
+      }
+
+      let lDepth = this.depthUtil(node.lChild);
+      let rDepth = this.depthUtil(node.rChild);
+
+      let diameter = lDepth + rDepth + 1;
+
+      let lDiameter = this.diameterUtil(node.lChild);
+      let rDiameter = this.diameterUtil(node.rChild);
+
+      if (lDiameter > diameter) {
+        diameter = lDiameter;
+      }
+
+      if (rDiameter > diameter) {
+        diameter = rDiameter;
+      }
+
+      return diameter;
+    }
+
+    leafNodeCount() {
+      return this.leafNodeCountUtil(this.root);
+    }
+
+    leafNodeCountUtil(node) {
+      if (!node) {
+        return 0;
+      }
+
+      if (!node.lChild && !node.rChild) {
+        return 1
+      }
+
+      let leftCount = this.leafNodeCountUtil(node.lChild);
+      let rightCount = this.leafNodeCountUtil(node.rChild);
+
+      return (leftCount + rightCount);
+    }
+
+    findMaxNode(node) {
+      if (!node) {
+        return -100000;
+      }
+
+      while (node.rChild) {
+        node = node.rChild;
+      }
+
+      return node;
+    }
+
+    setBST(array) {
+      this.root = this.setBSTUtil(array, 0, (array.length - 1));
+    }
+
+    setBSTUtil(array, startIndex, endIndex) {
+      let node = null;
+
+      if (startIndex > endIndex) {
+        return node;
+      }
+
+      let midIndex = Math.floor((startIndex + endIndex)/2);
+
+      node = new Node(array[midIndex]);
+      node.lChild = this.setBSTUtil(array, startIndex, (midIndex - 1));
+      node.rChild = this.setBSTUtil(array, (midIndex + 1), endIndex);
+
+      return node;
+    }
+
+    isBST() {
+      return this.isBSTUtil(this.root);
+    }
+
+    isBSTUtil(node) {
+      if (!node) {
+        return true;
+      }
+
+      if (node.lChild) {
+        let lMaxNode = this.findMaxNode(node.lChild);
+        if (lMaxNode.value > node.value) {
+          return false;
+        }
+      }
+
+      if (node.rChild) {
+        let rMinNode = this.findMinNode(node.rChild);
+        if (rMinNode.value < node.value) {
+          return false;
+        }
+      }
+
+      return (this.isBSTUtil(node.lChild) && this.isBSTUtil(node.rChild));
+    }
+
+    lca(value1, value2) {
+      return this.lcaUtil(this.root, value1, value2);
+    }
+
+    lcaUtil(node, value1, value2) {
+      if (!node) {
+        return null;
+      }
+
+      if (node.value === value1 || node.value === value2) {
+        return node;
+      }
+
+      let lLCA = this.lcaUtil(node.lChild, value1, value2);
+      let rLCA = this.lcaUtil(node.rChild, value1, value2);
+
+      if (lLCA && rLCA) {
+        return node;
+      } else if (lLCA) {
+        return lLCA;
+      } else {
+        return rLCA;
+      }
+    }
+
+    lcaBST(value1, value2) {
+      return this.lcaBSTUtil(this.root, value1, value2);
+    }
+
+    lcaBSTUtil(node, value1, value2) {
+      if (!node) {
+        return 100000;
+      }
+
+      let nodeValue = node.value;
+      if (nodeValue > value1 && nodeValue > value2) {
+        return this.lcaBSTUtil(node.lChild, value1, value2)
+      }
+
+      if (nodeValue < value1 && nodeValue < value2) {
+        return this.lcaBSTUtil(node.rChild, value1, value2)
+      }
+
+      return node
+    }
+
+    trim(minValue, maxValue) {
+      return this.trimUtil(this.root, minValue, maxValue);
+    }
+
+    trimUtil(node, minValue, maxValue) {
+      if (!node) {
+        return null;
+      }
+
+      node.lChild = this.trimUtil(node.lChild, minValue, maxValue);
+      node.rChild = this.trimUtil(node.rChild, minValue, maxValue);
+
+      if (node.value < minValue) {
+        return node.rChild;
+      }
+
+      if (node.value > maxValue) {
+        return node.lChild;
+      }
+
+      return node;
+    }
+
+    fetchInRange(minValue, maxValue) {
+      let array = [];
+      this.fetchInRangeUtil(this.root, minValue, maxValue, array);
+
+      return array.join(',');
+    }
+
+    fetchInRangeUtil(node, minValue, maxValue, array) {
+      if (!node) {
+        return;
+      }
+
+      this.fetchInRangeUtil(node.lChild, minValue, maxValue, array);
+
+      if (node.value >= minValue && node.value <= maxValue) {
+        array.push(node.value);
+      }
+
+      this.fetchInRangeUtil(node.rChild, minValue, maxValue, array);
+    }
+
+    bstCeilFloor(value) {
+      let node = this.root;
+      let ceil;
+      let floor;
+
+      while (node) {
+        if (node.value === value) {
+          ceil = node.value;
+          floor = node.value;
+          break;
+        }
+
+        if (node.value > value) {
+          ceil = node.value;
+          node = node.lChild;
+        } else {
+          floor = node.value;
+          node = node.rChild;
+        }
+      }
+
+      return { ceil: ceil, floor: floor }
+    }
+
+    bstIsPresent(value) {
+      return this.bstIsPresentUtil(this.root, value);
+    }
+
+    bstIsPresentUtil(node, value) {
+      if (!node) {
+        return false;
+      }
+
+      if (node.value === value) {
+        return true;
+      }
+
+      const left = this.bstIsPresentUtil(node.lChild, value);
+      if (left) {
+        return true;
+      }
+
+      const right = this.bstIsPresentUtil(node.rChild, value);
+      if (right) {
+        return true;
+      }
+
+      return false;
+    }
+
+    copy() {
+      let tCopy = new Tree();
+      tCopy.root = this.copyUtil(this.root);
+
+      return tCopy;
+    }
+
+    copyUtil(node) {
+      if (node) {
+        let nodeCopy = new Node(node.value);
+        nodeCopy.lChild = this.copyUtil(node.lChild);
+        nodeCopy.rChild = this.copyUtil(node.rChild);
+
+        return node;
+      } else {
+        return null;
+      }
+    }
+
+    isEqual(tree) {
+      return this.isEqualUtil(this.root, tree.root);
+    }
+
+    isEqualUtil(node1, node2) {
+      if (!node1 && !node2) {
+        return true;
+      }
+
+      if (!node1 || !node2) {
+        return false;
+      }
+
+      if (node1.value === node2.value) {
+        const left = this.isEqualUtil(node1.lChild, node2.lChild);
+        const right = this.isEqualUtil(node1.rChild, node2.rChild);
+
+        return (left && right);
+      }
+
+      return false;
+    }
+  }
+
+  class Queue {
+    constructor() {
+      this.items = [];
+    }
+
+    enqueue(item) {
+      this.items.push(item);
+    }
+
+    dequeue() {
+      return this.items.shift();
+    }
+
+    size() {
+     return this.items.length;
+    }
+  }
+  
+
+  console.clear();
+  tests({
+    'it creates a node': function() {
+      let value = 'value';
+      let lChild = 'lChild';
+      let rChild = 'rChild';
+
+      let node = new Node(value, lChild, rChild);
+
+      eq(node.value, value);
+      eq(node.lChild, lChild);
+      eq(node.rChild, rChild);
+    },
+    'it creates an empty tree': function() {
+      let tree = new Tree();
+
+      eq(tree.root, null);
+    },
+    'it inserts node in empty tree at root': function() {
+      let tree = new Tree();
+
+      let value = 10;
+      tree.insertNode(value);
+
+      let root = tree.root;
+      eq(root.value, 10);
+      eq(typeof(root.lChild), 'undefined');
+      eq(typeof(root.rChild), 'undefined');
+    },
+    'it inserts node with value < parent value at lChild': function() {
+      let tree = new Tree();
+
+      let rootValue = 20;
+      tree.insertNode(rootValue);
+
+      let lChildValue = 10;
+      tree.insertNode(lChildValue);
+
+      let lChild = tree.root.lChild;
+
+      eq((lChild instanceof Node), true)
+      eq(lChild.value, lChildValue);
+    },
+    'it inserts node with value > parent value at rChild': function() {
+      let tree = new Tree();
+
+      let rootValue = 20;
+      tree.insertNode(rootValue);
+
+      let rChildValue = 30;
+      tree.insertNode(rChildValue);
+
+      let rChild = tree.root.rChild;
+
+      eq((rChild instanceof Node), true)
+      eq(rChild.value, rChildValue);
+    },
+    'it creates a level order binary tree': function() {
+      let values = [1,2,3,4,5];
+      let expectedValuesStr = '1,2,3,4,5';
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(values);
+
+      values = [];
+      let actualValuesStr = t.getBinaryLevelOrderAsStr(values);
+
+      eq(actualValuesStr, expectedValuesStr);
+    },
+    'it fetches node values in pre-order': function() {
+      let array = [1,2,3,4,5];
+      let expectedValuesStr = '1,2,4,5,3';
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let actualValuesStr = t.fetchPreOrder();
+
+      eq(actualValuesStr, expectedValuesStr);
+    },
+    'it fetches node values in post-order': function() {
+      let array = [1,2,3,4,5];
+      let expectedValuesStr = '2,4,5,3,1';
+
+      let t = new Tree();
+
+      t.setBinaryLevelOrder(array);
+
+      let actualValuesStr = t.fetchPostOrder();
+
+      eq(actualValuesStr, expectedValuesStr);
+    },
+    'it fetches node values in in-order': function() {
+      let array = [1,2,3,4,5];
+      let expectedValuesStr = '2,4,5,1,3';
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let actualValuesStr = t.fetchInOrder();
+
+      eq(actualValuesStr, expectedValuesStr);
+    },
+    'it checks presence in tree': function() {
+      let array = [1,2,3,4,5];
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let isPresent = t.isPresent(3);
+      eq(isPresent, true);
+
+      isPresent = t.isPresent(6);
+      eq(isPresent, false);
+    },
+    'it performs Breadth First search': function() {
+      let array = [1,2,3,4,5];
+      let expectedValuesStr = '1,2,3,4,5';
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let actualValuesStr = t.fetchBFSValues();
+      eq(actualValuesStr, expectedValuesStr);
+    },
+    'it performs Depth First search': function() {
+      let array = [1,2,3,4,5];
+      let expectedValuesStr = '1,2,4,5,3';
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let actualValuesStr = t.fetchDFSValues();
+      eq(actualValuesStr, expectedValuesStr);
+    },
+    'it deletes a node': function() {
+      let array = [1,2,3,4,5];
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let actualValuesStr = t.deleteNode(4);
+
+      let isPresent = t.isPresent(4);
+      eq(isPresent, false);
+    },
+    'it returns tree depth': function() {
+      let array = [1,2,3,4,5];
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let actualDepth = t.depth();
+
+      let expectedDepth = 3;
+      eq(actualDepth, expectedDepth);
+    },
+    'it returns tree diameter': function() {
+      let array = [1,2,3,4,5];
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let actualDiameter = t.diameter();
+
+      let expectedDiameter = 4;
+      eq(actualDiameter, expectedDiameter);
+    },
+    'it returns leaf node count': function() {
+      let array = [1,2,3,4,5];
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let actualLeafNodeCount = t.leafNodeCount();
+
+      let expectedLeafNodeCount = 3;
+      eq(actualLeafNodeCount, expectedLeafNodeCount);
+    },
+    'it checks if isBST': function() {
+      let array = [1,2,3,4,5];
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let isBST = t.isBST();
+      eq(isBST, false);
+
+      t = new Tree();
+      t.setBST(array);
+
+      isBST = t.isBST();
+      eq(isBST, true);
+    },
+    'it returns LCA node': function() {
+      let array = [1,2,3,4,5];
+      let nodeLCA;
+      let expectedLCAValue;
+      let t;
+
+      t = new Tree();
+      t.setBinaryLevelOrder(array);
+      nodeLCA = t.lca(4,5);
+      expectedLCAValue = 2;
+      eq(nodeLCA.value, expectedLCAValue);
+    },
+    'it returns LCA node in BST': function() {
+      let array = [1,2,3,4,5];
+      let nodeLCA;
+      let expectedLCAValue;
+      let t;
+
+      t = new Tree();
+      t.setBST(array);
+      nodeLCA = t.lcaBST(4,5);
+      expectedLCAValue = 4;
+      eq(nodeLCA.value, expectedLCAValue);
+    },
+    'it trims the tree': function() {
+      let array = [1,2,3,4,5];
+      let t;
+      let minValue = 5;
+      let maxValue = 7;
+      t = new Tree();
+      t.setBST(array);
+      t.trim(minValue, maxValue);
+
+      eq(t.fetchInOrder(), '3,5');
+    },
+    'it fetches values in range': function() {
+      let array = [1,2,3,4,5];
+      let t;
+      let minValue = 3;
+      let maxValue = 7;
+      t = new Tree();
+      t.setBST(array);
+      let actualValuesStr = t.fetchInRange(minValue, maxValue);
+
+      let expectedValuesStr = '3,4,5';
+      eq(actualValuesStr, expectedValuesStr);
+    },
+    'it returns ceil and floor values': function() {
+      let array = [1,2,3,4,6];
+      let t;
+      let value = 5
+      let expectedCeil = 6;
+      let expectedFloor = 4;
+
+      t = new Tree();
+      t.setBST(array);
+      let result = t.bstCeilFloor(value);
+
+      eq(result.ceil, expectedCeil);
+      eq(result.floor, expectedFloor);
+    },
+    'it checks presence in BST': function() {
+      let array = [1,2,3,4,5];
+      let isPresent;
+      let t = new Tree();
+
+      t.setBST(array);
+
+      isPresent = t.bstIsPresent(4);
+      eq(isPresent, true);
+
+      isPresent = t.bstIsPresent(6);
+      eq(isPresent, false);
+    },
+    'it copies tree': function() {
+      let array = [1,2,3,4,5];
+
+      let t = new Tree();
+      t.setBinaryLevelOrder(array);
+
+      let tCopied = t.copy();
+      let actualValuesStr = tCopied.fetchBFSValues();
+
+      let expectedValuesStr = '1,2,3,4,5';
+      eq(actualValuesStr, expectedValuesStr);
+    },
+    'it checks tree is equal': function() {
+      let array1 = [1,2,3,4,5];
+      let array2 = [1,2,3,4,5];
+      let t1 = new Tree();
+      let t2 = new Tree();
+
+      t1.setBinaryLevelOrder(array1);
+      t2.setBinaryLevelOrder(array2);
+
+      let isEqual = t1.isEqual(t2);
+      eq(isEqual, true);
+
+      array2 = [1];
+      t2 = new Tree();
+      t2.setBinaryLevelOrder(array2);
+
+      isEqual = t1.isEqual(t2);
+      eq(isEqual, false);
+    }
+
+  });
+  </script>
+</body>
+</html>
