@@ -125,6 +125,12 @@
         i += 1;
       }
     }
+
+    addEdge(source, destination, cost = 1) {
+      let node = new AdjNode(source, destination, cost);
+      node.next = this.list[source].head;
+      this.list[source].head = node;
+    }
   }
 
   console.clear();
@@ -156,6 +162,25 @@
       eq(graph.list.length, 1);
       let isAdjList = graph.list[0] instanceof AdjList;
       eq(isAdjList, true);
+    },
+    'it adds an edge': function() {
+      let g = new Graph(2);
+
+      g.addEdge(0,1);
+
+      node = g.list[0].head;
+      eq(node.source, 0);
+      eq(node.destination, 1);
+      eq(node.cost, 1);
+      eq(node.next, null);
+
+      g.addEdge(1,2);
+
+      node = g.list[1].head;
+      eq(node.source, 1);
+      eq(node.destination, 2);
+      eq(node.cost, 1);
+      eq(node.next, null);
     }
 
   });
