@@ -131,6 +131,11 @@
       node.next = this.list[source].head;
       this.list[source].head = node;
     }
+
+    addBiEdge(source, destination, cost = 1) {
+      this.addEdge(source, destination, cost);
+      this.addEdge(destination, source, cost);
+    }
   }
 
   console.clear();
@@ -168,7 +173,7 @@
 
       g.addEdge(0,1);
 
-      node = g.list[0].head;
+      let node = g.list[0].head;
       eq(node.source, 0);
       eq(node.destination, 1);
       eq(node.cost, 1);
@@ -179,6 +184,23 @@
       node = g.list[1].head;
       eq(node.source, 1);
       eq(node.destination, 2);
+      eq(node.cost, 1);
+      eq(node.next, null);
+    },
+    'it adds a bi-directional edge': function() {
+      let g = new Graph(2);
+
+      g.addBiEdge(0, 1);
+
+      let node = g.list[0].head;
+      eq(node.source, 0);
+      eq(node.destination, 1);
+      eq(node.cost, 1);
+      eq(node.next, null);
+
+      node = g.list[1].head;
+      eq(node.source, 1);
+      eq(node.destination, 0);
       eq(node.cost, 1);
       eq(node.next, null);
     }
