@@ -136,6 +136,34 @@
       this.addEdge(source, destination, cost);
       this.addEdge(destination, source, cost);
     }
+
+    dfs() {
+      let visited = [];
+      let stk = [];
+      let dfs = [];
+
+      for(let i = 0; i < this.size; i++) {
+        visited[i] = 0;
+      }
+      visited[0] = 1;
+      stk.push(0);
+      dfs.push(0);
+
+      while (stk.length > 0) {
+        let itemIndex = stk.pop();
+        let head = this.list[itemIndex].head;
+
+        while (head) {
+          if (visited[head.destination] === 0) {
+            visited[head.destination] = 1;
+            stk.push(head.destination);
+            dfs.push(head.destination);
+          }
+          head = head.next;
+        }
+      }
+      return dfs.join(',');
+    }
   }
 
   console.clear();
@@ -203,6 +231,20 @@
       eq(node.destination, 0);
       eq(node.cost, 1);
       eq(node.next, null);
+    },
+    'it traverses nodes in DFS order': function() {
+      let g = new Graph(4);
+      g.addEdge(0, 1);
+      g.addEdge(0, 2);
+      g.addEdge(1, 2);
+      g.addEdge(2, 0);
+      g.addEdge(2, 3);
+      g.addEdge(3, 3);
+
+      let actualValues = g.dfs();
+
+      expectedValues = '0,2,1,3';
+      eq(actualValues, expectedValues);
     }
 
   });
