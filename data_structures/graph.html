@@ -204,6 +204,31 @@
         }
       }
     }
+
+    pathExist(source, destination) {
+      let visited = [];
+
+      for(let i = 0; i < this.size; i++) {
+        visited[i] = 0;
+      }
+
+      visited[source] = 1;
+      this.dfsRecursive(source, visited);
+
+      return Boolean(visited[destination]);
+    }
+
+    dfsRecursive(index, visited) {
+      let head = this.list[index].head;
+
+      while (head) {
+        if (visited[head.destination] === 0) {
+          visited[head.destination] = 1;
+          this.dfsRecursive(head.destination, visited);
+        }
+        head = head.next;
+      }
+    }
   }
 
   console.clear();
@@ -299,6 +324,22 @@
 
       expectedValues = '0,1,2,3';
       eq(actualValues, expectedValues);
+    },
+    'it determines if path exists': function() {
+      let isPathExist;
+      let g = new Graph(4);
+      g.addEdge(0, 1);
+      g.addEdge(0, 2);
+      g.addEdge(1, 2);
+      g.addEdge(2, 0);
+      g.addEdge(2, 3);
+      g.addEdge(3, 3);
+
+      isPathExist = g.pathExist(0,3);
+      eq(isPathExist, true);
+
+      isPathExist = g.pathExist(3,0);
+      eq(isPathExist, false);
     }
 
   });
