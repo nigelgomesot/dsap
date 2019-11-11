@@ -242,6 +242,20 @@
 
       return visited.every(Boolean);
     }
+
+    shortestPath(source) {
+      let distance = new Array(this.size);
+      let path = new Array(this.size);
+      let q = new Queue;
+
+      for(let i = 0; i < this.size; i++) {
+        distance[i] = -1;
+      }
+
+      distance[source] = 0;
+      q.push(source);
+      // TODO:
+    }
   }
 
   console.clear();
@@ -371,6 +385,17 @@
 
       isConnected = g.isConnected();
       eq(isConnected, false);
+    },
+    'it finds shorthest path for a node in an unweighted graph': function() {
+      let g = new Graph(4);
+      g.addEdge(0, 1);
+      g.addEdge(0, 2);
+      g.addEdge(2, 3);
+
+      let actualDistanceValues = g.shortestPath(0);
+
+      let expectedDistanceValues = '0,1,1,2';
+      eq(actualDistanceValues, expectedDistanceValues);
     }
 
   });
