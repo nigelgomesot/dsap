@@ -248,13 +248,28 @@
       let path = new Array(this.size);
       let q = new Queue;
 
-      for(let i = 0; i < this.size; i++) {
+      for (let i = 0; i < this.size; i++) {
         distance[i] = -1;
       }
 
       distance[source] = 0;
-      q.push(source);
-      // TODO:
+      q.enqueue(source);
+
+      while (q.size() > 0) {
+        let currNodeIndex = q.dequeue();
+        let head = this.list[currNodeIndex].head;
+
+        while (head) {
+          if (distance[head.destination] === -1) {
+            distance[head.destination] = distance[currNodeIndex] + 1;
+            path[head.destination] = currNodeIndex;
+            q.enqueue(head.destination);
+          }
+          head = head.next;
+        }
+      }
+
+      return distance.join(',');
     }
   }
 
