@@ -174,7 +174,7 @@
     }
 
     size() {
-     return this.items.length;
+     return this.length;
     }
 
     peek() {
@@ -368,13 +368,30 @@
         previous[i] = -1;
       }
 
-      pq = new PriorityQueue();
+      let pq = new PriorityQueue();
 
       distance[source] = 0;
       previous[source] = -1;
-      anode = new AdjNode(source, source, 0);
-      pq.push(anode);
-      // TODO:
+      let anode = new AdjNode(source, source, 0);
+      pq.add(anode);
+
+      while (pq.size() > 0) {
+        let node = pq.peek();
+        pq.remove();
+        let head = this.list[node.destination].head;
+
+        while (head) {
+          let altDistance = head.cost + distance[head.source];
+          if (altDistance < distance[head.destination]) {
+            distance[head.destination] = altDistance;
+            previous[head.destination] = head.source;
+            let nextNode = new AdjNode(head.source, head.destination, altDistance);
+          }
+          head = head.next;
+        }
+      }
+
+      return distance.join(',');
     }
   }
 
@@ -529,6 +546,7 @@
 
       let actualDistanceValues = g.dijkstra(0);
       let expectedDistanceValues = '0,4,3,5,9';
+      // TODO: fix spec
       eq(actualDistanceValues, expectedDistanceValues);
     }
 
