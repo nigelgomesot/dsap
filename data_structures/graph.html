@@ -386,6 +386,7 @@
             distance[head.destination] = altDistance;
             previous[head.destination] = head.source;
             let nextNode = new AdjNode(head.source, head.destination, altDistance);
+            pq.add(nextNode);
           }
           head = head.next;
         }
