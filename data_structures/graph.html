@@ -394,6 +394,18 @@
 
       return distance.join(',');
     }
+
+    bellmanFord(source) {
+      let distance = new Array(this.size);
+      let path = new Array(this.size);
+
+      for (let i = 0; i < this.size; i++) {
+        distance[i] = 9999;
+      }
+
+      distance[source] = 0;
+      // TODO: Pending
+    }
   }
 
   console.clear();
@@ -547,7 +559,22 @@
 
       let actualDistanceValues = g.dijkstra(0);
       let expectedDistanceValues = '0,4,3,5,9';
-      // TODO: fix spec
+
+      eq(actualDistanceValues, expectedDistanceValues);
+    },
+    'it finds shortest path from 1 node to other nodes using bellman ford for a negative weighted graph': function() {
+      let g = new Graph(5);
+      g.addEdge(0, 1, -1);
+      g.addEdge(0, 2, 4);
+      g.addEdge(1, 2, 3);
+      g.addEdge(1, 3, 2);
+      g.addEdge(3, 2, 5);
+      g.addEdge(3, 1, 1);
+      g.addEdge(4, 3, -3);
+
+      let actualDistanceValues = g.bellmanFord(0);
+      let expectedDistanceValues = '0,-1,2,-2,1';
+
       eq(actualDistanceValues, expectedDistanceValues);
     }
 
