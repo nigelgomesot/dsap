@@ -424,6 +424,23 @@
 
       return distance.join(',');
     }
+
+    topologicalSortDFS() {
+      let visited = new Array(this.size, 0);
+      let stk = [];
+      let i = 0;
+
+      while (i < this.size) {
+        if (visited[i] === 0) {
+          visited[i] = 1;
+          this.topologicalSortDFSUtil(i, visited, stk);
+          // PENDING
+        }
+        i += 1;
+      }
+
+      return stk.join(',');
+    }
   }
 
   console.clear();
@@ -595,6 +612,18 @@
       let expectedDistanceValues = '0,-1,2,-2,1';
 
       eq(actualDistanceValues, expectedDistanceValues);
+    },
+    'it performs topological sort DFS': function() {
+      let g = new Graph(5);
+      g.addEdge(0,1);
+      g.addEdge(0,3);
+      g.addEdge(3,4);
+      g.addEdge(4,5);
+
+      let actualorder = g.topologicalSortDFS();
+      let expectedorder = '0,1,3,4,5';
+
+      eq(actualorder, expectedorder);
     }
 
   });
