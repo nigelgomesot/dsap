@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+  <script type="text/javascript">
+  // REF: https://github.com/Hemant-Jain-Author/Data-Structures-and-Algorithms-in-Ruby/blob/master/Graph/Graph.rb
+  // REF: https://github.com/gordonmzhu/jstinytest/blob/master/tinytest.js
+
+  // TinyTest START
+  var TinyTestHelpers = {
+    renderStats: function(tests, failures) {
+      let numberOfTests = Object.keys(tests).length;
+      let successes = numberOfTests - failures;
+      let summaryStr = 'Total Tests: ' + numberOfTests
+              + ', Success: ' + successes
+              + ', Failures: ' + failures;
+
+      summaryEle = document.createElement('h1');
+      summaryEle.textContent = summaryStr;
+      document.body.appendChild(summaryEle);
+    }
+  };
+
+  var TinyTest = {
+
+    run: function(tests) {
+      var failures = 0;
+      for (var testName in tests) {
+        var testAction = tests[testName];
+        try {
+          testAction.apply(this);
+          console.log('%c' + testName, "color: green;");
+        } catch (e) {
+          failures++;
+          console.groupCollapsed('%c' + testName, "color: red;");
+          console.error(e.stack);
+          console.groupEnd();
+        }
+      }
+      setTimeout(function() { // Give document a chance to complete
+        if (window.document && document.body) {
+          document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+          TinyTestHelpers.renderStats(tests, failures);
+        }
+      }, 0);
+    },
+  
+    fail: function(msg) {
+      throw new Error('fail(): ' + msg);
+    },
+  
+    assert: function(value, msg) {
+      if (!value) {
+        throw new Error('assert(): ' + msg);
+      }
+    },
+  
+    assertEquals: function(expected, actual) {
+      if (expected != actual) {
+        throw new Error('assertEquals() "' + expected + '" != "' + actual + '"');
+      }
+    },
+  
+    assertStrictEquals: function(expected, actual) {
+      if (expected !== actual) {
+        throw new Error('assertStrictEquals() "' + expected + '" !== "' + actual + '"');
+      }
+    },
+  
+  };
+  
+  var fail         = TinyTest.fail.bind(TinyTest),
+    assert       = TinyTest.assert.bind(TinyTest),
+    assertEquals     = TinyTest.assertEquals.bind(TinyTest),
+    eq         = TinyTest.assertEquals.bind(TinyTest),
+    assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
+    tests        = TinyTest.run.bind(TinyTest);
+  
+  // TinyTest END
+
+  class Queue {
+    constructor() {
+      this.items = [];
+    }
+
+    enqueue(item) {
+      this.items.push(item);
+    }
+
+    dequeue() {
+      return this.items.shift();
+    }
+
+    size() {
+     return this.items.length;
+    }
+  }
+  
+  class PriorityQueue {
+    constructor() {
+      this.isMinHeap = true;
+      this.list = [];
+      this.length = 0;
+    }
+
+    add(value) {
+      this.list[this.length] = value;
+      this.length++;
+      this.percolateUp(this.length - 1);
+    }
+
+    percolateUp(child) {
+      parent = Math.floor((child - 1) / 2);
+
+      if (parent < 0) {
+        return;
+      }
+
+      if (this.compare(this.list[parent], this.list[child])) {
+        let temp = this.list[child];
+        this.list[child] = this.list[parent];
+        this.list[parent] = temp;
+
+        this.percolateUp(parent);
+      }
+    }
+
+    compare(value1, value2) {
+      if (this.isMinHeap) {
+        return (value1 - value2) > 0;
+      } else {
+        return (value2 - value1) > 0;
+      }
+    }
+
+    isEmpty() {
+      return this.length === 0;
+    }
+
+    remove() {
+      if (this.isEmpty()) {
+        throw new TypeError('heap is empty');
+      }
+
+      let removedValue = this.list[0];
+      this.list[0] = this.list[this.length - 1];
+      this.length--;
+      this.percolateDown(0);
+
+      return removedValue;
+    }
+
+    percolateDown(parent) {
+      let lChild = (2 * parent) + 1;
+      let rChild = lChild + 1;
+      let child = -1;
+
+      if (lChild <= this.length) {
+        child = lChild;
+      }
+
+      if ((rChild <= this.length) && (this.compare(this.list[lChild], this.list[rChild]))) {
+        child = rChild;
+      }
+
+      if ((child != -1) && (this.compare(this.list[parent], this.list[child]))) {
+        let temp = this.list[child];
+        this.list[child] = this.list[parent];
+        this.list[parent] = temp;
+        this.percolateDown(child);
+      }
+    }
+
+    size() {
+     return this.length;
+    }
+
+    peek() {
+      if (this.isEmpty()) {
+        throw new TypeError('heap is empty');
+      }
+
+      return this.list[0];
+    }
+  }
+
+  class AdjNode {
+    constructor(source, destination, cost = 1) {
+      this.source = source;
+      this.destination = destination;
+      this.cost = cost;
+      this.next = null;
+    }
+  }
+
+  class AdjList {
+    constructor() {
+      this.head = null;
+    }
+  }
+
+  class Graph {
+    constructor(elementCount) {
+      this.size = elementCount;
+      this.list = new Array(elementCount);
+
+      let i = 0
+      while (i < elementCount) {
+        this.list[i] = new AdjList();
+        i += 1;
+      }
+    }
+
+    addEdge(source, destination, cost = 1) {
+      let node = new AdjNode(source, destination, cost);
+      node.next = this.list[source].head;
+      this.list[source].head = node;
+    }
+
+    addBiEdge(source, destination, cost = 1) {
+      this.addEdge(source, destination, cost);
+      this.addEdge(destination, source, cost);
+    }
+
+    dfs() {
+      let visited = [];
+      let stk = [];
+      let dfs_array = [];
+
+      for(let i = 0; i < this.size; i++) {
+        visited[i] = 0;
+      }
+      visited[0] = 1;
+      stk.push(0);
+      dfs_array.push(0);
+
+      while (stk.length > 0) {
+        let itemIndex = stk.pop();
+        let head = this.list[itemIndex].head;
+
+        while (head) {
+          if (visited[head.destination] === 0) {
+            visited[head.destination] = 1;
+            stk.push(head.destination);
+            dfs_array.push(head.destination);
+          }
+          head = head.next;
+        }
+      }
+      return dfs_array.join(',');
+    }
+
+    bfs() {
+      let visited = [];
+      let bfs_array = [];
+
+      for(let i = 0; i < this.size; i++) {
+        visited[i] = 0;
+      }
+
+      let i = 0;
+      while (i < this.size) {
+        if (visited[i] === 0) {
+          this.bfsUtil(visited, i, bfs_array);
+        }
+        i += 1;
+      }
+      return bfs_array.join(',');
+    }
+
+    bfsUtil(visited, index, bfs_array) {
+      let queue = new Queue();
+
+      visited[index] = 1;
+      bfs_array[index] = index;
+
+      queue.enqueue(index);
+      while (queue.size > 0) {
+        let nodeIndex = queue.dequeue();
+        let head = this.list[nodeIndex].head;
+
+        while (head) {
+          if (visited[head.destination] === 0) {
+            visited[head.destination] = 1;
+            bfs_array[head.destination] = head.destination;
+            queue.enqueue(head.destination);
+          }
+          head = head.next;
+        }
+      }
+    }
+
+    pathExist(source, destination) {
+      let visited = [];
+
+      for(let i = 0; i < this.size; i++) {
+        visited[i] = 0;
+      }
+
+      visited[source] = 1;
+      this.dfsRecursive(source, visited);
+
+      return Boolean(visited[destination]);
+    }
+
+    dfsRecursive(index, visited) {
+      let head = this.list[index].head;
+
+      while (head) {
+        if (visited[head.destination] === 0) {
+          visited[head.destination] = 1;
+          this.dfsRecursive(head.destination, visited);
+        }
+        head = head.next;
+      }
+    }
+
+    isConnected() {
+      let visited = [];
+
+      for(let i = 0; i < this.size; i++) {
+        visited[i] = 0;
+      }
+
+      visited[0] = 1;
+      this.dfsRecursive(0, visited);
+
+      return visited.every(Boolean);
+    }
+
+    shortestPath(source) {
+      let distance = new Array(this.size);
+      let path = new Array(this.size);
+      let q = new Queue;
+
+      for (let i = 0; i < this.size; i++) {
+        distance[i] = -1;
+      }
+
+      distance[source] = 0;
+      q.enqueue(source);
+
+      while (q.size() > 0) {
+        let currNodeIndex = q.dequeue();
+        let head = this.list[currNodeIndex].head;
+
+        while (head) {
+          if (distance[head.destination] === -1) {
+            distance[head.destination] = distance[currNodeIndex] + 1;
+            path[head.destination] = currNodeIndex;
+            q.enqueue(head.destination);
+          }
+          head = head.next;
+        }
+      }
+
+      return distance.join(',');
+    }
+
+    dijkstra(source) {
+      let distance = new Array(this.size);
+      let previous = new Array(this.size);
+
+      for(let i = 0; i < this.size; i++) {
+        distance[i] = 9999;
+        previous[i] = -1;
+      }
+
+      let pq = new PriorityQueue();
+
+      distance[source] = 0;
+      previous[source] = -1;
+      let anode = new AdjNode(source, source, 0);
+      pq.add(anode);
+
+      while (pq.size() > 0) {
+        let node = pq.peek();
+        pq.remove();
+        let head = this.list[node.destination].head;
+
+        while (head) {
+          let altDistance = head.cost + distance[head.source];
+          if (altDistance < distance[head.destination]) {
+            distance[head.destination] = altDistance;
+            previous[head.destination] = head.source;
+            let nextNode = new AdjNode(head.source, head.destination, altDistance);
+            pq.add(nextNode);
+          }
+          head = head.next;
+        }
+      }
+
+      return distance.join(',');
+    }
+
+    bellmanFord(source) {
+      let distance = new Array(this.size);
+      let path = new Array(this.size);
+
+      for (let i = 0; i < this.size; i++) {
+        distance[i] = 9999;
+      }
+
+      distance[source] = 0;
+      let i = 0;
+      while (i < (this.size - 1)) {
+        let j = 0;
+        while (j < this.size) {
+          let head = this.list[j].head;
+          while (head) {
+            let newDistance = distance[j] + head.cost;
+            if (distance[head.destination] > newDistance) {
+              distance[head.destination] = newDistance;
+              path[head.destination] = j;
+            }
+            head = head.next;
+          }
+          j += 1;
+        }
+        i += 1;
+      }
+
+      return distance.join(',');
+    }
+
+    topologicalSortDFS() {
+      let visited = new Array(this.size);
+      let stk = [];
+      for (let i = 0; i < this.size; i++) {
+        visited[i] = 0;
+      }
+
+      let i = 0;
+
+      while (i < this.size) {
+        if (visited[i] === 0) {
+          visited[i] = 1;
+          this.topologicalSortDFSUtil(i, visited, stk);
+        }
+        i += 1;
+      }
+
+      return stk.join(',');
+    }
+
+    topologicalSortDFSUtil(index, visited, stk) {
+      let head = this.list[index].head;
+
+      while (head) {
+        if (visited[head.destination] === 0) {
+          visited[head.destination] = 1;
+          this.topologicalSortDFSUtil(head.destination, visited, stk);
+        }
+        head = head.next;
+      }
+      stk.push(index);
+    }
+  }
+
+  console.clear();
+  tests({
+    'it creates an adjacent node': function() {
+      let node = new AdjNode('source','destination');
+
+      eq(node.source, 'source');
+      eq(node.destination, 'destination');
+      eq(node.cost, 1);
+      eq(node.next, null);
+    },
+    'it creates an adjacent list': function() {
+      let list = new AdjList();
+
+      eq(list.head, null);
+    },
+    'it creates a graph': function() {
+      let elementCount = 0;
+      let graph = new Graph(elementCount);
+
+      eq(graph.size, 0);
+      eq(graph.list.length, 0);
+
+      elementCount = 1;
+      graph = new Graph(elementCount);
+
+      eq(graph.size, 1);
+      eq(graph.list.length, 1);
+      let isAdjList = graph.list[0] instanceof AdjList;
+      eq(isAdjList, true);
+    },
+    'it adds an edge': function() {
+      let g = new Graph(2);
+
+      g.addEdge(0,1);
+
+      let node = g.list[0].head;
+      eq(node.source, 0);
+      eq(node.destination, 1);
+      eq(node.cost, 1);
+      eq(node.next, null);
+
+      g.addEdge(1,2);
+
+      node = g.list[1].head;
+      eq(node.source, 1);
+      eq(node.destination, 2);
+      eq(node.cost, 1);
+      eq(node.next, null);
+    },
+    'it adds a bi-directional edge': function() {
+      let g = new Graph(2);
+
+      g.addBiEdge(0, 1);
+
+      let node = g.list[0].head;
+      eq(node.source, 0);
+      eq(node.destination, 1);
+      eq(node.cost, 1);
+      eq(node.next, null);
+
+      node = g.list[1].head;
+      eq(node.source, 1);
+      eq(node.destination, 0);
+      eq(node.cost, 1);
+      eq(node.next, null);
+    },
+    'it traverses nodes in DFS order': function() {
+      let g = new Graph(4);
+      g.addEdge(0, 1);
+      g.addEdge(0, 2);
+      g.addEdge(1, 2);
+      g.addEdge(2, 0);
+      g.addEdge(2, 3);
+      g.addEdge(3, 3);
+
+      let actualValues = g.dfs();
+
+      expectedValues = '0,2,1,3';
+      eq(actualValues, expectedValues);
+    },
+    'it traverses nodes in BFS order': function() {
+      let g = new Graph(4);
+      g.addEdge(0, 1);
+      g.addEdge(0, 2);
+      g.addEdge(1, 2);
+      g.addEdge(2, 0);
+      g.addEdge(2, 3);
+      g.addEdge(3, 3);
+
+      let actualValues = g.bfs();
+
+      expectedValues = '0,1,2,3';
+      eq(actualValues, expectedValues);
+    },
+    'it determines if path exists': function() {
+      let isPathExist;
+      let g = new Graph(4);
+      g.addEdge(0, 1);
+      g.addEdge(0, 2);
+      g.addEdge(1, 2);
+      g.addEdge(2, 0);
+      g.addEdge(2, 3);
+      g.addEdge(3, 3);
+
+      isPathExist = g.pathExist(0,3);
+      eq(isPathExist, true);
+
+      isPathExist = g.pathExist(3,0);
+      eq(isPathExist, false);
+    },
+    'it determines if graph is connected': function() {
+      let isConnected;
+      let g = new Graph(4);
+      g.addEdge(0, 1);
+      g.addEdge(1, 2);
+      g.addEdge(2, 3);
+
+      isConnected = g.isConnected();
+      eq(isConnected, true);
+
+      g = new Graph(4);
+      g.addEdge(0, 1);
+      g.addEdge(1, 2);
+      g.addEdge(3, 2);
+
+      isConnected = g.isConnected();
+      eq(isConnected, false);
+    },
+    'it finds shorthest path from 1 node to other nodes for an unweighted graph': function() {
+      let g = new Graph(4);
+      g.addEdge(0, 1);
+      g.addEdge(0, 2);
+      g.addEdge(2, 3);
+
+      let actualDistanceValues = g.shortestPath(0);
+
+      let expectedDistanceValues = '0,1,1,2';
+      eq(actualDistanceValues, expectedDistanceValues);
+    },
+    'it finds shortest path from 1 node to other nodes for positive weighted graph(dijkstra)': function() {
+      let g = new Graph(5);
+      g.addBiEdge(0, 1, 7);
+      g.addBiEdge(0, 2, 3);
+      g.addBiEdge(1, 2, 1);
+      g.addBiEdge(1, 3, 2);
+      g.addBiEdge(1, 4, 6);
+      g.addBiEdge(2, 3, 2);
+      g.addBiEdge(3, 4, 4);
+
+      let actualDistanceValues = g.dijkstra(0);
+      let expectedDistanceValues = '0,4,3,5,9';
+
+      eq(actualDistanceValues, expectedDistanceValues);
+    },
+    'it finds shortest path from 1 node to other nodes for negative weighted graph(bellman ford)': function() {
+      let g = new Graph(5);
+      g.addEdge(0, 1, -1);
+      g.addEdge(0, 2, 4);
+      g.addEdge(1, 2, 3);
+      g.addEdge(1, 3, 2);
+      g.addEdge(1, 4, 2);
+      g.addEdge(3, 2, 5);
+      g.addEdge(3, 1, 1);
+      g.addEdge(4, 3, -3);
+
+      let actualDistanceValues = g.bellmanFord(0);
+      let expectedDistanceValues = '0,-1,2,-2,1';
+
+      eq(actualDistanceValues, expectedDistanceValues);
+    },
+    'it performs topological sort DFS': function() {
+      let g = new Graph(5);
+      g.addEdge(0,1);
+      g.addEdge(0,2);
+      g.addEdge(2,3);
+      g.addEdge(3,4);
+
+      let actualorder = g.topologicalSortDFS();
+      let expectedorder = '4,3,2,1,0';
+
+      eq(actualorder, expectedorder);
+    }
+
+  });
+  </script>
+</body>
+</html>
