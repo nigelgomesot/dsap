@@ -426,20 +426,36 @@
     }
 
     topologicalSortDFS() {
-      let visited = new Array(this.size, 0);
+      let visited = new Array(this.size);
       let stk = [];
+      for (let i = 0; i < this.size; i++) {
+        visited[i] = 0;
+      }
+
       let i = 0;
 
       while (i < this.size) {
         if (visited[i] === 0) {
           visited[i] = 1;
           this.topologicalSortDFSUtil(i, visited, stk);
-          // PENDING
         }
         i += 1;
       }
 
       return stk.join(',');
+    }
+
+    topologicalSortDFSUtil(index, visited, stk) {
+      let head = this.list[index].head;
+
+      while (head) {
+        if (visited[head.destination] === 0) {
+          visited[head.destination] = 1;
+          this.topologicalSortDFSUtil(head.destination, visited, stk);
+        }
+        head = head.next;
+      }
+      stk.push(index);
     }
   }
 
@@ -616,12 +632,12 @@
     'it performs topological sort DFS': function() {
       let g = new Graph(5);
       g.addEdge(0,1);
-      g.addEdge(0,3);
+      g.addEdge(0,2);
+      g.addEdge(2,3);
       g.addEdge(3,4);
-      g.addEdge(4,5);
 
       let actualorder = g.topologicalSortDFS();
-      let expectedorder = '0,1,3,4,5';
+      let expectedorder = '4,3,2,1,0';
 
       eq(actualorder, expectedorder);
     }
