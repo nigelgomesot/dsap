@@ -82,9 +82,23 @@
 
   console.clear();
 
-  function linearSearchUnsorted(array, element) {
+  function linearSearchUnsorted(array, value) {
     for (let i = 0; i < array.length; i++) {
-      if (array[i] === element) {
+      if (array[i] === value) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function linearSearchSorted(array, value) {
+    for (let i = 0; i < array.length; i++) {
+      if (value < array[i]) {
+        return false;
+      }
+
+      if (array[i] === value) {
         return true;
       }
     }
@@ -102,6 +116,21 @@
       eq(exist, true);
 
       exist = linearSearchUnsorted(array, 44);
+      eq(exist, false);
+    },
+    'performs linear search on sorted array': function() {
+      let array = [1, 3, 5, 7, 9];
+      let exist = false;
+
+      exist = linearSearchSorted(array, 5);
+      eq(exist, true);
+
+      exist = linearSearchSorted(array, 55);
+      eq(exist, false);
+
+      array.push(4);
+      array.push(44);
+      exist = linearSearchSorted(array, 4);
       eq(exist, false);
     }
 
