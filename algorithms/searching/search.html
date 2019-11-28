@@ -106,9 +106,31 @@
     return false;
   }
 
+  function binarySearch(array, value) {
+    let low = 0;
+    let high = array.length - 1;
+    let mid;
+
+    while (low <= high) {
+      mid = Math.floor((low + high) / 2);
+
+      if (array[mid] === value) {
+        return true;
+      }
+
+      if (array[mid] < value) {
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    return false;
+  }
+
 
   tests({
-    'performs linear search on unsorted array': function() {
+    'it performs linear search on unsorted array': function() {
       let array = [1, 3, 5, 7, 6, 4, 2];
       let exist = false;
 
@@ -118,7 +140,7 @@
       exist = linearSearchUnsorted(array, 44);
       eq(exist, false);
     },
-    'performs linear search on sorted array': function() {
+    'it performs linear search on sorted array': function() {
       let array = [1, 3, 5, 7, 9];
       let exist = false;
 
@@ -131,6 +153,16 @@
       array.push(4);
       array.push(44);
       exist = linearSearchSorted(array, 4);
+      eq(exist, false);
+    },
+    'it performs binary search': function() {
+      let array = [1, 3, 5, 7, 9];
+      let exist = false;
+
+      exist = binarySearch(array, 5);
+      eq(exist, true);
+
+      exist = binarySearch(array, 55);
       eq(exist, false);
     }
 
