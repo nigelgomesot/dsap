@@ -150,6 +150,36 @@
     }
   }
 
+  function binarySearchRotatedArray(array, value) {
+    return binarySearchRotatedArrayUtil(array, 0, array.length - 1, value);
+  }
+
+  function binarySearchRotatedArrayUtil(array, start, end, value) {
+    if (start > end) {
+      return false;
+    }
+
+    let mid = Math.floor((start + end) / 2);
+
+    if (array[mid] === value) {
+      return true;
+    }
+
+    if (array[start] < array[mid]) {
+      if (array[start] <= value && value < array[mid]) {
+        return binarySearchRotatedArrayUtil(array, start, mid - 1, value);
+      } else {
+        return binarySearchRotatedArrayUtil(array, mid + 1, end, value);
+      }
+    } else {
+      if (array[mid] < value && value <= array[end]) {
+        return binarySearchRotatedArrayUtil(array, mid + 1, end, value);
+      } else {
+        return binarySearchRotatedArrayUtil(array, start, mid - 1, value);
+      }
+    }
+  }
+
   tests({
     'it performs linear search on unsorted array': function() {
       let array = [1, 3, 5, 7, 6, 4, 2];
@@ -194,6 +224,19 @@
       eq(exist, true);
 
       exist = binarySearchRecursive(array, 55);
+      eq(exist, false);
+    },
+    'it performs binary search on rotated array': function() {
+      let array = [6, 7, 8, 9, 1, 2, 3, 4];
+      let exist = false;
+
+      exist = binarySearchRotatedArray(array, 8);
+      eq(exist, true);
+
+      exist = binarySearchRotatedArray(array, 2);
+      eq(exist, true);
+
+      exist = binarySearchRotatedArray(array, 5);
       eq(exist, false);
     }
 
