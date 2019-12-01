@@ -180,6 +180,30 @@
     }
   }
 
+  function findRotatedArrayMax(array) {
+    let maxIndex = findRotatedArrayMaxUtil(array, 0, array.length - 1);
+
+    return array[maxIndex];
+  }
+
+  function findRotatedArrayMaxUtil(array, start, end) {
+    if (start >= end) {
+      return start;
+    }
+
+    let mid = Math.floor((start + end) / 2);
+
+    if (array[mid] > array[mid + 1]) {
+      return mid;
+    }
+
+    if (array[start] <= array[mid]) {
+      return findRotatedArrayMaxUtil(array, mid + 1, end);
+    } else {
+      return findRotatedArrayMaxUtil(array, start, mid - 1);
+    }
+  }
+
   tests({
     'it performs linear search on unsorted array': function() {
       let array = [1, 3, 5, 7, 6, 4, 2];
@@ -238,6 +262,13 @@
 
       exist = binarySearchRotatedArray(array, 5);
       eq(exist, false);
+    },
+    'it finds max value in a rotated array': function() {
+      let array = [6, 7, 8, 9, 1, 2, 3, 4];
+      let max;
+
+      max = findRotatedArrayMax(array);
+      eq(max, 9);
     }
 
   });
