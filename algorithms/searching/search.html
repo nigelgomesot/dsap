@@ -244,6 +244,22 @@
     return -1;
   }
 
+  function binarySearchBitonicArray(array, value) {
+    let maxIndex = findBitonicArrayMaxIndex(array);
+
+    let result = binarySearchBitonicArrayUtil(array, 0, maxIndex, value, true);
+    if (result != -1) {
+      return true
+    }
+
+    result = binarySearchBitonicArrayUtil(array, maxIndex + 1, array.length - 1, value, false);
+    if (result != -1) {
+      return true
+    }
+
+    return false;
+  }
+
   tests({
     'it performs linear search on unsorted array': function() {
       let array = [1, 3, 5, 7, 6, 4, 2];
@@ -331,6 +347,22 @@
 
       eq(actualMaxIndex, expectedMaxIndex);
 
+    },
+    'it performs binary search in bitonic array': function() {
+      let array = [1, 3, 5, 7, 9, 11, 12, 8, 5, 3, 1];
+      let exist = false;
+
+      exist = binarySearchBitonicArray(array, 12);
+      eq(exist, true);
+
+      exist = binarySearchBitonicArray(array, 7);
+      eq(exist, true);
+
+      exist = binarySearchBitonicArray(array, 8);
+      eq(exist, true);
+
+      exist = binarySearchBitonicArray(array, 4);
+      eq(exist, false);
     }
 
   });
