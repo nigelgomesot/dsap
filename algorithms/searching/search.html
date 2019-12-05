@@ -248,16 +248,34 @@
     let maxIndex = findBitonicArrayMaxIndex(array);
 
     let result = binarySearchBitonicArrayUtil(array, 0, maxIndex, value, true);
-    if (result != -1) {
+    if (result) {
       return true
     }
 
     result = binarySearchBitonicArrayUtil(array, maxIndex + 1, array.length - 1, value, false);
-    if (result != -1) {
+    if (result) {
       return true
     }
 
     return false;
+  }
+
+  function binarySearchBitonicArrayUtil(array, start, end, value, isInc) {
+    if (start > end) {
+      return false;
+    }
+
+    const mid = Math.floor((start + end) / 2);
+
+    if (array[mid] === value) {
+      return true;
+    }
+
+    if ((isInc && value < array[mid]) || (!isInc && value > array[mid])) {
+      return binarySearchBitonicArrayUtil(array, start, mid - 1, value, isInc);
+    } else {
+      return binarySearchBitonicArrayUtil(array, mid + 1, end, value, isInc);
+    }
   }
 
   tests({
