@@ -301,6 +301,44 @@
     return {buy: buy, sell: sell};
   }
 
+  // REF: https://github.com/trekhleb/javascript-algorithms/tree/master/src/algorithms/search/interpolation-search
+  function interpolationSearch(array, value) {
+    let lowIndex = 0;
+    let highIndex = array.length - 1;
+
+    while (lowIndex <= highIndex) {
+      const rangeDelta = array[highIndex] - array[lowIndex];
+      const indexDelta = highIndex - lowIndex;
+      const valueDelta = value - array[lowIndex];
+
+      if (valueDelta < 0) {
+        return -1;
+      }
+
+      if (!rangeDelta) {
+        return (array[lowIndex] === value) ? lowIndex : -1;
+      }
+
+      const midIndex = lowIndex + Math.floor(valueDelta * indexDelta / rangeDelta);
+
+      if (midIndex > highIndex) {
+        return -1;
+      }
+
+      if (array[midIndex] === value) {
+        return midIndex;
+      }
+
+      if (array[midIndex] < value) {
+        lowIndex = midIndex + 1;
+      } else {
+        highIndex = midIndex - 1;
+      }
+    }
+
+    return -1;
+  }
+
   tests({
     'it performs linear search on unsorted array': function() {
       let array = [1, 3, 5, 7, 6, 4, 2];
@@ -413,6 +451,16 @@
 
       eq(actualResult.buy, expectedResult.buy);
       eq(actualResult.sell, expectedResult.sell);
+    },
+    'it performs interpolation search': function() {
+      let array = [1,2,3,4,5,6,7,8,9,10];
+      let result = null;
+
+      result = interpolationSearch(array, 5);
+      eq(result, 4);
+
+      result = interpolationSearch(array, 11);
+      eq(result, -1);
     }
 
   });
