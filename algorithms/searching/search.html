@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+  <script type="text/javascript">
+  // REF: https://github.com/Hemant-Jain-Author/Data-Structures-and-Algorithms-using-JavaScript/blob/master/Searching/Searching1.js
+  // REF: https://github.com/gordonmzhu/jstinytest/blob/master/tinytest.js
+
+  // TinyTest START
+  var TinyTestHelpers = {
+    renderStats: function(tests, failures) {
+      let numberOfTests = Object.keys(tests).length;
+      let successes = numberOfTests - failures;
+      let summaryStr = 'Total Tests: ' + numberOfTests
+              + ', Success: ' + successes
+              + ', Failures: ' + failures;
+
+      summaryEle = document.createElement('h1');
+      summaryEle.textContent = summaryStr;
+      document.body.appendChild(summaryEle);
+    }
+  };
+
+  var TinyTest = {
+
+    run: function(tests) {
+      var failures = 0;
+      for (var testName in tests) {
+        var testAction = tests[testName];
+        try {
+          testAction.apply(this);
+          console.log('%c' + testName, "color: green;");
+        } catch (e) {
+          failures++;
+          console.groupCollapsed('%c' + testName, "color: red;");
+          console.error(e.stack);
+          console.groupEnd();
+        }
+      }
+      setTimeout(function() { // Give document a chance to complete
+        if (window.document && document.body) {
+          document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+          TinyTestHelpers.renderStats(tests, failures);
+        }
+      }, 0);
+    },
+  
+    fail: function(msg) {
+      throw new Error('fail(): ' + msg);
+    },
+  
+    assert: function(value, msg) {
+      if (!value) {
+        throw new Error('assert(): ' + msg);
+      }
+    },
+  
+    assertEquals: function(expected, actual) {
+      if (expected != actual) {
+        throw new Error('assertEquals() "' + expected + '" != "' + actual + '"');
+      }
+    },
+  
+    assertStrictEquals: function(expected, actual) {
+      if (expected !== actual) {
+        throw new Error('assertStrictEquals() "' + expected + '" !== "' + actual + '"');
+      }
+    },
+
+  };
+
+  var fail         = TinyTest.fail.bind(TinyTest),
+    assert       = TinyTest.assert.bind(TinyTest),
+    assertEquals     = TinyTest.assertEquals.bind(TinyTest),
+    eq         = TinyTest.assertEquals.bind(TinyTest),
+    assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
+    tests        = TinyTest.run.bind(TinyTest);
+
+  // TinyTest END
+
+  console.clear();
+
+  function linearSearchUnsorted(array, value) {
+    for (let i = 0; i < array.length; i++) {
+      if (array[i] === value) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function linearSearchSorted(array, value) {
+    for (let i = 0; i < array.length; i++) {
+      if (value < array[i]) {
+        return false;
+      }
+
+      if (array[i] === value) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function binarySearch(array, value) {
+    let low = 0;
+    let high = array.length - 1;
+    let mid;
+
+    while (low <= high) {
+      mid = Math.floor((low + high) / 2);
+
+      if (array[mid] === value) {
+        return true;
+      }
+
+      if (array[mid] < value) {
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    return false;
+  }
+
+  function binarySearchRecursive(array, value) {
+    return binarySearchRecursiveUtil(array, 0, array.length - 1, value);
+  }
+
+  function binarySearchRecursiveUtil(array, low, high, value) {
+    if (low > high) {
+      return false;
+    }
+
+    let mid = Math.floor((low + high) / 2);
+
+    if (array[mid] === value) {
+      return true;
+    }
+
+    if (array[mid] < value) {
+      return binarySearchRecursiveUtil(array, mid + 1, high, value);
+    } else {
+      return binarySearchRecursiveUtil(array, low, mid - 1, value);
+    }
+  }
+
+  function binarySearchRotatedArray(array, value) {
+    return binarySearchRotatedArrayUtil(array, 0, array.length - 1, value);
+  }
+
+  function binarySearchRotatedArrayUtil(array, start, end, value) {
+    if (start > end) {
+      return false;
+    }
+
+    let mid = Math.floor((start + end) / 2);
+
+    if (array[mid] === value) {
+      return true;
+    }
+
+    if (array[start] < array[mid]) {
+      if (array[start] <= value && value < array[mid]) {
+        return binarySearchRotatedArrayUtil(array, start, mid - 1, value);
+      } else {
+        return binarySearchRotatedArrayUtil(array, mid + 1, end, value);
+      }
+    } else {
+      if (array[mid] < value && value <= array[end]) {
+        return binarySearchRotatedArrayUtil(array, mid + 1, end, value);
+      } else {
+        return binarySearchRotatedArrayUtil(array, start, mid - 1, value);
+      }
+    }
+  }
+
+  function findRotatedArrayMax(array) {
+    let maxIndex = findRotatedArrayMaxUtil(array, 0, array.length - 1);
+
+    return array[maxIndex];
+  }
+
+  function findRotatedArrayMaxUtil(array, start, end) {
+    if (start >= end) {
+      return start;
+    }
+
+    let mid = Math.floor((start + end) / 2);
+
+    if (array[mid] > array[mid + 1]) {
+      return mid;
+    }
+
+    if (array[start] <= array[mid]) {
+      return findRotatedArrayMaxUtil(array, mid + 1, end);
+    } else {
+      return findRotatedArrayMaxUtil(array, start, mid - 1);
+    }
+  }
+
+  function findRepeating(array) {
+    let dictonary = {};
+    let repeating = [];
+
+    for(let i = 0; i < array.length; i++) {
+      let element = array[i];
+      if (element in dictonary) {
+        if (!repeating.includes(element)) {
+          repeating.push(element);
+        }
+      } else {
+        dictonary[element] = 1;
+      }
+    }
+
+    return repeating.join(',');
+  }
+
+  function findBitonicArrayMaxIndex(array) {
+    let start = 0;
+    let end = array.length - 1;
+    let mid;
+
+    while (start <= end) {
+      mid = Math.floor((start + end) / 2);
+
+      if ((array[mid - 1] < array[mid]) && (array[mid] > array[mid + 1])) {
+        return mid;
+      } else if ((array[mid - 1] < array[mid]) && (array[mid] < array[mid + 1])) {
+        start = mid + 1;
+      } else if ((array[mid - 1] > array[mid]) && (array[mid] > array[mid + 1])) {
+        end = mid - 1;
+      } else {
+        break;
+      }
+    }
+
+    return -1;
+  }
+
+  function binarySearchBitonicArray(array, value) {
+    let maxIndex = findBitonicArrayMaxIndex(array);
+
+    let result = binarySearchBitonicArrayUtil(array, 0, maxIndex, value, true);
+    if (result) {
+      return true
+    }
+
+    result = binarySearchBitonicArrayUtil(array, maxIndex + 1, array.length - 1, value, false);
+    if (result) {
+      return true
+    }
+
+    return false;
+  }
+
+  function binarySearchBitonicArrayUtil(array, start, end, value, isInc) {
+    if (start > end) {
+      return false;
+    }
+
+    const mid = Math.floor((start + end) / 2);
+
+    if (array[mid] === value) {
+      return true;
+    }
+
+    if ((isInc && value < array[mid]) || (!isInc && value > array[mid])) {
+      return binarySearchBitonicArrayUtil(array, start, mid - 1, value, isInc);
+    } else {
+      return binarySearchBitonicArrayUtil(array, mid + 1, end, value, isInc);
+    }
+  }
+
+  function findMaxProfit(array) {
+    let buy = 0;
+    let sell = 0;
+    let currMin = 0;
+    let currProfit = 0;
+    let maxProfit = 0;
+
+    for(let i = 0; i < array.length; i++) {
+      if (array[i] < array[currMin]) {
+        currMin = i;
+      }
+
+      const currProfit = array[i] - array[currMin];
+      if (currProfit > maxProfit) {
+        buy = currMin;
+        sell = i;
+        maxProfit = currProfit;
+      }
+    }
+
+    return {buy: buy, sell: sell};
+  }
+
+  // REF: https://github.com/trekhleb/javascript-algorithms/tree/master/src/algorithms/search/interpolation-search
+  function interpolationSearch(array, value) {
+    let lowIndex = 0;
+    let highIndex = array.length - 1;
+
+    while (lowIndex <= highIndex) {
+      const rangeDelta = array[highIndex] - array[lowIndex];
+      const indexDelta = highIndex - lowIndex;
+      const valueDelta = value - array[lowIndex];
+
+      if (valueDelta < 0) {
+        return -1;
+      }
+
+      if (!rangeDelta) {
+        return (array[lowIndex] === value) ? lowIndex : -1;
+      }
+
+      const midIndex = lowIndex + Math.floor(valueDelta * indexDelta / rangeDelta);
+
+      if (midIndex > highIndex) {
+        return -1;
+      }
+
+      if (array[midIndex] === value) {
+        return midIndex;
+      }
+
+      if (array[midIndex] < value) {
+        lowIndex = midIndex + 1;
+      } else {
+        highIndex = midIndex - 1;
+      }
+    }
+
+    return -1;
+  }
+
+  // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/search/jump-search/jumpSearch.js
+  function jumpSearch(array, value) {
+    const arraySize = array.length;
+    const jumpSize = Math.floor(Math.sqrt(arraySize));
+
+    let blockStart = 0;
+    let blockEnd = jumpSize;
+
+    while (value > array[Math.min(blockEnd, arraySize) - 1]) {
+      blockStart = blockEnd;
+      blockEnd += jumpSize;
+
+      if (blockStart > arraySize) {
+        return -1;
+      }
+    }
+
+    let currentIndex = blockStart;
+    while (currentIndex < Math.min(blockEnd, arraySize)) {
+      if (array[currentIndex] === value) {
+        return currentIndex;
+      }
+
+      currentIndex += 1;
+    }
+
+    return -1;
+  }
+
+  tests({
+    'it performs linear search on unsorted array': function() {
+      let array = [1, 3, 5, 7, 6, 4, 2];
+      let exist = false;
+
+      exist = linearSearchUnsorted(array, 4);
+      eq(exist, true);
+
+      exist = linearSearchUnsorted(array, 44);
+      eq(exist, false);
+    },
+    'it performs linear search on sorted array': function() {
+      let array = [1, 3, 5, 7, 9];
+      let exist = false;
+
+      exist = linearSearchSorted(array, 5);
+      eq(exist, true);
+
+      exist = linearSearchSorted(array, 55);
+      eq(exist, false);
+
+      array.push(4);
+      array.push(44);
+      exist = linearSearchSorted(array, 4);
+      eq(exist, false);
+    },
+    'it performs binary search': function() {
+      let array = [1, 3, 5, 7, 9];
+      let exist = false;
+
+      exist = binarySearch(array, 5);
+      eq(exist, true);
+
+      exist = binarySearch(array, 55);
+      eq(exist, false);
+    },
+    'it performs binary search using recursion': function() {
+      let array = [1, 3, 5, 7, 9];
+      let exist = false;
+
+      exist = binarySearchRecursive(array, 5);
+      eq(exist, true);
+
+      exist = binarySearchRecursive(array, 55);
+      eq(exist, false);
+    },
+    'it performs binary search on rotated array': function() {
+      let array = [6, 7, 8, 9, 1, 2, 3, 4];
+      let exist = false;
+
+      exist = binarySearchRotatedArray(array, 8);
+      eq(exist, true);
+
+      exist = binarySearchRotatedArray(array, 2);
+      eq(exist, true);
+
+      exist = binarySearchRotatedArray(array, 5);
+      eq(exist, false);
+    },
+    'it finds max value in a rotated array': function() {
+      let array = [6, 7, 8, 9, 1, 2, 3, 4];
+      let max;
+
+      max = findRotatedArrayMax(array);
+      eq(max, 9);
+    },
+    'it finds repeating elements in an array': function() {
+      let array = [1, 3, 5, 3, 1, 4, 2, 2, 3];
+
+      let actualElements = findRepeating(array);
+      let expectedElements = '3,1,2';
+
+      eq(actualElements, expectedElements);
+    },
+    'it finds max index in bitonic array': function() {
+      let array = [1, 3, 5, 7, 9, 11, 12, 8, 5, 3, 1];
+      let actualMaxIndex = findBitonicArrayMaxIndex(array);
+      let expectedMaxIndex = 6;
+
+      eq(actualMaxIndex, expectedMaxIndex);
+
+      array = [1,2,3];
+      actualMaxIndex = findBitonicArrayMaxIndex(array);
+      expectedMaxIndex = -1;
+
+      eq(actualMaxIndex, expectedMaxIndex);
+
+    },
+    'it performs binary search in bitonic array': function() {
+      let array = [1, 3, 5, 7, 9, 11, 12, 8, 5, 3, 1];
+      let exist = false;
+
+      exist = binarySearchBitonicArray(array, 12);
+      eq(exist, true);
+
+      exist = binarySearchBitonicArray(array, 7);
+      eq(exist, true);
+
+      exist = binarySearchBitonicArray(array, 8);
+      eq(exist, true);
+
+      exist = binarySearchBitonicArray(array, 4);
+      eq(exist, false);
+    },
+    'it finds max profit': function() {
+      let array = [10, 10, 5, 7, 9, 11, 12, 8, 5, 3, 10];
+      let expectedResult = { buy: 2, sell: 6 };
+
+      let actualResult = findMaxProfit(array);
+
+      eq(actualResult.buy, expectedResult.buy);
+      eq(actualResult.sell, expectedResult.sell);
+    },
+    'it performs interpolation search': function() {
+      let array = [1,2,3,4,5,6,7,8,9,10];
+      let result = null;
+
+      result = interpolationSearch(array, 5);
+      eq(result, 4);
+
+      result = interpolationSearch(array, 11);
+      eq(result, -1);
+    },
+    'it performs jump search': function() {
+      let array = [1,2,3,4,5,6,7,8,9,10];
+      let result = null;
+
+      result = jumpSearch(array, 5);
+      eq(result, 4);
+
+      result = jumpSearch(array, 11);
+      eq(result, -1);
+    }
+
+  });
+  </script>
+</body>
+</html>
