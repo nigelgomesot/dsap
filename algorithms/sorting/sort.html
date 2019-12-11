@@ -129,6 +129,28 @@
     return array;
   }
 
+  function selectionSort(array, compareCallback) {
+    let size = array.length;
+    let minIndex;
+    let temp;
+
+    for (let i = 0; i < size - 1; i ++) {
+      minIndex = i;
+
+      for (let j = i + 1; j < size; j++) {
+        if (compareCallback(array[minIndex], array[j])) {
+          minIndex = j;
+        }
+      }
+
+      temp = array[i];
+      array[i] = array[minIndex];
+      array[minIndex] = temp;
+    }
+
+    return array;
+  }
+
   tests({
     'it performs bubble sort': function() {
       let array = [9, 1, 8, 2, 7, 3, 6, 4, 5];
@@ -136,15 +158,17 @@
       let expectedOrder;
       let actualOrder;
 
-      result = bubbleSort(array, lessThanCompare);
+      result = bubbleSort(array, greaterThanCompare);
 
       expectedOrder = '1,2,3,4,5,6,7,8,9';
       actualOrder = result.join(',');
+      eq(actualOrder, expectedOrder);
 
-      result = bubbleSort(array, greaterThanCompare);
+      result = bubbleSort(array, lessThanCompare);
 
       expectedOrder = '9,8,7,6,5,4,3,2,1';
       actualOrder = result.join(',');
+      eq(actualOrder, expectedOrder);
     },
     'it performs insertion sort': function() {
       let array = [9, 1, 8, 2, 7, 3, 6, 4, 5];
@@ -152,15 +176,35 @@
       let expectedOrder;
       let actualOrder;
 
-      result = insertionSort(array, lessThanCompare);
+      result = insertionSort(array, greaterThanCompare);
 
       expectedOrder = '1,2,3,4,5,6,7,8,9';
       actualOrder = result.join(',');
+      eq(actualOrder, expectedOrder);
 
-      result = insertionSort(array, greaterThanCompare);
+      result = insertionSort(array, lessThanCompare);
 
       expectedOrder = '9,8,7,6,5,4,3,2,1';
       actualOrder = result.join(',');
+      eq(actualOrder, expectedOrder);
+    },
+    'it performs selection sort': function() {
+      let array = [9, 1, 8, 2, 7, 3, 6, 4, 5];
+      let result = '';
+      let expectedOrder;
+      let actualOrder;
+
+      result = selectionSort(array, greaterThanCompare);
+
+      expectedOrder = '1,2,3,4,5,6,7,8,9';
+      actualOrder = result.join(',');
+      eq(actualOrder, expectedOrder);
+
+      result = selectionSort(array, lessThanCompare);
+
+      expectedOrder = '9,8,7,6,5,4,3,2,1';
+      actualOrder = result.join(',');
+      eq(actualOrder, expectedOrder);
     }
 
   });
