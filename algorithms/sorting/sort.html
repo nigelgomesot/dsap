@@ -192,6 +192,26 @@
     quickSortUtil(array, upper + 1, stop);
   }
 
+  function mergeSort(array, compareCallback) {
+    const size = array.length
+    const tempArray = new Array(size);
+    mergeSortUtil(array, tempArray, 0, size - 1, compareCallback);
+
+    return array;
+  }
+
+  function mergeSortUtil(array, tempArray, lowerIndex, upperIndex, compareCallback) {
+    if (lowerIndex >= upperIndex) {
+      return;
+    }
+
+    const middleIndex = Math.floor((lowerIndex + upperIndex) / 2);
+    mergeSortUtil(array, tempArray, lowerIndex, middleIndex, compareCallback);
+    mergeSortUtil(array, tempArray, middleIndex + 1, upperIndex, compareCallback);
+    merge(array, tempArray, lowerIndex, middleIndex, upperIndex, compareCallback);
+  }
+
+
   tests({
     'it performs bubble sort': function() {
       let array = [9, 1, 8, 2, 7, 3, 6, 4, 5];
@@ -256,6 +276,24 @@
       result = quickSort(array);
 
       expectedOrder = '1,2,3,4,5,6,7,8,9';
+      actualOrder = result.join(',');
+      eq(actualOrder, expectedOrder);
+    },
+    'it performs merge sort': function() {
+      let array = [9, 1, 8, 2, 7, 3, 6, 4, 5];
+      let result = '';
+      let expectedOrder;
+      let actualOrder;
+
+      result = mergeSort(array, greaterThanCompare);
+
+      expectedOrder = '1,2,3,4,5,6,7,8,9';
+      actualOrder = result.join(',');
+      eq(actualOrder, expectedOrder);
+
+      result = mergeSort(array, lessThanCompare);
+
+      expectedOrder = '9,8,7,6,5,4,3,2,1';
       actualOrder = result.join(',');
       eq(actualOrder, expectedOrder);
     }
