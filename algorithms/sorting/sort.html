@@ -211,6 +211,41 @@
     merge(array, tempArray, lowerIndex, middleIndex, upperIndex, compareCallback);
   }
 
+  function merge(array, tempArray, lowerIndex, middleIndex, upperIndex, compareCallback) {
+    let lowerStart = lowerIndex;
+    let lowerStop = middleIndex;
+    let upperStart = middleIndex + 1;
+    let upperStop = upperIndex;
+    let count = lowerIndex;
+
+    while (lowerStart <= lowerStop && upperStart <= upperStop) {
+      if (compareCallback(array[lowerStart], array[upperStart])) {
+        tempArray[count] = array[lowerStart];
+        count++;
+        lowerStart++;
+      } else {
+        tempArray[count] = array[upperStart];
+        count++;
+        upperStart++;
+      }
+    }
+
+    while (lowerStart <= lowerStop) {
+      tempArray[count] = array[lowerStart];
+      count++;
+      lowerStart++;
+    }
+
+    while (upperStart <= upperStop) {
+      tempArray[count] = array[upperStart];
+      count++;
+      upperStart++;
+    }
+
+    for (let i = lowerIndex; i <= upperIndex; i++) {
+      array[i] = tempArray[i];
+    }
+  }
 
   tests({
     'it performs bubble sort': function() {
@@ -285,13 +320,13 @@
       let expectedOrder;
       let actualOrder;
 
-      result = mergeSort(array, greaterThanCompare);
+      result = mergeSort(array, lessThanCompare);
 
       expectedOrder = '1,2,3,4,5,6,7,8,9';
       actualOrder = result.join(',');
       eq(actualOrder, expectedOrder);
 
-      result = mergeSort(array, lessThanCompare);
+      result = mergeSort(array, greaterThanCompare);
 
       expectedOrder = '9,8,7,6,5,4,3,2,1';
       actualOrder = result.join(',');
