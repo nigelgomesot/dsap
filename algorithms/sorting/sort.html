@@ -247,6 +247,32 @@
     }
   }
 
+  // TODO: Pending
+  function bucketSort(array, lowerRange, upperRange) {
+    const range = upperRange - lowerRange;
+    const size = array.length;
+    let count = new Array(size).fill(0);
+    let i = 0;
+    let j = 0;
+
+    while (i < size) {
+      count[array[i] - lowerRange] += 1;
+      i++;
+    }
+
+    i = 0;
+    while (i <= range) {
+      while (count[i] > 0) {
+        array[j] = i + lowerRange;
+        j++;
+        count[i] -= 1;
+      }
+      i++;
+    }
+
+    return array;
+  }
+
   tests({
     'it performs bubble sort': function() {
       let array = [9, 1, 8, 2, 7, 3, 6, 4, 5];
@@ -329,6 +355,18 @@
       result = mergeSort(array, greaterThanCompare);
 
       expectedOrder = '9,8,7,6,5,4,3,2,1';
+      actualOrder = result.join(',');
+      eq(actualOrder, expectedOrder);
+    },
+    'it performs bucket sort': function() {
+      let array = [9, 1, 8, 2, 7, 3, 6, 4, 5];
+      let result = '';
+      let expectedOrder;
+      let actualOrder;
+
+      result = bucketSort(array, 0, 10);
+
+      expectedOrder = '1,2,3,4,5,6,7,8,9';
       actualOrder = result.join(',');
       eq(actualOrder, expectedOrder);
     }
