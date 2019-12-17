@@ -247,11 +247,10 @@
     }
   }
 
-  // TODO: Pending
   function bucketSort(array, lowerRange, upperRange) {
     const range = upperRange - lowerRange;
     const size = array.length;
-    let count = new Array(size).fill(0);
+    let count = new Array(range).fill(0);
     let i = 0;
     let j = 0;
 
@@ -261,7 +260,7 @@
     }
 
     i = 0;
-    while (i <= range) {
+    while (i <=range) {
       while (count[i] > 0) {
         array[j] = i + lowerRange;
         j++;
