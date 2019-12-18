@@ -272,6 +272,36 @@
     return array;
   }
 
+  function quickSelect(array, searchIndex) {
+    quickSortUtil(array, 0, array.length - 1, searchIndex);
+  }
+
+  function quickSelectUtil(array, lowerIndex, upperIndex, searchIndex) {
+    if (lowerIndex >= upperIndex) {
+      return;
+    }
+
+    let pivot = arr[lowerIndex];
+    let start = lowerIndex;
+    let stop = upperIndex;
+
+    while (lowerIndex < upperIndex) {
+      while (array[lowerIndex] <= pivot && lowerIndex < upperIndex) {
+        lowerIndex++;
+      }
+
+      while (array[upperIndex] > pivot && lowerIndex <= upperIndex) {
+        upperIndex--;
+      }
+
+      if (lowerIndex < upperIndex) {
+        swap(array, lowerIndex, upperIndex);
+      }
+
+      // TODO: Pending
+    }
+  }
+
   tests({
     'it performs bubble sort': function() {
       let array = [9, 1, 8, 2, 7, 3, 6, 4, 5];
@@ -368,6 +398,17 @@
       expectedOrder = '1,2,3,4,5,6,7,8,9';
       actualOrder = result.join(',');
       eq(actualOrder, expectedOrder);
+    },
+    'it performs quick select': function() {
+      let array = [9, 1, 8, 2, 7, 3, 6, 4, 5];
+      let index = 4;
+      let expectedValue;
+      let actualValue = 5;
+
+      quickSelect(array, index);
+
+      actualValue = array[4];
+      eq(actualValue, expectedValue);
     }
 
   });
