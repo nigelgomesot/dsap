@@ -297,8 +297,15 @@
       if (lowerIndex < upperIndex) {
         swap(array, lowerIndex, upperIndex);
       }
+    }
 
-      // TODO: Pending
+    swap(array, start, upperIndex);
+    if (searchIndex < upperIndex) {
+      quickSelectUtil(array, start, upperIndex - 1, searchIndex);
+    }
+
+    if (searchIndex > upperIndex) {
+      quickSelectUtil(array, upperIndex + 1, stop, searchIndex);
     }
   }
 
@@ -402,8 +409,8 @@
     'it performs quick select': function() {
       let array = [9, 1, 8, 2, 7, 3, 6, 4, 5];
       let index = 4;
-      let expectedValue;
-      let actualValue = 5;
+      let expectedValue = 5;
+      let actualValue;
 
       quickSelect(array, index);
 
