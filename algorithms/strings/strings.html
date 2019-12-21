@@ -84,7 +84,33 @@
 
 
   function matchExpression(expression, string) {
-    // TODO:
+    return matchExpressionUtil(expression, string, 0, 0);
+  }
+
+  function matchExpressionUtil(exp, str, expIndex, strIndex) {
+    const expLength = exp.length;
+    const strLength = str.length;
+
+    if ((expIndex === expLength) && (strIndex === strLength)) {
+      return true;
+    }
+
+    if ((expIndex === expLength && strIndex !== strLength) ||
+        (expIndex !== expLength && strIndex === strLength)) {
+      return false;
+    }
+
+    if (exp[expIndex] === '?' || exp[expIndex] === str[strIndex]) {
+      return matchExpressionUtil(exp, str, expIndex + 1, strIndex + 1);
+    }
+
+    if (exp[expIndex] === '*' ) {
+      return  matchExpressionUtil(exp, str, expIndex + 1, strIndex) ||
+              matchExpressionUtil(exp, str, expIndex, strIndex + 1) ||
+              matchExpressionUtil(exp, str, expIndex + 1, strIndex + 1);
+    }
+
+    return false;
   }
 
   tests({
