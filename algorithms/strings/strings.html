@@ -113,6 +113,23 @@
     return false;
   }
 
+  // TODO: convert string to codepoint
+  function toLower(char) {
+    if (char >= 97 && char <= (97 + 25)) {
+      return String.fromCharCode(char - 32);
+    }
+
+    return char;
+  }
+
+  function toUpper(char) {
+    if (char >= 65 && char <= (65 + 25)) {
+      return String.fromCharCode(char + 32);
+    }
+
+    return char;
+  }
+
   tests({
     'it performs regular expression match': function() {
       let isMatch = false;
@@ -126,6 +143,15 @@
 
       isMatch = matchExpression('h*d', 'hello world');
       eq(isMatch, true);
+    },
+    'it performs case conversion': function() {
+      let result;
+
+      result = toLower('S');
+      eq(result, 's');
+
+      result = toUpper('s');
+      eq(result, 'S');
     }
 
   });
