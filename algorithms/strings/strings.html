@@ -115,16 +115,20 @@
 
   // TODO: convert string to codepoint
   function toLower(char) {
-    if (char >= 97 && char <= (97 + 25)) {
-      return String.fromCharCode(char - 32);
+    const codePoint = char.codePointAt(0);
+
+    if (codePoint >= 65 && codePoint <= (65 + 25)) {
+      return String.fromCharCode(codePoint + 32);
     }
 
     return char;
   }
 
   function toUpper(char) {
-    if (char >= 65 && char <= (65 + 25)) {
-      return String.fromCharCode(char + 32);
+    const codePoint = char.codePointAt(0);
+
+    if (codePoint >= 97 && codePoint <= (97 + 25)) {
+      return String.fromCharCode(codePoint - 32);
     }
 
     return char;
