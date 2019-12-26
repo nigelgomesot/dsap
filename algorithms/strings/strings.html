@@ -155,6 +155,18 @@
     return true;
   }
 
+  function isPalindrome(str) {
+    let i = 0;
+    let j = str.length - 1;
+
+    while ((i < j) && str[i] === str[j]) {
+      i++;
+      j--;
+    }
+
+    return (i < j) ? false : true;
+  }
+
   tests({
     'it performs regular expression match': function() {
       let isMatch = false;
@@ -186,6 +198,18 @@
 
       isPermutationResult = isPermutation('appleb', 'plepaa');
       eq(isPermutationResult, false);
+    },
+    'it checks if string is a palindrome': function() {
+      let isPalindromeResult;
+
+      isPalindromeResult = isPalindrome('eolloe');
+      eq(isPalindromeResult, true);
+
+      isPalindromeResult = isPalindrome('bolloe');
+      eq(isPalindromeResult, false);
+
+      isPalindromeResult = isPalindrome('eollob');
+      eq(isPalindromeResult, false);
     }
 
   });
