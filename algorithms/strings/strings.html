@@ -167,6 +167,27 @@
     return (i < j) ? false : true;
   }
 
+  function reverseString(str) {
+    let strArray = str.split('');
+    reverseStringUtil(strArray);
+
+    return strArray.join('');
+  }
+
+  function reverseStringUtil(array) {
+    let i = 0;
+    let j = array.length - 1;
+    let temp;
+
+    while (i < j) {
+      temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+      i++;
+      j--;
+    }
+ }
+
   tests({
     'it performs regular expression match': function() {
       let isMatch = false;
@@ -210,6 +231,12 @@
 
       isPalindromeResult = isPalindrome('eollob');
       eq(isPalindromeResult, false);
+    },
+    'it reverses a string': function() {
+      let actualResult = reverseString('hello');
+      let expectedResult = 'olleh';
+
+      eq(actualResult, expectedResult);
     }
 
   });
