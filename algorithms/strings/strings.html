@@ -169,12 +169,12 @@
 
   function reverseString(str) {
     let strArray = str.split('');
-    reverseStringUtil(strArray);
+    reverseUtil(strArray);
 
     return strArray.join('');
   }
 
-  function reverseStringUtil(array) {
+  function reverseUtil(array) {
     let i = 0;
     let j = array.length - 1;
     let temp;
@@ -186,7 +186,14 @@
       i++;
       j--;
     }
- }
+  }
+
+  function reverseSentence(sntc) {
+    let sntcArray = sntc.split(' ');
+    reverseUtil(sntcArray);
+
+    return sntcArray.join(' ');
+  }
 
   tests({
     'it performs regular expression match': function() {
@@ -235,6 +242,12 @@
     'it reverses a string': function() {
       let actualResult = reverseString('hello');
       let expectedResult = 'olleh';
+
+      eq(actualResult, expectedResult);
+    },
+    'it reverses a sentence': function() {
+      let actualResult = reverseSentence('i love hello world');
+      let expectedResult = 'world hello love i';
 
       eq(actualResult, expectedResult);
     }
