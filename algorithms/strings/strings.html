@@ -195,6 +195,34 @@
     return sntcArray.join(' ');
   }
 
+  function getAnagrams(word) {
+    let wordArray = word.split('');
+    let result = [];
+
+    getAnagramsUtil(wordArray, 0, wordArray.length - 1, result);
+
+    return result;
+  }
+
+  function getAnagramsUtil(array, lower, upper, result) {
+    if (lower === upper) {
+      result.push(array.join(''));
+    } else {
+      for (let i = lower; i <= upper; i++) {
+        swapArray(array, i, lower);
+        getAnagramsUtil(array, lower + 1, upper, result);
+        swapArray(array, i, lower);
+      }
+    }
+  }
+
+  function swapArray(array, index1, index2) {
+    let temp;
+    temp = array[index1];
+    array[index1] = array[index2];
+    array[index2] = temp;
+  }
+
   tests({
     'it performs regular expression match': function() {
       let isMatch = false;
@@ -250,6 +278,23 @@
       let expectedResult = 'world hello love i';
 
       eq(actualResult, expectedResult);
+    },
+    'it returns anagrams of a word': function() {
+      let actualResult = getAnagrams('ABC');
+      let expectedResult = [
+        'ABC',
+        'ACB',
+        'BAC',
+        'BCA',
+        'CBA',
+        'CAB'
+      ];
+
+      eq(actualResult.length, expectedResult.length);
+
+      for (let i = 0; i < actualResult.length; i++) {
+        eq(actualResult.includes(expectedResult[i]), true);
+      }
     }
 
   });
