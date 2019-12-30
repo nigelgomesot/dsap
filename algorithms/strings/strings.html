@@ -223,6 +223,21 @@
     array[index2] = temp;
   }
 
+  // REF: https://www.geeksforgeeks.org/shuffle-a-given-array-using-fisher-yates-shuffle-algorithm/
+  function shuffle(string) {
+    let strArray = string.split('');
+
+    for (let i = strArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * i + 1);
+
+      const temp = strArray[i];
+      strArray[i] = strArray[j];
+      strArray[j] = temp;
+    }
+
+    return strArray.join('');
+  }
+
   tests({
     'it performs regular expression match': function() {
       let isMatch = false;
@@ -295,6 +310,14 @@
       for (let i = 0; i < actualResult.length; i++) {
         eq(actualResult.includes(expectedResult[i]), true);
       }
+    },
+    'it shuffles a string': function() {
+      let string = 'ABCDEF';
+
+      let shuffledString = shuffle(string);
+      let isShuffled = string !== shuffledString;
+
+      eq(isShuffled, true);
     }
 
   });
