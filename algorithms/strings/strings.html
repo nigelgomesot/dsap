@@ -238,6 +238,27 @@
     return strArray.join('');
   }
 
+  function binaryAdd(str1, str2) {
+    let result = '';
+    let digitSum = 0;
+    let index1 = str1.length - 1;
+    let index2 = str2.length - 1;
+
+    while (index1 >= 0 || index2 >= 0 || digitSum == 1) {
+      digitSum += (index1 >= 0 ? str1[index1] - '0' : 0);
+      digitSum += (index2 >= 0 ? str2[index2] - '0' : 0);
+
+      result = (digitSum % 2 - '0').toString() + result;
+
+      digitSum = parseInt(digitSum / 2);
+
+      index1--;
+      index2--;
+    }
+
+    return result;
+  }
+
   tests({
     'it performs regular expression match': function() {
       let isMatch = false;
@@ -318,6 +339,23 @@
       let isShuffled = string !== shuffledString;
 
       eq(isShuffled, true);
+    },
+    'it adds binary strings': function() {
+      let str1 = '1101';
+      let str2 = '100';
+
+      let actualResult = binaryAdd(str1, str2);
+
+      let expectedResult = '10001';
+      eq(actualResult, expectedResult);
+
+      str1 = '1100011';
+      str2 = '10';
+
+      actualResult = binaryAdd(str1, str2);
+
+      expectedResult = '1100101';
+      eq(actualResult, expectedResult);
     }
 
   });
