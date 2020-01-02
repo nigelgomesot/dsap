@@ -276,6 +276,29 @@
     return distance;
   }
 
+  // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/knuth-morris-pratt/knuthMorrisPratt.js
+  function buildPatternKMP(word) {
+    const patternTable = [0];
+    let prefixIndex = 0;
+    let suffixIndex = 1;
+
+    while (suffixIndex < word.length) {
+      if (word[prefixIndex] === word[suffixIndex]) {
+        patternTable[suffixIndex] = prefixIndex + 1;
+        prefixIndex++;
+        suffixIndex++;
+      } else if (prefixIndex === 0) {
+        patternTable[suffixIndex] = 0;
+        suffixIndex++;
+      } else {
+        prefixIndex = patternTable[prefixIndex - 1];
+      }
+    }
+
+    return patternTable;
+  }
+
+
   tests({
     'it performs regular expression match': function() {
       let isMatch = false;
@@ -393,6 +416,18 @@
       actualResult = hammingDistance('karolin', 'karolin');
       expectedResult = 0;
 
+      eq(actualResult, expectedResult);
+    },
+    'it matches pattern using kmp': function() {
+      let actualResult;
+      let expectedResult;
+
+      actualResult = patternSearchKMP('abcbcglx', 'abca');
+      expectedResult = -1;
+      eq(actualResult, expectedResult);
+
+      actualResult = patternSearchKMP('abcbcglx', 'bcgl');
+      expectedResult = 3;
       eq(actualResult, expectedResult);
     }
 
