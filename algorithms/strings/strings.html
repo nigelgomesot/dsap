@@ -277,27 +277,6 @@
   }
 
   // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/knuth-morris-pratt/knuthMorrisPratt.js
-  function buildPatternKMP(word) {
-    const patternTable = [0];
-    let prefixIndex = 0;
-    let suffixIndex = 1;
-
-    while (suffixIndex < word.length) {
-      if (word[prefixIndex] === word[suffixIndex]) {
-        patternTable[suffixIndex] = prefixIndex + 1;
-        prefixIndex++;
-        suffixIndex++;
-      } else if (prefixIndex === 0) {
-        patternTable[suffixIndex] = 0;
-        suffixIndex++;
-      } else {
-        prefixIndex = patternTable[prefixIndex - 1];
-      }
-    }
-
-    return patternTable;
-  }
-
   function patternSearchKMP(text, word) {
     let textIndex = 0;
     let wordIndex = 0;
@@ -321,6 +300,54 @@
     }
 
     return -1;
+  }
+
+  function buildPatternKMP(word) {
+    const patternTable = [0];
+    let prefixIndex = 0;
+    let suffixIndex = 1;
+
+    while (suffixIndex < word.length) {
+      if (word[prefixIndex] === word[suffixIndex]) {
+        patternTable[suffixIndex] = prefixIndex + 1;
+        prefixIndex++;
+        suffixIndex++;
+      } else if (prefixIndex === 0) {
+        patternTable[suffixIndex] = 0;
+        suffixIndex++;
+      } else {
+        prefixIndex = patternTable[prefixIndex - 1];
+      }
+    }
+
+    return patternTable;
+  }
+
+  // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/levenshtein-distance/levenshteinDistance.js
+  function levenshteinDistance(str1, str2) {
+    const distanceMatrix = Array(str2.length + 1).fill(null).map(() => Array(str1.length + 1).fill(null));
+
+    for (let i = 0; i <= str2.length; i++) {
+      distanceMatrix[i][0] = i;
+    }
+
+    for (let j = 0; j <= str1.length; j++) {
+      distanceMatrix[0][j] = j;
+    }
+
+    for (let i = 1; i <= str2.length; i++) {
+      for (let j = 1; j <= str1.length; j++) {
+        const indicator = str1[j - 1] === str2[i - 1] ? 0 : 1;
+
+        distanceMatrix[i][j] = Math.min(
+          distanceMatrix[i][j - 1] + 1, // deletion
+          distanceMatrix[i - 1][j] + 1, // insertion
+          distanceMatrix[i - 1][j - 1] + indicator // substitution
+        )
+      }
+    }
+
+    return distanceMatrix[str2.length][str1.length];
   }
 
   tests({
@@ -453,6 +480,26 @@
       actualResult = patternSearchKMP('abcbcglx', 'bcgl');
       expectedResult = 3;
       eq(actualResult, expectedResult);
+    },
+    'it finds levenshtein distance between 2 words': function() {
+      let str1;
+      let str2;
+      let actualDistance;
+      let expectedDistance;
+
+      str1 = 'saturday';
+      str2 = 'sunday';
+      actualDistance = levenshteinDistance(str1, str2);
+      expectedDistance = 3;
+
+      eq(actualDistance, expectedDistance);
+
+      str1 = 'abcdef';
+      str2 = 'azced';
+      actualDistance = levenshteinDistance(str1, str2);
+      expectedDistance = 3;
+
+      eq(actualDistance, expectedDistance);
     }
 
   });
