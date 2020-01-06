@@ -350,6 +350,11 @@
     return distanceMatrix[str2.length][str1.length];
   }
 
+  // REF: https://github.com/trekhleb/javascript-algorithms/tree/master/src/algorithms/string/longest-common-substring
+  function longestCommonString(str1, str2) {
+
+  }
+
   tests({
     'it performs regular expression match': function() {
       let isMatch = false;
@@ -500,6 +505,27 @@
       expectedDistance = 3;
 
       eq(actualDistance, expectedDistance);
+    },
+    'it finds the longest common substring': function() {
+      let str1;
+      let str2;
+      let actualString;
+      let expectedString;
+
+      str1 = 'A';
+      str2 = 'B';
+      actualString = longestCommonString(str1, str2);
+      expectedString = '';
+
+      eq(actualString, expectedString);
+
+
+      str1 = 'BABCA';
+      str2 = 'ABCBA';
+      actualString = longestCommonString(str1, str2);
+      expectedString = 'ABC';
+
+      eq(actualString, expectedString);
     }
 
   });
