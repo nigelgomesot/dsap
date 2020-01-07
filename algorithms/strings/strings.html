@@ -352,7 +352,42 @@
 
   // REF: https://github.com/trekhleb/javascript-algorithms/tree/master/src/algorithms/string/longest-common-substring
   function longestCommonString(str1, str2) {
+    const arr1 = [...str1];
+    const arr2 = [...str2];
 
+    const distanceMatrix = Array(arr2.length + 1).fill(null).map(() => {
+      return Array(arr1.length + 1).fill(null)
+    });
+
+    for (let rowIndex = 0; rowIndex <= arr2.length; rowIndex++) {
+      distanceMatrix[rowIndex][0] = 0;
+    }
+
+    for (let colIndex = 0; colIndex <= arr1.length; colIndex++) {
+      distanceMatrix[0][colIndex] = 0;
+    }
+
+    let longestSubStringLength = 0;
+    let longestSubStringCol = 0;
+    let longestSubStringRow = 0;
+
+    for (let rowIndex = 1; rowIndex <= arr2.length; rowIndex++) {
+      for (let colIndex = 1; colIndex <= arr1.length; colIndex++) {
+        if (arr1[colIndex - 1] === arr2[rowIndex - 1]) {
+          distanceMatrix[rowIndex][colIndex] = distanceMatrix[rowIndex - 1][colIndex - 1] + 1;
+        } else {
+          distanceMatrix[rowIndex][colIndex] = 0;
+        }
+
+        if (distanceMatrix[rowIndex][colIndex] > longestSubStringLength) {
+          longestSubStringLength = distanceMatrix[rowIndex][colIndex];
+          longestSubStringCol = colIndex;
+          longestSubStringRow = rowIndex;
+        }
+      }
+    }
+
+    // PENDING
   }
 
   tests({
