@@ -387,7 +387,19 @@
       }
     }
 
-    // PENDING
+    if (longestSubStringLength === 0) {
+      return '';
+    }
+
+    let longestSubString = '';
+
+    while (distanceMatrix[longestSubStringRow][longestSubStringCol] > 0) {
+      longestSubString = arr1[longestSubStringCol - 1] + longestSubString;
+      longestSubStringRow--;
+      longestSubStringCol--;
+    }
+
+    return longestSubString;
   }
 
   tests({
