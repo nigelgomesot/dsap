@@ -402,6 +402,11 @@
     return longestSubString;
   }
 
+  // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/rabin-karp/rabinKarp.js
+  function patternSearchRabinKarp(text, word) {
+
+  }
+
   tests({
     'it performs regular expression match': function() {
       let isMatch = false;
@@ -573,6 +578,18 @@
       expectedString = 'ABC';
 
       eq(actualString, expectedString);
+    },
+    'it matches pattern using rabin-karp': function() {
+      let actualResult;
+      let expectedResult;
+
+      actualResult = patternSearchRabinKarp('abcbcglx', 'abca');
+      expectedResult = -1;
+      eq(actualResult, expectedResult);
+
+      actualResult = patternSearchRabinKarp('abcbcglx', 'bcgl');
+      expectedResult = 3;
+      eq(actualResult, expectedResult);
     }
 
   });
