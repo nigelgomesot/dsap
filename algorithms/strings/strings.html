@@ -404,7 +404,31 @@
 
   // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/rabin-karp/rabinKarp.js
   function patternSearchRabinKarp(text, word) {
+    const hasher = new PolynomialHash();
 
+    const wordHash = hasher.hash(word);
+    const wordLength = word.length;
+
+    let currentFrameHash = null;
+    let prevFrame = null;
+
+    for (let charIndex = 0; charIndex <= (text.length - wordLength); charIndex++) {
+      const currentFrame = text.substring(charIndex, charIndex + wordLength);
+
+      if (currentFrameHash === null) {
+        currentFrameHash = hasher.hash(currentFrame);
+      } else {
+        currentFrameHash = hasher.roll(currentFrameHash, prevFrame, currentFrame);
+      }
+
+      prevFrame = currentFrame;
+
+      if ((currentFrameHash === wordHash) && (currentFrame === word)) {
+        return charIndex;
+      }
+    }
+
+    return -1;
   }
 
   tests({
