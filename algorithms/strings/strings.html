@@ -435,6 +435,11 @@
     return -1;
   }
 
+  // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/regular-expression-matching/regularExpressionMatching.js
+  function regexMatch(string, pattern) {
+
+  }
+
   tests({
     'it performs regular expression match': function() {
       let isMatch = false;
@@ -618,6 +623,21 @@
       actualResult = patternSearchRabinKarp('abcbcglx', 'bcgl');
       expectedResult = 3;
       eq(actualResult, expectedResult);
+    },
+    'it performs regex match': function() {
+      let isMatch;
+
+      isMatch = regexMatch('', 'a*');
+      eq(isMatch, false);
+
+      isMatch = regexMatch('a', '');
+      eq(isMatch, false);
+
+      isMatch = regexMatch('aab', 'c*a*b*');
+      eq(isMatch, true);
+
+      isMatch = regexMatch('abba', 'a*b*.c');
+      eq(isMatch, false);
     }
 
   });
