@@ -437,6 +437,26 @@
 
   // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/regular-expression-matching/regularExpressionMatching.js
   function regexMatch(string, pattern) {
+    const matchMatrix = Array(string.length + 1).fill(null).map(() => {
+      return Array(pattern.length + 1).fill(null);
+    });
+
+    matchMatrix[0][0] = true;
+
+    for (let colIndex = 1; colIndex <= pattern.length; colIndex++) {
+      const patternIndex = colIndex - 1;
+
+      if (pattern[patternIndex] === '*') {
+        matchMatrix[0][colIndex] = matchMatrix[0][colIndex - 2];
+      } else {
+        matchMatrix[0][colIndex] = false;
+      }
+    }
+
+    for (let rowIndex = 1; rowIndex <= string.length; rowIndex++) {
+      matchMatrix[rowIndex][0] = false;
+    }
+
 
   }
 
