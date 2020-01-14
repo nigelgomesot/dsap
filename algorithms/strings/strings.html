@@ -457,7 +457,33 @@
       matchMatrix[rowIndex][0] = false;
     }
 
+    for (let rowIndex = 1; rowIndex <= string.length; rowIndex++) {
+      for (let colIndex = 1; colIndex <= pattern.length; colIndex++) {
+        const stringIndex = rowIndex - 1;
+        const patternIndex = colIndex - 1;
 
+        if (pattern[patternIndex] === '*') {
+          if (matchMatrix[rowIndex][colIndex - 2] === true) {
+            matchMatrix[rowIndex][colIndex] = true;
+          } else if (
+            (
+              pattern[patternIndex - 1] === string[stringIndex]
+              || pattern[patternIndex - 1] === '.'
+            )
+            && (matchMatrix[rowIndex - 1][colIndex] === true)) {
+              matchMatrix[rowIndex][colIndex] = true;
+          } else {
+            matchMatrix[rowIndex][colIndex] = false;
+          }
+        } else if (pattern[patternIndex] === string[stringIndex] || pattern[patternIndex] === '.') {
+          matchMatrix[rowIndex][colIndex] = matchMatrix[rowIndex - 1][colIndex - 1];
+        } else {
+          matchMatrix[rowIndex][colIndex] = false;
+        }
+      }
+    }
+
+    return matchMatrix[string.length][pattern.length];
   }
 
   tests({
