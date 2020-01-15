@@ -486,6 +486,11 @@
     return matchMatrix[string.length][pattern.length];
   }
 
+  // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/z-algorithm/zAlgorithm.js
+  function zAlgorithm(text, word) {
+
+  }
+
   tests({
     'it performs regular expression match': function() {
       let isMatch = false;
@@ -684,6 +689,24 @@
 
       isMatch = regexMatch('abba', 'a*b*.c');
       eq(isMatch, false);
+    },
+    'it matches pattern using z-algorithm': function() {
+      let actualResult;
+      let expectedResult;
+
+      actualResult = zAlgorithm('abcxabcdabxabcdabcdabcy', 'abcdabcy');
+      expectedResult = [15];
+      eq(actualResult.length, expectedResult.length);
+      eq(actualResult[0], expectedResult[0]);
+
+      actualResult = zAlgorithm('abcbcglabcx', 'abc');
+      expectedResult = [0, 7];
+      eq(actualResult.length, expectedResult.length);
+      eq(actualResult[0], expectedResult[0]);
+      eq(actualResult[1], expectedResult[1]);
+
+      actualResult = zAlgorithm('abcxabcdabxabcdabcdabcy', 'abcdabca');
+      eq(actualResult.length, 0);
     }
 
   });
