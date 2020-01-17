@@ -491,6 +491,29 @@
 
   }
 
+  function buildZArray(zString) {
+    const zArray = new Array(zString.length).fill(null).map(() => 0);
+
+    let leftIndex = 0;
+    let rightIndex = 0;
+    let boxShift = 0;
+
+    for (let charIndex = 1; charIndex < zString.length; charIndex++) {
+      if (charIndex > rightIndex) {
+        leftIndex = charIndex;
+        rightIndex = charIndex;
+
+        while (rightIndex < zString.length && zString[rightIndex - leftIndex] === zString[rightIndex]) {
+          rightIndex++;
+        }
+
+        zArray[charIndex] = rightIndex - leftIndex;
+        rightIndex--;
+      }
+      // PENDING
+    }
+  }
+
   tests({
     'it performs regular expression match': function() {
       let isMatch = false;
