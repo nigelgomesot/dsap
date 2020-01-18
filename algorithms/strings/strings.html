@@ -494,24 +494,42 @@
   function buildZArray(zString) {
     const zArray = new Array(zString.length).fill(null).map(() => 0);
 
-    let leftIndex = 0;
-    let rightIndex = 0;
-    let boxShift = 0;
+    let zBoxLeftIndex = 0;
+    let zBoxRightIndex = 0;
+    let zBoxShiftIndex = 0;
 
     for (let charIndex = 1; charIndex < zString.length; charIndex++) {
-      if (charIndex > rightIndex) {
-        leftIndex = charIndex;
-        rightIndex = charIndex;
+      if (charIndex > zBoxRightIndex) {
+        zBoxLeftIndex = charIndex;
+        zBoxRightIndex = charIndex;
 
-        while (rightIndex < zString.length && zString[rightIndex - leftIndex] === zString[rightIndex]) {
-          rightIndex++;
+        while (zBoxRightIndex < zString.length &&
+          zString[zBoxRightIndex - zBoxLeftIndex] === zString[zBoxRightIndex]) {
+          zBoxRightIndex++;
         }
 
-        zArray[charIndex] = rightIndex - leftIndex;
-        rightIndex--;
+        zArray[charIndex] = zBoxRightIndex - zBoxLeftIndex;
+        zBoxRightIndex--;
+      } else {
+        zBoxShiftIndex = charIndex - zBoxLeftIndex;
+
+        if (zArray[zBoxShiftIndex] < (zBoxRightIndex - charIndex + 1)) {
+          zArray[charIndex] = zArray[zBoxShiftIndex];
+        } else {
+          zBoxLeftIndex = charIndex;
+
+          while (zBoxRightIndex < zString.length &&
+            zString[zBoxRightIndex - zBoxLeftIndex] === zString[zBoxRightIndex]) {
+            zBoxRightIndex++;
+          }
+
+          zArray[charIndex] = zBoxRightIndex - zBoxLeftIndex;
+          zBoxRightIndex--;
+        }
       }
-      // PENDING
     }
+
+    return zArray;
   }
 
   tests({
@@ -701,17 +719,35 @@
     'it performs regex match': function() {
       let isMatch;
 
-      isMatch = regexMatch('', 'a*');
-      eq(isMatch, false);
-
       isMatch = regexMatch('a', '');
       eq(isMatch, false);
 
-      isMatch = regexMatch('aab', 'c*a*b*');
-      eq(isMatch, true);
-
       isMatch = regexMatch('abba', 'a*b*.c');
       eq(isMatch, false);
+
+      isMatch = regexMatch('', 'a*');
+      eq(isMatch, true);
+
+      isMatch = regexMatch('aab', 'c*a*b*');
+      eq(isMatch, true);
+    },
+    'it builds zArray': function() {
+      let expectedArray;
+      let actualArray;
+
+      actualArray = buildZArray('abaxabab');
+      expectedArray = [0,0,1,0,3,0,2,0];
+
+      for (let i = 0; i < expectedArray.length; i++) {
+        eq(actualArray[i], expectedArray[i]);
+      }
+
+      actualArray = buildZArray('aabcaabxaaaz');
+      expectedArray = [0,1,0,0,3,1,0,0,2,2,1,0];
+
+      for (let i = 0; i < expectedArray.length; i++) {
+        eq(actualArray[i], expectedArray[i]);
+      }
     },
     'it matches pattern using z-algorithm': function() {
       let actualResult;
