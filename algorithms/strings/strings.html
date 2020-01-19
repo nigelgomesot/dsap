@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+  <!-- load PolynomialHash -->
+  <script type="text/javascript" src="polynomial_hash.js"></script>
+
+  <script type="text/javascript">
+  // REF: https://github.com/Hemant-Jain-Author/Data-Structures-and-Algorithms-using-JavaScript/blob/master/String/StringAlgo.js
+
+  // REF: https://github.com/gordonmzhu/jstinytest/blob/master/tinytest.js
+
+  // TinyTest START
+  var TinyTestHelpers = {
+    renderStats: function(tests, failures) {
+      let numberOfTests = Object.keys(tests).length;
+      let successes = numberOfTests - failures;
+      let summaryStr = 'Total Tests: ' + numberOfTests
+              + ', Success: ' + successes
+              + ', Failures: ' + failures;
+
+      summaryEle = document.createElement('h1');
+      summaryEle.textContent = summaryStr;
+      document.body.appendChild(summaryEle);
+    }
+  };
+
+  var TinyTest = {
+
+    run: function(tests) {
+      var failures = 0;
+      for (var testName in tests) {
+        var testAction = tests[testName];
+        try {
+          testAction.apply(this);
+          console.log('%c' + testName, "color: green;");
+        } catch (e) {
+          failures++;
+          console.groupCollapsed('%c' + testName, "color: red;");
+          console.error(e.stack);
+          console.groupEnd();
+        }
+      }
+      setTimeout(function() { // Give document a chance to complete
+        if (window.document && document.body) {
+          document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+          TinyTestHelpers.renderStats(tests, failures);
+        }
+      }, 0);
+    },
+  
+    fail: function(msg) {
+      throw new Error('fail(): ' + msg);
+    },
+  
+    assert: function(value, msg) {
+      if (!value) {
+        throw new Error('assert(): ' + msg);
+      }
+    },
+  
+    assertEquals: function(expected, actual) {
+      if (expected != actual) {
+        throw new Error('assertEquals() "' + expected + '" != "' + actual + '"');
+      }
+    },
+  
+    assertStrictEquals: function(expected, actual) {
+      if (expected !== actual) {
+        throw new Error('assertStrictEquals() "' + expected + '" !== "' + actual + '"');
+      }
+    },
+
+  };
+
+  var fail         = TinyTest.fail.bind(TinyTest),
+    assert       = TinyTest.assert.bind(TinyTest),
+    assertEquals     = TinyTest.assertEquals.bind(TinyTest),
+    eq         = TinyTest.assertEquals.bind(TinyTest),
+    assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
+    tests        = TinyTest.run.bind(TinyTest);
+
+  // TinyTest END
+
+  console.clear();
+
+
+  function matchExpression(expression, string) {
+    return matchExpressionUtil(expression, string, 0, 0);
+  }
+
+  function matchExpressionUtil(exp, str, expIndex, strIndex) {
+    const expLength = exp.length;
+    const strLength = str.length;
+
+    if ((expIndex === expLength) && (strIndex === strLength)) {
+      return true;
+    }
+
+    if ((expIndex === expLength && strIndex !== strLength) ||
+        (expIndex !== expLength && strIndex === strLength)) {
+      return false;
+    }
+
+    if (exp[expIndex] === '?' || exp[expIndex] === str[strIndex]) {
+      return matchExpressionUtil(exp, str, expIndex + 1, strIndex + 1);
+    }
+
+    if (exp[expIndex] === '*' ) {
+      return  matchExpressionUtil(exp, str, expIndex + 1, strIndex) ||
+              matchExpressionUtil(exp, str, expIndex, strIndex + 1) ||
+              matchExpressionUtil(exp, str, expIndex + 1, strIndex + 1);
+    }
+
+    return false;
+  }
+
+  // TODO: convert string to codepoint
+  function toLower(char) {
+    const codePoint = char.codePointAt(0);
+
+    if (codePoint >= 65 && codePoint <= (65 + 25)) {
+      return String.fromCharCode(codePoint + 32);
+    }
+
+    return char;
+  }
+
+  function toUpper(char) {
+    const codePoint = char.codePointAt(0);
+
+    if (codePoint >= 97 && codePoint <= (97 + 25)) {
+      return String.fromCharCode(codePoint - 32);
+    }
+
+    return char;
+  }
+
+  function isPermutation(str1, str2) {
+    var count = new Array(256).fill(0);
+
+    if (str1.length != str2.length) {
+      return false;
+    }
+
+    for (let i = 0; i < str1.length; i++) {
+      count[str1.charCodeAt(i)]++;
+      count[str2.charCodeAt(i)]--;
+    }
+
+    for (let i = 0; i < str1.length; i++) {
+      if (count[str1.charCodeAt(i)] !== 0) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function isPalindrome(str) {
+    let i = 0;
+    let j = str.length - 1;
+
+    while ((i < j) && str[i] === str[j]) {
+      i++;
+      j--;
+    }
+
+    return (i < j) ? false : true;
+  }
+
+  function reverseString(str) {
+    let strArray = str.split('');
+    reverseUtil(strArray);
+
+    return strArray.join('');
+  }
+
+  function reverseUtil(array) {
+    let i = 0;
+    let j = array.length - 1;
+    let temp;
+
+    while (i < j) {
+      temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+      i++;
+      j--;
+    }
+  }
+
+  function reverseSentence(sntc) {
+    let sntcArray = sntc.split(' ');
+    reverseUtil(sntcArray);
+
+    return sntcArray.join(' ');
+  }
+
+  function getAnagrams(word) {
+    let wordArray = word.split('');
+    let result = [];
+
+    getAnagramsUtil(wordArray, 0, wordArray.length - 1, result);
+
+    return result;
+  }
+
+  function getAnagramsUtil(array, lower, upper, result) {
+    if (lower === upper) {
+      result.push(array.join(''));
+    } else {
+      for (let i = lower; i <= upper; i++) {
+        swapArray(array, i, lower);
+        getAnagramsUtil(array, lower + 1, upper, result);
+        swapArray(array, i, lower);
+      }
+    }
+  }
+
+  function swapArray(array, index1, index2) {
+    let temp;
+    temp = array[index1];
+    array[index1] = array[index2];
+    array[index2] = temp;
+  }
+
+  // REF: https://www.geeksforgeeks.org/shuffle-a-given-array-using-fisher-yates-shuffle-algorithm/
+  function shuffle(string) {
+    let strArray = string.split('');
+
+    for (let i = strArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * i + 1);
+
+      const temp = strArray[i];
+      strArray[i] = strArray[j];
+      strArray[j] = temp;
+    }
+
+    return strArray.join('');
+  }
+
+  function binaryAdd(str1, str2) {
+    let result = '';
+    let digitSum = 0;
+    let index1 = str1.length - 1;
+    let index2 = str2.length - 1;
+
+    while (index1 >= 0 || index2 >= 0 || digitSum == 1) {
+      digitSum += (index1 >= 0 ? str1[index1] - '0' : 0);
+      digitSum += (index2 >= 0 ? str2[index2] - '0' : 0);
+
+      result = (digitSum % 2 - '0').toString() + result;
+
+      digitSum = parseInt(digitSum / 2);
+
+      index1--;
+      index2--;
+    }
+
+    return result;
+  }
+
+  // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/hamming-distance/hammingDistance.js
+  function hammingDistance(str1, str2) {
+    if (str1.length !== str2.length) {
+      throw new Error('strings have different length');
+    }
+
+    let distance = 0;
+
+    for (let i = 0; i < str1.length; i++) {
+      if (str1[i] !== str2[i]) {
+        distance++;
+      }
+    }
+
+    return distance;
+  }
+
+  // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/knuth-morris-pratt/knuthMorrisPratt.js
+  function patternSearchKMP(text, word) {
+    let textIndex = 0;
+    let wordIndex = 0;
+
+    const patternTable = buildPatternKMP(word);
+
+    while (textIndex < text.length) {
+      if (text[textIndex] === word[wordIndex]) {
+        if (wordIndex === word.length - 1) {
+          return (textIndex - word.length) + 1;
+        }
+
+       textIndex++;
+        wordIndex++;
+      } else if (wordIndex > 0) {
+        wordIndex = patternTable[wordIndex - 1];
+      } else {
+        wordIndex = 0;
+        textIndex += 1;
+      }
+    }
+
+    return -1;
+  }
+
+  function buildPatternKMP(word) {
+    const patternTable = [0];
+    let prefixIndex = 0;
+    let suffixIndex = 1;
+
+    while (suffixIndex < word.length) {
+      if (word[prefixIndex] === word[suffixIndex]) {
+        patternTable[suffixIndex] = prefixIndex + 1;
+        prefixIndex++;
+        suffixIndex++;
+      } else if (prefixIndex === 0) {
+        patternTable[suffixIndex] = 0;
+        suffixIndex++;
+      } else {
+        prefixIndex = patternTable[prefixIndex - 1];
+      }
+    }
+
+    return patternTable;
+  }
+
+  // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/levenshtein-distance/levenshteinDistance.js
+  function levenshteinDistance(str1, str2) {
+    const distanceMatrix = Array(str2.length + 1).fill(null).map(() => Array(str1.length + 1).fill(null));
+
+    for (let i = 0; i <= str2.length; i++) {
+      distanceMatrix[i][0] = i;
+    }
+
+    for (let j = 0; j <= str1.length; j++) {
+      distanceMatrix[0][j] = j;
+    }
+
+    for (let i = 1; i <= str2.length; i++) {
+      for (let j = 1; j <= str1.length; j++) {
+        const indicator = str1[j - 1] === str2[i - 1] ? 0 : 1;
+
+        distanceMatrix[i][j] = Math.min(
+          distanceMatrix[i][j - 1] + 1, // deletion
+          distanceMatrix[i - 1][j] + 1, // insertion
+          distanceMatrix[i - 1][j - 1] + indicator // substitution
+        )
+      }
+    }
+
+    return distanceMatrix[str2.length][str1.length];
+  }
+
+  // REF: https://github.com/trekhleb/javascript-algorithms/tree/master/src/algorithms/string/longest-common-substring
+  function longestCommonString(str1, str2) {
+    const arr1 = [...str1];
+    const arr2 = [...str2];
+
+    const distanceMatrix = Array(arr2.length + 1).fill(null).map(() => {
+      return Array(arr1.length + 1).fill(null)
+    });
+
+    for (let rowIndex = 0; rowIndex <= arr2.length; rowIndex++) {
+      distanceMatrix[rowIndex][0] = 0;
+    }
+
+    for (let colIndex = 0; colIndex <= arr1.length; colIndex++) {
+      distanceMatrix[0][colIndex] = 0;
+    }
+
+    let longestSubStringLength = 0;
+    let longestSubStringCol = 0;
+    let longestSubStringRow = 0;
+
+    for (let rowIndex = 1; rowIndex <= arr2.length; rowIndex++) {
+      for (let colIndex = 1; colIndex <= arr1.length; colIndex++) {
+        if (arr1[colIndex - 1] === arr2[rowIndex - 1]) {
+          distanceMatrix[rowIndex][colIndex] = distanceMatrix[rowIndex - 1][colIndex - 1] + 1;
+        } else {
+          distanceMatrix[rowIndex][colIndex] = 0;
+        }
+
+        if (distanceMatrix[rowIndex][colIndex] > longestSubStringLength) {
+          longestSubStringLength = distanceMatrix[rowIndex][colIndex];
+          longestSubStringCol = colIndex;
+          longestSubStringRow = rowIndex;
+        }
+      }
+    }
+
+    if (longestSubStringLength === 0) {
+      return '';
+    }
+
+    let longestSubString = '';
+
+    while (distanceMatrix[longestSubStringRow][longestSubStringCol] > 0) {
+      longestSubString = arr1[longestSubStringCol - 1] + longestSubString;
+      longestSubStringRow--;
+      longestSubStringCol--;
+    }
+
+    return longestSubString;
+  }
+
+  // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/rabin-karp/rabinKarp.js
+  function patternSearchRabinKarp(text, word) {
+    const hasher = new PolynomialHash();
+
+    const wordHash = hasher.hash(word);
+    const wordLength = word.length;
+
+    let currentFrameHash = null;
+    let prevFrame = null;
+
+    for (let charIndex = 0; charIndex <= (text.length - wordLength); charIndex++) {
+      const currentFrame = text.substring(charIndex, charIndex + wordLength);
+
+      if (currentFrameHash === null) {
+        currentFrameHash = hasher.hash(currentFrame);
+      } else {
+        currentFrameHash = hasher.roll(currentFrameHash, prevFrame, currentFrame);
+      }
+
+      prevFrame = currentFrame;
+
+      if ((currentFrameHash === wordHash) && (currentFrame === word)) {
+        return charIndex;
+      }
+    }
+
+    return -1;
+  }
+
+  // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/regular-expression-matching/regularExpressionMatching.js
+  function regexMatch(string, pattern) {
+    const matchMatrix = Array(string.length + 1).fill(null).map(() => {
+      return Array(pattern.length + 1).fill(null);
+    });
+
+    matchMatrix[0][0] = true;
+
+    for (let colIndex = 1; colIndex <= pattern.length; colIndex++) {
+      const patternIndex = colIndex - 1;
+
+      if (pattern[patternIndex] === '*') {
+        matchMatrix[0][colIndex] = matchMatrix[0][colIndex - 2];
+      } else {
+        matchMatrix[0][colIndex] = false;
+      }
+    }
+
+    for (let rowIndex = 1; rowIndex <= string.length; rowIndex++) {
+      matchMatrix[rowIndex][0] = false;
+    }
+
+    for (let rowIndex = 1; rowIndex <= string.length; rowIndex++) {
+      for (let colIndex = 1; colIndex <= pattern.length; colIndex++) {
+        const stringIndex = rowIndex - 1;
+        const patternIndex = colIndex - 1;
+
+        if (pattern[patternIndex] === '*') {
+          if (matchMatrix[rowIndex][colIndex - 2] === true) {
+            matchMatrix[rowIndex][colIndex] = true;
+          } else if (
+            (
+              pattern[patternIndex - 1] === string[stringIndex]
+              || pattern[patternIndex - 1] === '.'
+            )
+            && (matchMatrix[rowIndex - 1][colIndex] === true)) {
+              matchMatrix[rowIndex][colIndex] = true;
+          } else {
+            matchMatrix[rowIndex][colIndex] = false;
+          }
+        } else if (pattern[patternIndex] === string[stringIndex] || pattern[patternIndex] === '.') {
+          matchMatrix[rowIndex][colIndex] = matchMatrix[rowIndex - 1][colIndex - 1];
+        } else {
+          matchMatrix[rowIndex][colIndex] = false;
+        }
+      }
+    }
+
+    return matchMatrix[string.length][pattern.length];
+  }
+
+  // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/z-algorithm/zAlgorithm.js
+  function zAlgorithm(text, word) {
+    const wordPositions = [];
+    const seperator = '$';
+    const zString = `${word}${seperator}${text}`;
+
+    const zArray = buildZArray(zString);
+
+    for (let charIndex = 1; charIndex < zArray.length; charIndex++) {
+      if (zArray[charIndex] === word.length) {
+        const wordPosition = charIndex - seperator.length - word.length;
+        wordPositions.push(wordPosition);
+      }
+    }
+
+    return wordPositions;
+  }
+
+  function buildZArray(zString) {
+    const zArray = new Array(zString.length).fill(null).map(() => 0);
+
+    let zBoxLeftIndex = 0;
+    let zBoxRightIndex = 0;
+    let zBoxShiftIndex = 0;
+
+    for (let charIndex = 1; charIndex < zString.length; charIndex++) {
+      if (charIndex > zBoxRightIndex) {
+        zBoxLeftIndex = charIndex;
+        zBoxRightIndex = charIndex;
+
+        while (zBoxRightIndex < zString.length &&
+          zString[zBoxRightIndex - zBoxLeftIndex] === zString[zBoxRightIndex]) {
+          zBoxRightIndex++;
+        }
+
+        zArray[charIndex] = zBoxRightIndex - zBoxLeftIndex;
+        zBoxRightIndex--;
+      } else {
+        zBoxShiftIndex = charIndex - zBoxLeftIndex;
+
+        if (zArray[zBoxShiftIndex] < (zBoxRightIndex - charIndex + 1)) {
+          zArray[charIndex] = zArray[zBoxShiftIndex];
+        } else {
+          zBoxLeftIndex = charIndex;
+
+          while (zBoxRightIndex < zString.length &&
+            zString[zBoxRightIndex - zBoxLeftIndex] === zString[zBoxRightIndex]) {
+            zBoxRightIndex++;
+          }
+
+          zArray[charIndex] = zBoxRightIndex - zBoxLeftIndex;
+          zBoxRightIndex--;
+        }
+      }
+    }
+
+    return zArray;
+  }
+
+  tests({
+    'it performs regular expression match': function() {
+      let isMatch = false;
+
+      isMatch = matchExpression('hel?o', 'hello');
+      eq(isMatch, true);
+
+      isMatch = matchExpression('hello*', 'hello world');
+      eq(isMatch, true);
+
+
+      isMatch = matchExpression('h*d', 'hello world');
+      eq(isMatch, true);
+    },
+    'it performs case conversion': function() {
+      let result;
+
+      result = toLower('S');
+      eq(result, 's');
+
+      result = toUpper('s');
+      eq(result, 'S');
+    },
+    'it checks if strings are permutation of each other': function() {
+      let isPermutationResult;
+
+      isPermutationResult = isPermutation('apple', 'plepa');
+      eq(isPermutationResult, true);
+
+      isPermutationResult = isPermutation('appleb', 'plepaa');
+      eq(isPermutationResult, false);
+    },
+    'it checks if string is a palindrome': function() {
+      let isPalindromeResult;
+
+      isPalindromeResult = isPalindrome('eolloe');
+      eq(isPalindromeResult, true);
+
+      isPalindromeResult = isPalindrome('bolloe');
+      eq(isPalindromeResult, false);
+
+      isPalindromeResult = isPalindrome('eollob');
+      eq(isPalindromeResult, false);
+    },
+    'it reverses a string': function() {
+      let actualResult = reverseString('hello');
+      let expectedResult = 'olleh';
+
+      eq(actualResult, expectedResult);
+    },
+    'it reverses a sentence': function() {
+      let actualResult = reverseSentence('i love hello world');
+      let expectedResult = 'world hello love i';
+
+      eq(actualResult, expectedResult);
+    },
+    'it returns anagrams of a word': function() {
+      let actualResult = getAnagrams('ABC');
+      let expectedResult = [
+        'ABC',
+        'ACB',
+        'BAC',
+        'BCA',
+        'CBA',
+        'CAB'
+      ];
+
+      eq(actualResult.length, expectedResult.length);
+
+      for (let i = 0; i < actualResult.length; i++) {
+        eq(actualResult.includes(expectedResult[i]), true);
+      }
+    },
+    'it shuffles a string': function() {
+      let string = 'ABCDEF';
+
+      let shuffledString = shuffle(string);
+      let isShuffled = string !== shuffledString;
+
+      eq(isShuffled, true);
+    },
+    'it adds binary strings': function() {
+      let str1 = '1101';
+      let str2 = '100';
+
+      let actualResult = binaryAdd(str1, str2);
+
+      let expectedResult = '10001';
+      eq(actualResult, expectedResult);
+
+      str1 = '1100011';
+      str2 = '10';
+
+      actualResult = binaryAdd(str1, str2);
+
+      expectedResult = '1100101';
+      eq(actualResult, expectedResult);
+    },
+    'it calculates hamming distance': function() {
+      let expectedErrorMessage = 'strings have different length';
+      let actualErrorMessage;
+      try {
+        hammingDistance('karolin', '');
+      } catch(err) {
+        actualErrorMessage = err.message;
+      }
+
+      eq(actualErrorMessage, expectedErrorMessage);
+
+      let actualResult = hammingDistance('karolin', 'kathrin');
+      let expectedResult = 3;
+
+      eq(actualResult, expectedResult);
+
+      actualResult = hammingDistance('karolin', 'karolin');
+      expectedResult = 0;
+
+      eq(actualResult, expectedResult);
+    },
+    'it matches pattern using kmp': function() {
+      let actualResult;
+      let expectedResult;
+
+      actualResult = patternSearchKMP('abcbcglx', 'abca');
+      expectedResult = -1;
+      eq(actualResult, expectedResult);
+
+      actualResult = patternSearchKMP('abcbcglx', 'bcgl');
+      expectedResult = 3;
+      eq(actualResult, expectedResult);
+    },
+    'it finds levenshtein distance between 2 words': function() {
+      let str1;
+      let str2;
+      let actualDistance;
+      let expectedDistance;
+
+      str1 = 'saturday';
+      str2 = 'sunday';
+      actualDistance = levenshteinDistance(str1, str2);
+      expectedDistance = 3;
+
+      eq(actualDistance, expectedDistance);
+
+      str1 = 'abcdef';
+      str2 = 'azced';
+      actualDistance = levenshteinDistance(str1, str2);
+      expectedDistance = 3;
+
+      eq(actualDistance, expectedDistance);
+    },
+    'it finds the longest common substring': function() {
+      let str1;
+      let str2;
+      let actualString;
+      let expectedString;
+
+      str1 = 'A';
+      str2 = 'B';
+      actualString = longestCommonString(str1, str2);
+      expectedString = '';
+
+      eq(actualString, expectedString);
+
+
+      str1 = 'BABCA';
+      str2 = 'ABCBA';
+      actualString = longestCommonString(str1, str2);
+      expectedString = 'ABC';
+
+      eq(actualString, expectedString);
+    },
+    'it matches pattern using rabin-karp': function() {
+      let actualResult;
+      let expectedResult;
+
+      actualResult = patternSearchRabinKarp('abcbcglx', 'abca');
+      expectedResult = -1;
+      eq(actualResult, expectedResult);
+
+      actualResult = patternSearchRabinKarp('abcbcglx', 'bcgl');
+      expectedResult = 3;
+      eq(actualResult, expectedResult);
+    },
+    'it performs regex match': function() {
+      let isMatch;
+
+      isMatch = regexMatch('a', '');
+      eq(isMatch, false);
+
+      isMatch = regexMatch('abba', 'a*b*.c');
+      eq(isMatch, false);
+
+      isMatch = regexMatch('', 'a*');
+      eq(isMatch, true);
+
+      isMatch = regexMatch('aab', 'c*a*b*');
+      eq(isMatch, true);
+    },
+    'it builds zArray': function() {
+      let expectedArray;
+      let actualArray;
+
+      actualArray = buildZArray('abaxabab');
+      expectedArray = [0,0,1,0,3,0,2,0];
+
+      for (let i = 0; i < expectedArray.length; i++) {
+        eq(actualArray[i], expectedArray[i]);
+      }
+
+      actualArray = buildZArray('aabcaabxaaaz');
+      expectedArray = [0,1,0,0,3,1,0,0,2,2,1,0];
+
+      for (let i = 0; i < expectedArray.length; i++) {
+        eq(actualArray[i], expectedArray[i]);
+      }
+    },
+    'it matches pattern using z-algorithm': function() {
+      let actualResult;
+      let expectedResult;
+
+      actualResult = zAlgorithm('abcxabcdabxabcdabcdabcy', 'abcdabcy');
+      expectedResult = [15];
+      eq(actualResult.length, expectedResult.length);
+      eq(actualResult[0], expectedResult[0]);
+
+      actualResult = zAlgorithm('abcbcglabcx', 'abc');
+      expectedResult = [0, 7];
+      eq(actualResult.length, expectedResult.length);
+      eq(actualResult[0], expectedResult[0]);
+      eq(actualResult[1], expectedResult[1]);
+
+      actualResult = zAlgorithm('abcxabcdabxabcdabcdabcy', 'abcdabca');
+      eq(actualResult.length, 0);
+    }
+
+  });
+  </script>
+</body>
+</html>
