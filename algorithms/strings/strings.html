@@ -488,7 +488,20 @@
 
   // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/z-algorithm/zAlgorithm.js
   function zAlgorithm(text, word) {
+    const wordPositions = [];
+    const seperator = '$';
+    const zString = `${word}${seperator}${text}`;
 
+    const zArray = buildZArray(zString);
+
+    for (let charIndex = 1; charIndex < zArray.length; charIndex++) {
+      if (zArray[charIndex] === word.length) {
+        const wordPosition = charIndex - seperator.length - word.length;
+        wordPositions.push(wordPosition);
+      }
+    }
+
+    return wordPositions;
   }
 
   function buildZArray(zString) {
