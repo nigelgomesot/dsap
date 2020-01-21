@@ -99,6 +99,29 @@
     return product;
   }
 
+  function combinationSum(candidates, target) {
+    return combinationSumRecursive(candidates, target);
+  }
+
+  function combinationSumRecursive(
+    candidates,
+    remaningSum,
+    finalCombinations = [],
+    currentCombination = [],
+    startFrom = 0
+  ) {
+    if (remaningSum < 0) {
+      return finalCombinations;
+    }
+
+    if (remaningSum === 0) {
+      finalCombinations.push(currentCombination.slice());
+
+      return finalCombinations;
+    }
+
+    // PENDING
+  }
 
   tests({
     'it performs cartesian product': function() {
@@ -126,7 +149,22 @@
         eq(actualResult[i][0], expectedResult[i][0]);
         eq(actualResult[i][1], expectedResult[i][1]);
       }
+    },
+    'it performs combination sum': function() {
+      let expectedResult;
+      let actualResult;
 
+      actualResult = combinationSum([2, 3, 6, 7], 7);
+      expectedResult = [
+        [2,2,3],
+        [7]
+      ]
+      for (let i = 0; i < expectedResult.length; i++) {
+        eq(actualResult[i].join(','), expectedResult[i].join(','));
+      }
+
+      actualResult = combinationSum([2, 5], 3);
+      eq(actualResult.length, 0);
     }
 
   });
