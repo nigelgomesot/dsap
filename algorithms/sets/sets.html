@@ -105,22 +105,38 @@
 
   function combinationSumRecursive(
     candidates,
-    remaningSum,
+    remainingSum,
     finalCombinations = [],
     currentCombination = [],
     startFrom = 0
   ) {
-    if (remaningSum < 0) {
+    if (remainingSum < 0) {
       return finalCombinations;
     }
 
-    if (remaningSum === 0) {
+    if (remainingSum === 0) {
       finalCombinations.push(currentCombination.slice());
 
       return finalCombinations;
     }
 
-    // PENDING
+    for (let currentIndex = startFrom; currentIndex < candidates.length; currentIndex++) {
+      const currentCandidate = candidates[currentIndex];
+
+      currentCombination.push(currentCandidate);
+
+      combinationSumRecursive(
+        candidates,
+        remainingSum - currentCandidate,
+        finalCombinations,
+        currentCombination,
+        currentIndex
+      )
+
+      currentCombination.pop();
+    }
+
+    return finalCombinations;
   }
 
   tests({
