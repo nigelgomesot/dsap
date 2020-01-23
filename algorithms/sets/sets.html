@@ -139,6 +139,16 @@
     return finalCombinations;
   }
 
+  function combineWithoutRepitition(options, comboLength) {
+    if (options.length === 1) {
+      return options.map(option => [option]);
+    }
+
+    const combos = [];
+
+    // PENDING
+  }
+
   tests({
     'it performs cartesian product': function() {
       let actualResult;
@@ -181,6 +191,25 @@
 
       actualResult = combinationSum([2, 5], 3);
       eq(actualResult.length, 0);
+    },
+    'it performs combinat without repitition': function() {
+      let actualResult = combineWithoutRepitition(['A', 'B', 'C', 'D', 'E'], 3);
+      let expectedResult = [
+        ['A', 'B', 'C'],
+        ['A', 'B', 'D'],
+        ['A', 'B', 'E'],
+        ['A', 'C', 'D'],
+        ['A', 'C', 'E'],
+        ['A', 'D', 'E'],
+        ['B', 'C', 'D'],
+        ['B', 'C', 'E'],
+        ['B', 'D', 'E'],
+        ['C', 'D', 'E'],
+      ];
+
+      for (let i = 0; i < expectedResult.length; i++) {
+        eq(actualResult[i].join(','), expectedResult[i].join(','));
+      }
     }
 
   });
