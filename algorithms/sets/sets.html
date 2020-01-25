@@ -160,6 +160,27 @@
     return combos;
   }
 
+  function combineWithRepitition(options, comboLength) {
+    if (comboLength === 1) {
+      return options.map(option => [option]);
+    }
+
+    const combos = [];
+
+    options.forEach((option, optionIndex) => {
+      const smallerCombos = combineWithRepitition(
+        options.slice(optionIndex),
+        comboLength - 1
+      );
+
+      smallerCombos.forEach(smallerCombo => {
+        combos.push([option].concat(smallerCombo));
+      });
+    });
+
+    return combos;
+  }
+
   tests({
     'it performs cartesian product': function() {
       let actualResult;
@@ -221,7 +242,26 @@
       for (let i = 0; i < expectedResult.length; i++) {
         eq(actualResult[i].join(','), expectedResult[i].join(','));
       }
-    }
+    },
+    'it performs combination with repitition': function() {
+      let actualResult = combineWithRepitition(['A', 'B', 'C'], 3);
+      let expectedResult = [
+        ['A', 'A', 'A'],
+        ['A', 'A', 'B'],
+        ['A', 'A', 'C'],
+        ['A', 'B', 'B'],
+        ['A', 'B', 'C'],
+        ['A', 'C', 'C'],
+        ['B', 'B', 'B'],
+        ['B', 'B', 'C'],
+        ['B', 'C', 'C'],
+        ['C', 'C', 'C'],
+      ];
+
+      for (let i = 0; i < expectedResult.length; i++) {
+        eq(actualResult[i].join(','), expectedResult[i].join(','));
+      }
+    },
 
   });
   </script>
