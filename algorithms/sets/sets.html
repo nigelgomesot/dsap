@@ -188,9 +188,9 @@
 
     const permutations = [];
 
-    option = options[0];
+    const option = options[0];
 
-    smallerPerms = permutateWithoutRepitition(options.slice(1));
+    const smallerPerms = permutateWithoutRepitition(options.slice(1));
 
     smallerPerms.forEach((smallerPerm, smallerPermIndex) => {
       for (let i = 0; i <= smallerPerm.length; i++) {
