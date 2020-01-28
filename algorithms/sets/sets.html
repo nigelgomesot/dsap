@@ -204,6 +204,27 @@
     return permutations;
   }
 
+  function permutateWithRepitition(options, optionLength = options.length) {
+    if (optionLength === 1) {
+      return options.map(option => [option]);
+    }
+
+    const permutations = [];
+
+    const smallerPerms = permutateWithRepitition(
+      options,
+      optionLength - 1
+    )
+
+    options.forEach(option => {
+      smallerPerms.forEach(smallerPerm => {
+        permutations.push([option].concat(smallerPerm));
+      });
+    });
+
+    return permutations;
+  }
+
   tests({
     'it performs cartesian product': function() {
       let actualResult;
@@ -294,6 +315,42 @@
         ['A', 'C', 'B'],
         ['C', 'A', 'B'],
         ['C', 'B', 'A']
+      ];
+
+      for (let i = 0; i < expectedResult.length; i++) {
+        eq(actualResult[i].join(','), expectedResult[i].join(','));
+      }
+    },
+    'it performs permutation with repitition': function() {
+      let actualResult = permutateWithRepitition(['A', 'B', 'C']);
+      let expectedResult = [
+        ['A', 'A', 'A'],
+        ['A', 'A', 'B'],
+        ['A', 'A', 'C'],
+        ['A', 'B', 'A'],
+        ['A', 'B', 'B'],
+        ['A', 'B', 'C'],
+        ['A', 'C', 'A'],
+        ['A', 'C', 'B'],
+        ['A', 'C', 'C'],
+        ['B', 'A', 'A'],
+        ['B', 'A', 'B'],
+        ['B', 'A', 'C'],
+        ['B', 'B', 'A'],
+        ['B', 'B', 'B'],
+        ['B', 'B', 'C'],
+        ['B', 'C', 'A'],
+        ['B', 'C', 'B'],
+        ['B', 'C', 'C'],
+        ['C', 'A', 'A'],
+        ['C', 'A', 'B'],
+        ['C', 'A', 'C'],
+        ['C', 'B', 'A'],
+        ['C', 'B', 'B'],
+        ['C', 'B', 'C'],
+        ['C', 'C', 'A'],
+        ['C', 'C', 'B'],
+        ['C', 'C', 'C'],
       ];
 
       for (let i = 0; i < expectedResult.length; i++) {
