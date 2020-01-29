@@ -225,6 +225,18 @@
     return permutations;
   }
 
+  function fisherYates(originalArray) {
+    const array = originalArray.slice(0);
+
+    for (let i = (array.length - 1); i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+
+      [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
+    }
+
+    return array;
+  }
+
   tests({
     'it performs cartesian product': function() {
       let actualResult;
@@ -357,6 +369,17 @@
         eq(actualResult[i].join(','), expectedResult[i].join(','));
       }
     },
+    'it shuffles array using fisher Yates': function() {
+      let isShuffled = false;
+
+      const originalArray = [1, 2, 3, 4]
+      const shuffledArray = fisherYates(originalArray);
+
+      isShuffled = originalArray.join(',') != shuffledArray.join(',');
+
+      eq(shuffledArray.length, originalArray.length);
+      eq(isShuffled, true);
+    }
 
   });
   </script>
