@@ -237,6 +237,11 @@
     return array;
   }
 
+  // REF: https://www.geeksforgeeks.org/0-1-knapsack-problem-dp-10/
+  function knapSack01(values, weights, maxWeight) {
+
+  }
+
   tests({
     'it performs cartesian product': function() {
       let actualResult;
@@ -379,6 +384,16 @@
 
       eq(shuffledArray.length, originalArray.length);
       eq(isShuffled, true);
+    },
+    'it performs knapsack 0/1': function() {
+      const val = [60, 100, 120];
+      const wt = [10, 20, 30];
+      const maxWt = 50;
+
+      const actualResult = knapSack01(val, wt, maxWt);
+      const expectedResult = 220;
+
+      eq(actualResult, expectedResult);
     }
 
   });
