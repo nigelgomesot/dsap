@@ -239,7 +239,29 @@
 
   // REF: https://github.com/mission-peace/interview/blob/master/src/com/interview/dynamic/Knapsack01.java
   function knapSack01(values, weights, maxWeight) {
+    const weightMatrix = Array(values.length + 1).fill(null).map(() => Array(maxWeight + 1).fill(null));
 
+    for (let i = 0; i <= values.length; i++) {
+      weightMatrix[i][0] = 0;
+    }
+
+    for (let j = 0; j <= maxWeight; j++) {
+      weightMatrix[0][j] = 0;
+    }
+
+    for (let i = 1; i <= values.length; i++) {
+      for (let j = 1; j <= weights.length; j++) {
+        if (j < weights[i]) {
+          weightMatrix[i][j] = weightMatrix[i - 1][j];
+        } else {
+          weight = Math.max(values[i] + weightMatrix[i - 1][j - weights[i]],
+                        weightMatrix[i - 1][j]);
+          weightMatrix[i][j] = weight;
+        }
+      }
+    }
+
+    return weightMatrix[values.length][maxWeight];
   }
 
   tests({
