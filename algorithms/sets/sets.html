@@ -250,13 +250,13 @@
     }
 
     for (let i = 1; i <= values.length; i++) {
-      for (let j = 1; j <= weights.length; j++) {
-        if (j < weights[i]) {
-          weightMatrix[i][j] = weightMatrix[i - 1][j];
-        } else {
-          weight = Math.max(values[i] + weightMatrix[i - 1][j - weights[i]],
+      for (let j = 1; j <= maxWeight; j++) {
+        if (j - weights[i - 1] >= 0) {
+          weight = Math.max(values[i - 1] + weightMatrix[i - 1][j - weights[i - 1]],
                         weightMatrix[i - 1][j]);
           weightMatrix[i][j] = weight;
+        } else {
+          weightMatrix[i][j] = weightMatrix[i - 1][j];
         }
       }
     }
