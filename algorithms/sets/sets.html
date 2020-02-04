@@ -264,6 +264,38 @@
     return weightMatrix[values.length][maxWeight];
   }
 
+  function lcs(set1, set2) {
+    const array1 = set1.split('');
+    const array2 = set2.split('');
+
+    const lcsMatrix = Array(array2.length + 1).fill(null).map(() => Array(array1.length + 1).fill(null));
+
+    for (let colIndex = 0; colIndex <= array1.length; colIndex++) {
+      lcsMatrix[0][colIndex] = 0;
+    }
+
+    for (let rowIndex = 0; rowIndex <= array2.length; rowIndex++) {
+      lcsMatrix[rowIndex][0] = 0;
+    }
+
+    for (let rowIndex = 1; rowIndex <= array2.length; rowIndex++) {
+      for(let colIndex = 1; colIndex <= array1.length; colIndex++) {
+        if (array2[rowIndex - 1] === array1[colIndex - 1]) {
+          lcsMatrix[rowIndex][colIndex] = lcsMatrix[rowIndex - 1][colIndex - 1] + 1;
+        } else {
+          const lcsValue = Math.max(
+            lcsMatrix[rowIndex - 1][colIndex],
+            lcsMatrix[rowIndex][colIndex - 1]
+          );
+
+          lcsMatrix[rowIndex][colIndex] = lcsValue;
+        }
+      }
+    }
+
+    // PENDING
+  }
+
   tests({
     'it performs cartesian product': function() {
       let actualResult;
@@ -414,6 +446,16 @@
 
       const actualResult = knapSack01(val, wt, maxWt);
       const expectedResult = 220;
+
+      eq(actualResult, expectedResult);
+    },
+    'it finds longest common subsequence(LCS)': function() {
+      const set1 = 'ABCDGH';
+      const set2 = 'AEDFHR';
+
+      const expectedResult = 'ADH';
+
+      const actualResult = lcs(set1, set2);
 
       eq(actualResult, expectedResult);
     }
