@@ -293,7 +293,27 @@
       }
     }
 
-    // PENDING
+    if (!lcsMatrix[array2.length][array1.length]) {
+      return '';
+    }
+
+    const sequence = [];
+    let colIndex = array1.length;
+    let rowIndex = array2.length;
+
+    while (colIndex > 0 || rowIndex > 0) {
+      if (array1[colIndex - 1] === array2[rowIndex - 1]) {
+        sequence.unshift(array1[colIndex - 1]);
+        colIndex -= 1;
+        rowIndex -= 1;
+      } else if (lcsMatrix[rowIndex][colIndex] === lcsMatrix[rowIndex][colIndex - 1]) {
+        colIndex -= 1;
+      } else {
+        rowIndex -= 1;
+      }
+    }
+
+    return sequence.join('');
   }
 
   tests({
@@ -450,12 +470,19 @@
       eq(actualResult, expectedResult);
     },
     'it finds longest common subsequence(LCS)': function() {
-      const set1 = 'ABCDGH';
-      const set2 = 'AEDFHR';
+      let set1 = 'ABC';
+      let set2 = 'DEF';
 
-      const expectedResult = 'ADH';
+      let actualResult = lcs(set1, set2);
+      let expectedResult = '';
 
-      const actualResult = lcs(set1, set2);
+      eq(actualResult, expectedResult);
+
+      set1 = 'ABCDGH';
+      set2 = 'AEDFHR';
+
+      expectedResult = 'ADH';
+      actualResult = lcs(set1, set2);
 
       eq(actualResult, expectedResult);
     }
