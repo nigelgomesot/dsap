@@ -316,6 +316,34 @@
     return sequence.join('');
   }
 
+  function lis(sequence) {
+    const array =  sequence.split(',');
+    const lengthsArray = Array(array.length).fill(1);
+
+    let previousIndex = 0;
+    let currentIndex = 1;
+
+    while (currentIndex < array.length) {
+      if (array[currentIndex] > array[previousIndex]) {
+
+        const newLength = lengthsArray[previousIndex] + 1;
+
+        if (newLength > lengthsArray[currentIndex]) {
+          lengthsArray[currentIndex] = newLength;
+        }
+      }
+
+      previousIndex += 1;
+
+      if (previousIndex === currentIndex) {
+        previousIndex = 0;
+        currentIndex += 1;
+      }
+    }
+
+    // PENDING
+  }
+
   tests({
     'it performs cartesian product': function() {
       let actualResult;
@@ -483,6 +511,21 @@
 
       expectedResult = 'ADH';
       actualResult = lcs(set1, set2);
+
+      eq(actualResult, expectedResult);
+    },
+    'it finds longest increasing subsequence(LIS)': function() {
+      let sequence = '1,4,2,5,3';
+
+      let actualResult = lis(sequence);
+      let expectedResult = '1,2,3';
+
+      eq(actualResult, expectedResult);
+
+      sequence = '3,2,1';
+
+      actualResult = lis(sequence);
+      expectedResult = '3';
 
       eq(actualResult, expectedResult);
     }
