@@ -341,7 +341,7 @@
       }
     }
 
-    // PENDING
+    return Math.max(...lengthsArray);
   }
 
   tests({
@@ -518,14 +518,14 @@
       let sequence = '1,4,2,5,3';
 
       let actualResult = lis(sequence);
-      let expectedResult = '1,2,3';
+      let expectedResult = 3;
 
       eq(actualResult, expectedResult);
 
       sequence = '3,2,1';
 
       actualResult = lis(sequence);
-      expectedResult = '3';
+      expectedResult = 1;
 
       eq(actualResult, expectedResult);
     }
