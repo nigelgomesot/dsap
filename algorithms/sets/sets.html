@@ -344,6 +344,33 @@
     return Math.max(...lengthsArray);
   }
 
+  function maxSubArray(array) {
+    let maxSum = -Infinity;
+    let maxStartIndex = 0;
+    let maxEndIndex = array.length - 1;
+
+    let currentSum = 0;
+    let currentStartIndex = 0;
+
+    array.forEach((currentNum, currentIndex) => {
+      currentSum += currentNum;
+
+      if (maxSum < currentNum) {
+        maxSum = currentSum;
+        maxStartIndex = currentStartIndex;
+        maxEndIndex = currentIndex;
+      }
+
+
+      if (currentSum < 0) {
+        currentSum = 0;
+        currentStartIndex = currentIndex + 1;
+      }
+    });
+
+    return array.slice(maxStartIndex, maxEndIndex + 1);
+  }
+
   tests({
     'it performs cartesian product': function() {
       let actualResult;
@@ -528,6 +555,27 @@
       expectedResult = 1;
 
       eq(actualResult, expectedResult);
+    },
+    'it finds maximum sub array': function() {
+      let expectedArray;
+      let actualArray;
+
+      actualArray = maxSubArray([0, 0, 1, 2]);
+      expectedArray = [0, 0, 1, 2];
+
+      eq(actualArray.length, expectedArray.length);
+      for (let i = 0; i < expectedArray.length; i++) {
+        eq(actualArray[i], expectedArray[i]);
+      }
+
+      actualArray = maxSubArray([-2, -3, 4, -1, -2, 1, 5, -3]);
+      expectedArray = [4, -1, -2, 1, 5];
+
+      eq(actualArray.length, expectedArray.length);
+      for (let i = 0; i < expectedArray.length; i++) {
+        eq(actualArray[i], expectedArray[i]);
+      }
+
     }
 
   });
