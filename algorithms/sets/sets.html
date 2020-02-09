@@ -371,6 +371,32 @@
     return array.slice(maxStartIndex, maxEndIndex + 1);
   }
 
+  // REF: https://www.geeksforgeeks.org/shortest-possible-combination-two-strings/
+  function scs(set1, set2) {
+    const setLength1 = set1.length;
+    const setLength2 = set2.length;
+
+    const scsMatrix = Array(set1.length + 1).fill(null).map(() => Array(set2.length + 1).fill(null));
+
+    for (let rowIndex = 0; rowIndex <= setLength1; rowIndex++) {
+      for (let colIndex = 0; colIndex <= setLength2; colIndex++) {
+        if (rowIndex === 0) {
+          scsMatrix[rowIndex][colIndex] = colIndex;
+        } else if (colIndex === 0) {
+          scsMatrix[rowIndex][colIndex] = rowIndex;
+        } else if (set1[rowIndex - 1] === set2[colIndex - 1]) {
+          scsMatrix[rowIndex][colIndex] = 1 + scsMatrix[rowIndex - 1][colIndex - 1];
+        } else {
+          scsMatrix[rowIndex][colIndex] = 1 + Math.min(
+            scsMatrix[rowIndex - 1][colIndex],
+            scsMatrix[rowIndex][colIndex - 1]);
+        }
+      }
+    }
+
+    // PENDING
+  }
+
   tests({
     'it performs cartesian product': function() {
       let actualResult;
@@ -575,7 +601,20 @@
       for (let i = 0; i < expectedArray.length; i++) {
         eq(actualArray[i], expectedArray[i]);
       }
+    },
+    'it finds shortest common supersequence(SCS)': function() {
+      let set1;
+      let set2;
+      let actualResult;
+      let expectedResult;
 
+      set1 = 'algorithm';
+      set2 = 'rhythm';
+
+      actualResult = scs(set1, set2);
+      expectedResult = 'algorihythm';
+
+      eq(actualResult, expectedResult);
     }
 
   });
