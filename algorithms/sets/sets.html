@@ -394,7 +394,42 @@
       }
     }
 
-    // PENDING
+    let index = scsMatrix[setLength1][setLength2];
+    const result = Array(index + 1);
+
+    let setIndex1 = setLength1;
+    let setIndex2 = setLength2;
+
+    while (setIndex1 > 0 && setIndex2 > 0) {
+      if (set1[setIndex1 - 1] === set2[setIndex2 - 1]) {
+        result.unshift(set1[setIndex1 - 1]);
+        index--;
+        setIndex1--;
+        setIndex2--;
+      } else if (scsMatrix[setIndex1 - 1][setIndex2] < scsMatrix[setIndex1][setIndex2 - 1]) {
+        result.unshift(set1[setIndex1 -1]);
+        index--;
+        setIndex1--;
+      } else {
+        result.unshift(set2[setIndex2 - 1]);
+        index--;
+        setIndex2--;
+      }
+    }
+
+    while (setIndex1 > 0) {
+      result.unshift(set1[setIndex1 - 1]);
+      index--;
+      setIndex1--;
+    }
+
+    while (setIndex2 > 0) {
+      result.unshift(set2[setIndex2 - 1]);
+      index--;
+      setIndex2--;
+    }
+
+    return result;
   }
 
   tests({
@@ -608,10 +643,10 @@
       let actualResult;
       let expectedResult;
 
-      set1 = 'algorithm';
-      set2 = 'rhythm';
+      set1 = 'algorithm'.split('');
+      set2 = 'rhythm'.split('');
 
-      actualResult = scs(set1, set2);
+      actualResult = scs(set1, set2).join('');
       expectedResult = 'algorihythm';
 
       eq(actualResult, expectedResult);
