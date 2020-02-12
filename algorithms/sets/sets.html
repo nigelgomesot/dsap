@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+  <script type="text/javascript">
+  // REF: https://github.com/trekhleb/javascript-algorithms/tree/master/src/algorithms/sets
+
+  // REF: https://github.com/gordonmzhu/jstinytest/blob/master/tinytest.js
+
+  // TinyTest START
+  var TinyTestHelpers = {
+    renderStats: function(tests, failures) {
+      let numberOfTests = Object.keys(tests).length;
+      let successes = numberOfTests - failures;
+      let summaryStr = 'Total Tests: ' + numberOfTests
+              + ', Success: ' + successes
+              + ', Failures: ' + failures;
+
+      summaryEle = document.createElement('h1');
+      summaryEle.textContent = summaryStr;
+      document.body.appendChild(summaryEle);
+    }
+  };
+
+  var TinyTest = {
+
+    run: function(tests) {
+      var failures = 0;
+      for (var testName in tests) {
+        var testAction = tests[testName];
+        try {
+          testAction.apply(this);
+          console.log('%c' + testName, "color: green;");
+        } catch (e) {
+          failures++;
+          console.groupCollapsed('%c' + testName, "color: red;");
+          console.error(e.stack);
+          console.groupEnd();
+        }
+      }
+      setTimeout(function() { // Give document a chance to complete
+        if (window.document && document.body) {
+          document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+          TinyTestHelpers.renderStats(tests, failures);
+        }
+      }, 0);
+    },
+  
+    fail: function(msg) {
+      throw new Error('fail(): ' + msg);
+    },
+  
+    assert: function(value, msg) {
+      if (!value) {
+        throw new Error('assert(): ' + msg);
+      }
+    },
+  
+    assertEquals: function(expected, actual) {
+      if (expected != actual) {
+        throw new Error('assertEquals() "' + expected + '" != "' + actual + '"');
+      }
+    },
+  
+    assertStrictEquals: function(expected, actual) {
+      if (expected !== actual) {
+        throw new Error('assertStrictEquals() "' + expected + '" !== "' + actual + '"');
+      }
+    },
+
+    assertArrayEquals: function(expected, actual) {
+      if (expected instanceof Array && actual instanceof Array) {
+        if (expected.length !== actual.length)
+          throw new Error('assertArrayEquals() length: "' + expected.length + '" !== "' + actual.length + '"');
+
+        for(let i = 0; i < expected.length; i++) {
+          eqArray(expected[i], actual[i]);
+        }
+      } else {
+        eq(expected, actual);
+      }
+    }
+  };
+
+  var fail         = TinyTest.fail.bind(TinyTest),
+    assert       = TinyTest.assert.bind(TinyTest),
+    assertEquals     = TinyTest.assertEquals.bind(TinyTest),
+    eq         = TinyTest.assertEquals.bind(TinyTest),
+    assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
+    eqArray      = TinyTest.assertArrayEquals.bind(TinyTest),
+    tests        = TinyTest.run.bind(TinyTest);
+
+  // TinyTest END
+
+  console.clear();
+
+  function cartesianProduct(setA, setB) {
+    if (!setA || !setB || !setA.length || !setB.length) {
+      return null;
+    }
+
+    const product = [];
+
+    for (indexA = 0; indexA < setA.length; indexA++) {
+      for (indexB = 0; indexB < setB.length; indexB++) {
+        product.push([setA[indexA], setB[indexB]]);
+      }
+    }
+
+    return product;
+  }
+
+  function combinationSum(candidates, target) {
+    return combinationSumRecursive(candidates, target);
+  }
+
+  function combinationSumRecursive(
+    candidates,
+    remainingSum,
+    finalCombinations = [],
+    currentCombination = [],
+    startFrom = 0
+  ) {
+    if (remainingSum < 0) {
+      return finalCombinations;
+    }
+
+    if (remainingSum === 0) {
+      finalCombinations.push(currentCombination.slice());
+
+      return finalCombinations;
+    }
+
+    for (let currentIndex = startFrom; currentIndex < candidates.length; currentIndex++) {
+      const currentCandidate = candidates[currentIndex];
+
+      currentCombination.push(currentCandidate);
+
+      combinationSumRecursive(
+        candidates,
+        remainingSum - currentCandidate,
+        finalCombinations,
+        currentCombination,
+        currentIndex
+      )
+
+      currentCombination.pop();
+    }
+
+    return finalCombinations;
+  }
+
+  function combineWithoutRepitition(options, comboLength) {
+    if (comboLength === 1) {
+      return options.map(option => [option]);
+    }
+
+    const combos = [];
+
+    options.forEach((option, optionIndex) => {
+      const smallerCombos = combineWithoutRepitition(
+        options.slice(optionIndex + 1),
+        comboLength - 1
+      );
+
+      smallerCombos.forEach(smallerCombo => {
+        combos.push([option].concat(smallerCombo));
+      });
+    });
+
+    return combos;
+  }
+
+  function combineWithRepitition(options, comboLength) {
+    if (comboLength === 1) {
+      return options.map(option => [option]);
+    }
+
+    const combos = [];
+
+    options.forEach((option, optionIndex) => {
+      const smallerCombos = combineWithRepitition(
+        options.slice(optionIndex),
+        comboLength - 1
+      );
+
+      smallerCombos.forEach(smallerCombo => {
+        combos.push([option].concat(smallerCombo));
+      });
+    });
+
+    return combos;
+  }
+
+  function permutateWithoutRepitition(options) {
+    if (options.length === 1) {
+      return [options];
+    }
+
+    const permutations = [];
+
+    const option = options[0];
+
+    const smallerPerms = permutateWithoutRepitition(options.slice(1));
+
+    smallerPerms.forEach((smallerPerm, smallerPermIndex) => {
+      for (let i = 0; i <= smallerPerm.length; i++) {
+        const prefix = smallerPerm.slice(0, i);
+        const suffix = smallerPerm.slice(i);
+
+        permutations.push(prefix.concat([option], suffix));
+      }
+    });
+
+    return permutations;
+  }
+
+  function permutateWithRepitition(options, optionLength = options.length) {
+    if (optionLength === 1) {
+      return options.map(option => [option]);
+    }
+
+    const permutations = [];
+
+    const smallerPerms = permutateWithRepitition(
+      options,
+      optionLength - 1
+    )
+
+    options.forEach(option => {
+      smallerPerms.forEach(smallerPerm => {
+        permutations.push([option].concat(smallerPerm));
+      });
+    });
+
+    return permutations;
+  }
+
+  function fisherYates(originalArray) {
+    const array = originalArray.slice(0);
+
+    for (let i = (array.length - 1); i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+
+      [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
+    }
+
+    return array;
+  }
+
+  // REF: https://github.com/mission-peace/interview/blob/master/src/com/interview/dynamic/Knapsack01.java
+  function knapSack01(values, weights, maxWeight) {
+    const weightMatrix = Array(values.length + 1).fill(null).map(() => Array(maxWeight + 1).fill(null));
+
+    for (let i = 0; i <= values.length; i++) {
+      weightMatrix[i][0] = 0;
+    }
+
+    for (let j = 0; j <= maxWeight; j++) {
+      weightMatrix[0][j] = 0;
+    }
+
+    for (let i = 1; i <= values.length; i++) {
+      for (let j = 1; j <= maxWeight; j++) {
+        if (j - weights[i - 1] >= 0) {
+          weight = Math.max(values[i - 1] + weightMatrix[i - 1][j - weights[i - 1]],
+                        weightMatrix[i - 1][j]);
+          weightMatrix[i][j] = weight;
+        } else {
+          weightMatrix[i][j] = weightMatrix[i - 1][j];
+        }
+      }
+    }
+
+    return weightMatrix[values.length][maxWeight];
+  }
+
+  function lcs(set1, set2) {
+    const array1 = set1.split('');
+    const array2 = set2.split('');
+
+    const lcsMatrix = Array(array2.length + 1).fill(null).map(() => Array(array1.length + 1).fill(null));
+
+    for (let colIndex = 0; colIndex <= array1.length; colIndex++) {
+      lcsMatrix[0][colIndex] = 0;
+    }
+
+    for (let rowIndex = 0; rowIndex <= array2.length; rowIndex++) {
+      lcsMatrix[rowIndex][0] = 0;
+    }
+
+    for (let rowIndex = 1; rowIndex <= array2.length; rowIndex++) {
+      for(let colIndex = 1; colIndex <= array1.length; colIndex++) {
+        if (array2[rowIndex - 1] === array1[colIndex - 1]) {
+          lcsMatrix[rowIndex][colIndex] = lcsMatrix[rowIndex - 1][colIndex - 1] + 1;
+        } else {
+          const lcsValue = Math.max(
+            lcsMatrix[rowIndex - 1][colIndex],
+            lcsMatrix[rowIndex][colIndex - 1]
+          );
+
+          lcsMatrix[rowIndex][colIndex] = lcsValue;
+        }
+      }
+    }
+
+    if (!lcsMatrix[array2.length][array1.length]) {
+      return '';
+    }
+
+    const sequence = [];
+    let colIndex = array1.length;
+    let rowIndex = array2.length;
+
+    while (colIndex > 0 || rowIndex > 0) {
+      if (array1[colIndex - 1] === array2[rowIndex - 1]) {
+        sequence.unshift(array1[colIndex - 1]);
+        colIndex -= 1;
+        rowIndex -= 1;
+      } else if (lcsMatrix[rowIndex][colIndex] === lcsMatrix[rowIndex][colIndex - 1]) {
+        colIndex -= 1;
+      } else {
+        rowIndex -= 1;
+      }
+    }
+
+    return sequence.join('');
+  }
+
+  function lis(sequence) {
+    const array =  sequence.split(',');
+    const lengthsArray = Array(array.length).fill(1);
+
+    let previousIndex = 0;
+    let currentIndex = 1;
+
+    while (currentIndex < array.length) {
+      if (array[currentIndex] > array[previousIndex]) {
+
+        const newLength = lengthsArray[previousIndex] + 1;
+
+        if (newLength > lengthsArray[currentIndex]) {
+          lengthsArray[currentIndex] = newLength;
+        }
+      }
+
+      previousIndex += 1;
+
+      if (previousIndex === currentIndex) {
+        previousIndex = 0;
+        currentIndex += 1;
+      }
+    }
+
+    return Math.max(...lengthsArray);
+  }
+
+  function maxSubArray(array) {
+    let maxSum = -Infinity;
+    let maxStartIndex = 0;
+    let maxEndIndex = array.length - 1;
+
+    let currentSum = 0;
+    let currentStartIndex = 0;
+
+    array.forEach((currentNum, currentIndex) => {
+      currentSum += currentNum;
+
+      if (maxSum < currentNum) {
+        maxSum = currentSum;
+        maxStartIndex = currentStartIndex;
+        maxEndIndex = currentIndex;
+      }
+
+
+      if (currentSum < 0) {
+        currentSum = 0;
+        currentStartIndex = currentIndex + 1;
+      }
+    });
+
+    return array.slice(maxStartIndex, maxEndIndex + 1);
+  }
+
+  // REF: https://www.geeksforgeeks.org/shortest-possible-combination-two-strings/
+  function scs(set1, set2) {
+    const setLength1 = set1.length;
+    const setLength2 = set2.length;
+
+    const scsMatrix = Array(set1.length + 1).fill(null).map(() => Array(set2.length + 1).fill(null));
+
+    for (let rowIndex = 0; rowIndex <= setLength1; rowIndex++) {
+      for (let colIndex = 0; colIndex <= setLength2; colIndex++) {
+        if (rowIndex === 0) {
+          scsMatrix[rowIndex][colIndex] = colIndex;
+        } else if (colIndex === 0) {
+          scsMatrix[rowIndex][colIndex] = rowIndex;
+        } else if (set1[rowIndex - 1] === set2[colIndex - 1]) {
+          scsMatrix[rowIndex][colIndex] = 1 + scsMatrix[rowIndex - 1][colIndex - 1];
+        } else {
+          scsMatrix[rowIndex][colIndex] = 1 + Math.min(
+            scsMatrix[rowIndex - 1][colIndex],
+            scsMatrix[rowIndex][colIndex - 1]);
+        }
+      }
+    }
+
+    let index = scsMatrix[setLength1][setLength2];
+    const result = Array(index + 1);
+
+    let setIndex1 = setLength1;
+    let setIndex2 = setLength2;
+
+    while (setIndex1 > 0 && setIndex2 > 0) {
+      if (set1[setIndex1 - 1] === set2[setIndex2 - 1]) {
+        result.unshift(set1[setIndex1 - 1]);
+        index--;
+        setIndex1--;
+        setIndex2--;
+      } else if (scsMatrix[setIndex1 - 1][setIndex2] < scsMatrix[setIndex1][setIndex2 - 1]) {
+        result.unshift(set1[setIndex1 -1]);
+        index--;
+        setIndex1--;
+      } else {
+        result.unshift(set2[setIndex2 - 1]);
+        index--;
+        setIndex2--;
+      }
+    }
+
+    while (setIndex1 > 0) {
+      result.unshift(set1[setIndex1 - 1]);
+      index--;
+      setIndex1--;
+    }
+
+    while (setIndex2 > 0) {
+      result.unshift(set2[setIndex2 - 1]);
+      index--;
+      setIndex2--;
+    }
+
+    return result;
+  }
+
+  function powerSet(originalSet, allSubsets = [[]], currentSubSet = [], startAt = 0) {
+    for (let position = startAt; position < originalSet.length; position++) {
+      currentSubSet.push(originalSet[position]);
+
+      allSubsets.push([...currentSubSet]);
+
+      powerSet(originalSet, allSubsets, currentSubSet, position + 1);
+
+      currentSubSet.pop();
+    }
+
+    return allSubsets;
+  }
+
+  tests({
+    'it performs cartesian product': function() {
+      let actualResult;
+      let expectedResult;
+
+      actualResult = cartesianProduct([1], []);
+      expectedResult = null;
+      eq(actualResult, expectedResult);
+
+      actualResult = cartesianProduct([1], [1]);
+      expectedResult = [[1,1]];
+      for (let i = 0; i < expectedResult.length; i++) {
+        eq(actualResult[i][0], expectedResult[i][0]);
+        eq(actualResult[i][1], expectedResult[i][1]);
+      }
+
+      actualResult = cartesianProduct([1,2,3], [4,5,6]);
+      expectedResult = [
+        [1,4], [1,5], [1,6],
+        [2,4], [2,5], [2,6],
+        [3,4], [3,5], [3,6],
+      ];
+      for (let i = 0; i < expectedResult.length; i++) {
+        eq(actualResult[i][0], expectedResult[i][0]);
+        eq(actualResult[i][1], expectedResult[i][1]);
+      }
+    },
+    'it performs combination sum': function() {
+      let expectedResult;
+      let actualResult;
+
+      actualResult = combinationSum([2, 3, 6, 7], 7);
+      expectedResult = [
+        [2,2,3],
+        [7]
+      ]
+      for (let i = 0; i < expectedResult.length; i++) {
+        eq(actualResult[i].join(','), expectedResult[i].join(','));
+      }
+
+      actualResult = combinationSum([2, 5], 3);
+      eq(actualResult.length, 0);
+    },
+    'it performs combination without repitition': function() {
+      let actualResult = combineWithoutRepitition(['A', 'B', 'C', 'D', 'E'], 3);
+      let expectedResult = [
+        ['A', 'B', 'C'],
+        ['A', 'B', 'D'],
+        ['A', 'B', 'E'],
+        ['A', 'C', 'D'],
+        ['A', 'C', 'E'],
+        ['A', 'D', 'E'],
+        ['B', 'C', 'D'],
+        ['B', 'C', 'E'],
+        ['B', 'D', 'E'],
+        ['C', 'D', 'E'],
+      ];
+
+      for (let i = 0; i < expectedResult.length; i++) {
+        eq(actualResult[i].join(','), expectedResult[i].join(','));
+      }
+    },
+    'it performs combination with repitition': function() {
+      let actualResult = combineWithRepitition(['A', 'B', 'C'], 3);
+      let expectedResult = [
+        ['A', 'A', 'A'],
+        ['A', 'A', 'B'],
+        ['A', 'A', 'C'],
+        ['A', 'B', 'B'],
+        ['A', 'B', 'C'],
+        ['A', 'C', 'C'],
+        ['B', 'B', 'B'],
+        ['B', 'B', 'C'],
+        ['B', 'C', 'C'],
+        ['C', 'C', 'C'],
+      ];
+
+      for (let i = 0; i < expectedResult.length; i++) {
+        eq(actualResult[i].join(','), expectedResult[i].join(','));
+      }
+    },
+    'it performs permutation without repitition': function() {
+      let actualResult = permutateWithoutRepitition(['A', 'B', 'C']);
+      let expectedResult = [
+        ['A', 'B', 'C'],
+        ['B', 'A', 'C'],
+        ['B', 'C', 'A'],
+        ['A', 'C', 'B'],
+        ['C', 'A', 'B'],
+        ['C', 'B', 'A']
+      ];
+
+      for (let i = 0; i < expectedResult.length; i++) {
+        eq(actualResult[i].join(','), expectedResult[i].join(','));
+      }
+    },
+    'it performs permutation with repitition': function() {
+      let actualResult = permutateWithRepitition(['A', 'B', 'C']);
+      let expectedResult = [
+        ['A', 'A', 'A'],
+        ['A', 'A', 'B'],
+        ['A', 'A', 'C'],
+        ['A', 'B', 'A'],
+        ['A', 'B', 'B'],
+        ['A', 'B', 'C'],
+        ['A', 'C', 'A'],
+        ['A', 'C', 'B'],
+        ['A', 'C', 'C'],
+        ['B', 'A', 'A'],
+        ['B', 'A', 'B'],
+        ['B', 'A', 'C'],
+        ['B', 'B', 'A'],
+        ['B', 'B', 'B'],
+        ['B', 'B', 'C'],
+        ['B', 'C', 'A'],
+        ['B', 'C', 'B'],
+        ['B', 'C', 'C'],
+        ['C', 'A', 'A'],
+        ['C', 'A', 'B'],
+        ['C', 'A', 'C'],
+        ['C', 'B', 'A'],
+        ['C', 'B', 'B'],
+        ['C', 'B', 'C'],
+        ['C', 'C', 'A'],
+        ['C', 'C', 'B'],
+        ['C', 'C', 'C'],
+      ];
+
+      for (let i = 0; i < expectedResult.length; i++) {
+        eq(actualResult[i].join(','), expectedResult[i].join(','));
+      }
+    },
+    'it shuffles array using fisher Yates': function() {
+      let isShuffled = false;
+
+      const originalArray = [1, 2, 3, 4]
+      const shuffledArray = fisherYates(originalArray);
+
+      isShuffled = originalArray.join(',') != shuffledArray.join(',');
+
+      eq(shuffledArray.length, originalArray.length);
+      eq(isShuffled, true);
+    },
+    'it performs knapsack 0/1': function() {
+      const val = [60, 100, 120];
+      const wt = [10, 20, 30];
+      const maxWt = 50;
+
+      const actualResult = knapSack01(val, wt, maxWt);
+      const expectedResult = 220;
+
+      eq(actualResult, expectedResult);
+    },
+    'it finds longest common subsequence(LCS)': function() {
+      let set1 = 'ABC';
+      let set2 = 'DEF';
+
+      let actualResult = lcs(set1, set2);
+      let expectedResult = '';
+
+      eq(actualResult, expectedResult);
+
+      set1 = 'ABCDGH';
+      set2 = 'AEDFHR';
+
+      expectedResult = 'ADH';
+      actualResult = lcs(set1, set2);
+
+      eq(actualResult, expectedResult);
+    },
+    'it finds longest increasing subsequence(LIS)': function() {
+      let sequence = '1,4,2,5,3';
+
+      let actualResult = lis(sequence);
+      let expectedResult = 3;
+
+      eq(actualResult, expectedResult);
+
+      sequence = '3,2,1';
+
+      actualResult = lis(sequence);
+      expectedResult = 1;
+
+      eq(actualResult, expectedResult);
+    },
+    'it finds maximum sub array': function() {
+      let expectedArray;
+      let actualArray;
+
+      actualArray = maxSubArray([0, 0, 1, 2]);
+      expectedArray = [0, 0, 1, 2];
+
+      eq(actualArray.length, expectedArray.length);
+      for (let i = 0; i < expectedArray.length; i++) {
+        eq(actualArray[i], expectedArray[i]);
+      }
+
+      actualArray = maxSubArray([-2, -3, 4, -1, -2, 1, 5, -3]);
+      expectedArray = [4, -1, -2, 1, 5];
+
+      eq(actualArray.length, expectedArray.length);
+      for (let i = 0; i < expectedArray.length; i++) {
+        eq(actualArray[i], expectedArray[i]);
+      }
+    },
+    'it finds shortest common supersequence(SCS)': function() {
+      let set1;
+      let set2;
+      let actualResult;
+      let expectedResult;
+
+      set1 = 'algorithm'.split('');
+      set2 = 'rhythm'.split('');
+
+      actualResult = scs(set1, set2).join('');
+      expectedResult = 'algorihythm';
+
+      eq(actualResult, expectedResult);
+    },
+    'it returns power set': function() {
+      let array;
+      let actualResult;
+      let expectedResult;
+      array = [1];
+      actualResult = powerSet(array);
+
+      expectedResult = [
+        [],
+        [1]
+      ]
+      eqArray(actualResult, expectedResult);
+
+      array = [1, 2, 3];
+      actualResult = powerSet(array);
+      expectedResult = [
+        [],
+        [1],
+        [1, 2],
+        [1, 2, 3],
+        [1, 3],
+        [2],
+        [2, 3],
+        [3]
+      ];
+      eqArray(actualResult, expectedResult);
+    }
+
+  });
+  </script>
+</body>
+</html>
