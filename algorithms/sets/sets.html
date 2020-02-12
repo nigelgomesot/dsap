@@ -70,6 +70,18 @@
       }
     },
 
+    assertArrayEquals: function(expected, actual) {
+      if (expected instanceof Array && actual instanceof Array) {
+        if (expected.length !== actual.length)
+          throw new Error('assertArrayEquals() length: "' + expected.length + '" !== "' + actual.length + '"');
+
+        for(let i = 0; i < expected.length; i++) {
+          eqArray(expected[i], actual[i]);
+        }
+      } else {
+        eq(expected, actual);
+      }
+    }
   };
 
   var fail         = TinyTest.fail.bind(TinyTest),
@@ -77,6 +89,7 @@
     assertEquals     = TinyTest.assertEquals.bind(TinyTest),
     eq         = TinyTest.assertEquals.bind(TinyTest),
     assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
+    eqArray      = TinyTest.assertArrayEquals.bind(TinyTest),
     tests        = TinyTest.run.bind(TinyTest);
 
   // TinyTest END
@@ -666,8 +679,21 @@
       eq(actualResult, expectedResult);
     },
     'it returns power set': function() {
-      const array = [1, 2, 3];
-      const expectedResult = [
+      let array;
+      let actualResult;
+      let expectedResult;
+      array = [1];
+      actualResult = powerSet(array);
+
+      expectedResult = [
+        [],
+        [1]
+      ]
+      eqArray(actualResult, expectedResult);
+
+      array = [1, 2, 3];
+      actualResult = powerSet(array);
+      expectedResult = [
         [],
         [1],
         [1, 2],
@@ -675,11 +701,9 @@
         [1, 3],
         [2],
         [2, 3],
-        [3],
+        [3]
       ];
-
-      const actualResult = powerSet(array);
-      eq(actualResult, expectedResult);
+      eqArray(actualResult, expectedResult);
     }
 
   });
