@@ -124,6 +124,10 @@
     return count;
   }
 
+  function bitsDiff(number1, number2) {
+    return countSetBits(number1 ^ number2);
+  }
+
   tests({
     'it finds bit length of a number': function() {
       let number = 32;
@@ -160,6 +164,18 @@
       actualCount = countSetBits(7);
       expectedCount = 3;
       eq(expectedCount, actualCount);
+    },
+    'finds bit difference between 2 numbers': function() {
+      let expectedDiff;
+      let actualDiff;
+
+      actualDiff = bitsDiff(3, 3);
+      expectedDiff = 0;
+      eq(expectedDiff, actualDiff);
+
+      actualDiff = bitsDiff(1, 7);
+      expectedDiff = 2;
+      eq(expectedDiff, actualDiff);
     }
 
   });
