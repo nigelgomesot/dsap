@@ -128,6 +128,10 @@
     return countSetBits(number1 ^ number2);
   }
 
+  function getBit(number, bitPosition) {
+    return (number >> bitPosition) & 1;
+  }
+
   tests({
     'it finds bit length of a number': function() {
       let number = 32;
@@ -176,6 +180,18 @@
       actualDiff = bitsDiff(1, 7);
       expectedDiff = 2;
       eq(expectedDiff, actualDiff);
+    },
+    'finds bit at specified position in a number': function() {
+      let expectedBit;
+      let actualBit;
+
+      actualBit = getBit(2, 1);
+      expectedBit = 1;
+      eq(expectedBit, actualBit);
+
+      actualBit = getBit(3, 5);
+      expectedBit = 0;
+      eq(expectedBit, actualBit);
     }
 
   });
