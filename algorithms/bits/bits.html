@@ -132,6 +132,10 @@
     return (number >> bitPosition) & 1;
   }
 
+  function numberIsEven(number) {
+    return (number & 1) === 0;
+  }
+
   tests({
     'it finds bit length of a number': function() {
       let number = 32;
@@ -169,7 +173,7 @@
       expectedCount = 3;
       eq(expectedCount, actualCount);
     },
-    'finds bit difference between 2 numbers': function() {
+    'it finds bit difference between 2 numbers': function() {
       let expectedDiff;
       let actualDiff;
 
@@ -181,7 +185,7 @@
       expectedDiff = 2;
       eq(expectedDiff, actualDiff);
     },
-    'finds bit at specified position in a number': function() {
+    'it finds bit at specified position in a number': function() {
       let expectedBit;
       let actualBit;
 
@@ -192,6 +196,15 @@
       actualBit = getBit(3, 5);
       expectedBit = 0;
       eq(expectedBit, actualBit);
+    },
+    'it checks if number is even': function() {
+      let isEven;
+
+      isEven = numberIsEven(2);
+      eq(isEven, true);
+
+      isEven = numberIsEven(5);
+      eq(isEven, false);
     }
 
   });
