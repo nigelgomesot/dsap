@@ -144,6 +144,14 @@
     return ((number >> 31 & 1) === 0);
   }
 
+  function numberIsPowerOf2(number) {
+    if (number === 0) {
+      return false;
+    }
+
+    return ((number & (number - 1)) === 0);
+  }
+
   tests({
     'it finds bit length of a number': function() {
       let number = 32;
@@ -225,6 +233,18 @@
 
       isPositive = numberIsPositive(0);
       eq(isPositive, false);
+    },
+    'it checks if number is power of 2': function() {
+      let isPowerOf2;
+
+      isPowerOf2 = numberIsPowerOf2(16);
+      eq(isPowerOf2, true);
+
+      isPowerOf2 = numberIsPowerOf2(15);
+      eq(isPowerOf2, false);
+
+      isPowerOf2 = numberIsPowerOf2(0);
+      eq(isPowerOf2, false);
     }
 
   });
