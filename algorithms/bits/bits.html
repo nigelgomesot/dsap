@@ -152,6 +152,10 @@
     return ((number & (number - 1)) === 0);
   }
 
+  function multiplyBy2(number) {
+    return (number << 1);
+  }
+
   tests({
     'it finds bit length of a number': function() {
       let number = 32;
@@ -245,6 +249,15 @@
 
       isPowerOf2 = numberIsPowerOf2(0);
       eq(isPowerOf2, false);
+    },
+    'it multiplies by 2': function() {
+      let actualResult;
+
+      actualResult = multiplyBy2(4);
+      eq(actualResult, 8);
+
+      actualResult = multiplyBy2(0);
+      eq(actualResult, 0);
     }
 
   });
