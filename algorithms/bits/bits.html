@@ -191,6 +191,10 @@
     return (number & clearMask) | (bitValue << bitPosition);
   }
 
+  function fullAdder(number1, number2) {
+
+  }
+
   tests({
     'it finds bit length of a number': function() {
       let number = 32;
@@ -341,6 +345,15 @@
 
       actualResult = updateBit(3, 2, 1);
       eq(actualResult, 7);
+    },
+    'it performs full adder operation': function() {
+      let actualResult;
+
+      actualResult = fullAdder(6, 6);
+      eq(actualResult, 12);
+
+      actualResult = fullAdder(4, -2);
+      eq(actualResult, 2);
     }
 
   });
