@@ -192,8 +192,26 @@
   }
 
   function fullAdder(number1, number2) {
+    let result = 0;
+    let carry = 0;
 
+    for (let i = 0; i < 32; i++) {
+      const bit1 = getBit(number1, i);
+      const bit2 = getBit(number2, i);
+
+      const bit1Plusbit2 = bit1 ^ bit2;
+      const carryIn = carry;
+      const bitSum = bit1Plusbit2 ^ carryIn;
+      const carryOut = (bit1Plusbit2 & carryIn) | (bit1 & bit2);
+
+      carry = carryOut;
+
+      result = updateBit(result, i, bitSum);
+    }
+
+    return result;
   }
+
 
   tests({
     'it finds bit length of a number': function() {
@@ -349,11 +367,14 @@
     'it performs full adder operation': function() {
       let actualResult;
 
-      actualResult = fullAdder(6, 6);
-      eq(actualResult, 12);
+      actualResult = fullAdder(2, 2);
+      eq(actualResult, 4);
 
-      actualResult = fullAdder(4, -2);
-      eq(actualResult, 2);
+      actualResult = fullAdder(4, -3);
+      eq(actualResult, 1);
+
+      actualResult = fullAdder(-4, 3);
+      eq(actualResult, -1);
     }
 
   });
