@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+  <script type="text/javascript">
+  // REF: https://github.com/trekhleb/javascript-algorithms/tree/master/src/algorithms/math/bits
+
+  // REF: https://github.com/gordonmzhu/jstinytest/blob/master/tinytest.js
+
+  // TinyTest START
+  var TinyTestHelpers = {
+    renderStats: function(tests, failures) {
+      let numberOfTests = Object.keys(tests).length;
+      let successes = numberOfTests - failures;
+      let summaryStr = 'Total Tests: ' + numberOfTests
+              + ', Success: ' + successes
+              + ', Failures: ' + failures;
+
+      summaryEle = document.createElement('h1');
+      summaryEle.textContent = summaryStr;
+      document.body.appendChild(summaryEle);
+    }
+  };
+
+  var TinyTest = {
+
+    run: function(tests) {
+      var failures = 0;
+      for (var testName in tests) {
+        var testAction = tests[testName];
+        try {
+          testAction.apply(this);
+          console.log('%c' + testName, "color: green;");
+        } catch (e) {
+          failures++;
+          console.groupCollapsed('%c' + testName, "color: red;");
+          console.error(e.stack);
+          console.groupEnd();
+        }
+      }
+      setTimeout(function() { // Give document a chance to complete
+        if (window.document && document.body) {
+          document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+          TinyTestHelpers.renderStats(tests, failures);
+        }
+      }, 0);
+    },
+  
+    fail: function(msg) {
+      throw new Error('fail(): ' + msg);
+    },
+  
+    assert: function(value, msg) {
+      if (!value) {
+        throw new Error('assert(): ' + msg);
+      }
+    },
+  
+    assertEquals: function(expected, actual) {
+      if (expected != actual) {
+        throw new Error('assertEquals() "' + expected + '" != "' + actual + '"');
+      }
+    },
+  
+    assertStrictEquals: function(expected, actual) {
+      if (expected !== actual) {
+        throw new Error('assertStrictEquals() "' + expected + '" !== "' + actual + '"');
+      }
+    },
+
+    assertArrayEquals: function(expected, actual) {
+      if (expected instanceof Array && actual instanceof Array) {
+        if (expected.length !== actual.length)
+          throw new Error('assertArrayEquals() length: "' + expected.length + '" !== "' + actual.length + '"');
+
+        for(let i = 0; i < expected.length; i++) {
+          eqArray(expected[i], actual[i]);
+        }
+      } else {
+        eq(expected, actual);
+      }
+    }
+  };
+
+  var fail         = TinyTest.fail.bind(TinyTest),
+    assert       = TinyTest.assert.bind(TinyTest),
+    assertEquals     = TinyTest.assertEquals.bind(TinyTest),
+    eq         = TinyTest.assertEquals.bind(TinyTest),
+    assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
+    eqArray      = TinyTest.assertArrayEquals.bind(TinyTest),
+    tests        = TinyTest.run.bind(TinyTest);
+
+  // TinyTest END
+
+  console.clear();
+
+  function bitLength(number) {
+    let length = 0;
+
+    while ((1 << length) <= number) {
+      length++;
+    }
+
+    return length;
+  }
+
+  function clearBit(number, bitPosition) {
+    const mask = ~(1 << bitPosition);
+
+    return (number & mask);
+  }
+
+  function countSetBits(number) {
+    let count = 0;
+
+    while (number) {
+      count += number & 1;
+
+      number >>= 1;
+    }
+
+    return count;
+  }
+
+  function bitsDiff(number1, number2) {
+    return countSetBits(number1 ^ number2);
+  }
+
+  function getBit(number, bitPosition) {
+    return (number >> bitPosition) & 1;
+  }
+
+  function numberIsEven(number) {
+    return (number & 1) === 0;
+  }
+
+  function numberIsPositive(number) {
+    if (number === 0) {
+      return false;
+    }
+
+    return ((number >> 31 & 1) === 0);
+  }
+
+  function numberIsPowerOf2(number) {
+    if (number === 0) {
+      return false;
+    }
+
+    return ((number & (number - 1)) === 0);
+  }
+
+  function multiplyBy2(number) {
+    return (number << 1);
+  }
+
+  function divideBy2(number) {
+    return (number >> 1);
+  }
+
+  function multiplyUnsigned(number1, number2) {
+    let result = 0;
+    let bitIndex = 0;
+    let multiplier = number2;
+
+    while (multiplier !== 0) {
+      if (multiplier & 1) {
+        result += number1 << bitIndex;
+      }
+
+      bitIndex += 1;
+      multiplier >>= 1;
+    }
+
+    return result;
+  }
+
+  function setBit(number, bitPosition) {
+    return ( number | (1 << bitPosition) );
+  }
+
+  function switchSign(number) {
+    return (~number + 1);
+  }
+
+  function updateBit(number, bitPosition, bitValue) {
+    const clearMask = ~(1 << bitPosition);
+
+    return (number & clearMask) | (bitValue << bitPosition);
+  }
+
+  function fullAdder(number1, number2) {
+    let result = 0;
+    let carry = 0;
+
+    for (let i = 0; i < 32; i++) {
+      const bit1 = getBit(number1, i);
+      const bit2 = getBit(number2, i);
+
+      const bit1Plusbit2 = bit1 ^ bit2;
+      const carryIn = carry;
+      const bitSum = bit1Plusbit2 ^ carryIn;
+      const carryOut = (bit1Plusbit2 & carryIn) | (bit1 & bit2);
+
+      carry = carryOut;
+
+      result = updateBit(result, i, bitSum);
+    }
+
+    return result;
+  }
+
+
+  tests({
+    'it finds bit length of a number': function() {
+      let number = 32;
+      let expectedLength = 6;
+
+      let actualLength = bitLength(number);
+      eq(expectedLength, actualLength);
+    },
+    'it clears bit position of a number': function() {
+      const number = 10;
+      let expectedNumber;
+      let actualNumber;
+
+      actualNumber = clearBit(10, 0);
+      expectedNumber = 10;
+      eq(expectedNumber, actualNumber);
+
+      actualNumber = clearBit(10, 1);
+      expectedNumber = 8;
+      eq(expectedNumber, actualNumber);
+
+      actualNumber = clearBit(10, 3);
+      expectedNumber = 2;
+      eq(expectedNumber, actualNumber);
+    },
+    'it counts set bits': function() {
+      let expectedCount;
+      let actualCount;
+
+      actualCount = countSetBits(2);
+      expectedCount = 1;
+      eq(expectedCount, actualCount);
+
+      actualCount = countSetBits(7);
+      expectedCount = 3;
+      eq(expectedCount, actualCount);
+    },
+    'it finds bit difference between 2 numbers': function() {
+      let expectedDiff;
+      let actualDiff;
+
+      actualDiff = bitsDiff(3, 3);
+      expectedDiff = 0;
+      eq(expectedDiff, actualDiff);
+
+      actualDiff = bitsDiff(1, 7);
+      expectedDiff = 2;
+      eq(expectedDiff, actualDiff);
+    },
+    'it finds bit at specified position in a number': function() {
+      let expectedBit;
+      let actualBit;
+
+      actualBit = getBit(2, 1);
+      expectedBit = 1;
+      eq(expectedBit, actualBit);
+
+      actualBit = getBit(3, 5);
+      expectedBit = 0;
+      eq(expectedBit, actualBit);
+    },
+    'it checks if number is even': function() {
+      let isEven;
+
+      isEven = numberIsEven(2);
+      eq(isEven, true);
+
+      isEven = numberIsEven(5);
+      eq(isEven, false);
+    },
+    'it checks if number is positive': function() {
+      let isPositive;
+
+      isPositive = numberIsPositive(2);
+      eq(isPositive, true);
+
+      isPositive = numberIsPositive(-5);
+      eq(isPositive, false);
+
+      isPositive = numberIsPositive(0);
+      eq(isPositive, false);
+    },
+    'it checks if number is power of 2': function() {
+      let isPowerOf2;
+
+      isPowerOf2 = numberIsPowerOf2(16);
+      eq(isPowerOf2, true);
+
+      isPowerOf2 = numberIsPowerOf2(15);
+      eq(isPowerOf2, false);
+
+      isPowerOf2 = numberIsPowerOf2(0);
+      eq(isPowerOf2, false);
+    },
+    'it multiplies by 2': function() {
+      let actualResult;
+
+      actualResult = multiplyBy2(4);
+      eq(actualResult, 8);
+
+      actualResult = multiplyBy2(0);
+      eq(actualResult, 0);
+    },
+    'it divides by 2': function() {
+      let actualResult;
+
+      actualResult = divideBy2(4);
+      eq(actualResult, 2);
+
+      actualResult = divideBy2(5);
+      eq(actualResult, 2);
+
+      actualResult = divideBy2(0);
+      eq(actualResult, 0);
+    },
+    'it multiplies unsigned numbers': function() {
+      let actualResult;
+
+      actualResult = multiplyUnsigned(2, 7);
+      eq(actualResult, 14);
+
+      actualResult = multiplyUnsigned(2, 0);
+      eq(actualResult, 0);
+    },
+    'it sets bit at specified position': function() {
+      let actualResult;
+
+      actualResult = setBit(1, 2);
+      eq(actualResult, 5);
+
+      actualResult = setBit(2, 1);
+      eq(actualResult, 2);
+    },
+    'it switches sign of a number': function() {
+      let actualResult;
+
+      actualResult = switchSign(3);
+      eq(actualResult, -3);
+
+      actualResult = switchSign(-3);
+      eq(actualResult, 3);
+    },
+    'it updates bit at specified position': function() {
+      let actualResult;
+
+      actualResult = updateBit(7, 2, 0);
+      eq(actualResult, 3);
+
+      actualResult = updateBit(3, 2, 1);
+      eq(actualResult, 7);
+    },
+    'it performs full adder operation': function() {
+      let actualResult;
+
+      actualResult = fullAdder(2, 2);
+      eq(actualResult, 4);
+
+      actualResult = fullAdder(4, -3);
+      eq(actualResult, 1);
+
+      actualResult = fullAdder(-4, 3);
+      eq(actualResult, -1);
+    }
+
+  });
+  </script>
+</body>
+</html>
