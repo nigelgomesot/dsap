@@ -6,4 +6,11 @@ export default class ComplexNumber {
 		this.re = re;
 		this.im = im;
 	}
+
+	add(addend) {
+		return new ComplexNumber({
+			re: this.re + addend.re,
+			im: this.im + addend.im
+		});
+	}
 }
