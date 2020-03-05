@@ -19,4 +19,13 @@ describe('ComplexNumber', () => {
     expect(result.im).toBe(3+4);
   });
 
+  it('subtracts complex numbers', () => {
+    const complexNumber1 = new ComplexNumber({re: 1, im: 3});
+    const complexNumber2 = new ComplexNumber({re: 2, im: 4});
+
+    const result = complexNumber1.subtract(complexNumber2);
+
+    expect(result.re).toBe(1-2);
+    expect(result.im).toBe(3-4);
+  });
 });

@@ -13,4 +13,11 @@ export default class ComplexNumber {
 			im: this.im + addend.im
 		});
 	}
+
+	subtract(subtrahend) {
+		return new ComplexNumber({
+			re: this.re - subtrahend.re,
+			im: this.im - subtrahend.im
+		});
+	}
 }
