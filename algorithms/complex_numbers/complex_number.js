@@ -20,4 +20,11 @@ export default class ComplexNumber {
 			im: this.im - subtrahend.im
 		});
 	}
+
+	multiply(multipicand) {
+		return new ComplexNumber({
+			re: (this.re * multipicand.re - this.im * multipicand.im),
+			im: (this.re * multipicand.im + this.im * multipicand.re)
+		});
+	}
 }

@@ -28,4 +28,14 @@ describe('ComplexNumber', () => {
     expect(result.re).toBe(1-2);
     expect(result.im).toBe(3-4);
   });
+
+  it('multiplies complex numbers', () => {
+    const complexNumber1 = new ComplexNumber({re: 1, im: 3});
+    const complexNumber2 = new ComplexNumber({re: 2, im: 4});
+
+    const result = complexNumber1.multiply(complexNumber2);
+
+    expect(result.re).toBe(1 * 2 - 3 * 4);
+    expect(result.im).toBe(1 * 4 + 3 * 2);
+  });
 });
