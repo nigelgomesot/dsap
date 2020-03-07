@@ -27,4 +27,11 @@ export default class ComplexNumber {
 			im: (this.re * multipicand.im + this.im * multipicand.re)
 		});
 	}
+
+	conjugate() {
+		return new ComplexNumber({
+			re: this.re,
+			im: (-1 * this.im)
+		});
+	}
 }

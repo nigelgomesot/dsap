@@ -38,4 +38,22 @@ describe('ComplexNumber', () => {
     expect(result.re).toBe(1 * 2 - 3 * 4);
     expect(result.im).toBe(1 * 4 + 3 * 2);
   });
+
+  it('returns conjugate of a complex number', () => {
+    let result;
+
+    const complexNumber1 = new ComplexNumber({re: 1, im: 3});
+
+    result = complexNumber1.conjugate();
+
+    expect(result.re).toBe(1);
+    expect(result.im).toBe(-3);
+
+    const complexNumber2 = new ComplexNumber({re: -1, im: -3});
+
+    result = complexNumber2.conjugate();
+
+    expect(result.re).toBe(-1);
+    expect(result.im).toBe(3);
+  })
 });
