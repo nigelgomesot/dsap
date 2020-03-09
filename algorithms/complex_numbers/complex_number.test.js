@@ -55,5 +55,15 @@ describe('ComplexNumber', () => {
 
     expect(result.re).toBe(-1);
     expect(result.im).toBe(3);
-  })
+  }),
+
+  it('divides complex numbers', () => {
+    const complexNumber1 = new ComplexNumber({re: 2, im: 3});
+    const complexNumber2 = new ComplexNumber({re: 4, im: -5});
+
+    const result = complexNumber1.divide(complexNumber2);
+
+    expect(result.re).toBe(-7 / 41);
+    expect(result.im).toBe(22 / 41);
+  });
 });

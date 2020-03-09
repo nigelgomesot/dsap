@@ -34,4 +34,16 @@ export default class ComplexNumber {
 			im: (-1 * this.im)
 		});
 	}
+
+	divide(divider) {
+		const dividerConjugate = divider.conjugate();
+
+		const finalDivident = this.multiply(dividerConjugate);
+		const finalDivider = ((divider.re ** 2) + (divider.im ** 2));
+
+		return new ComplexNumber({
+			re: (finalDivident.re / finalDivider),
+			im: (finalDivident.im / finalDivider)
+		});
+	}
 }
