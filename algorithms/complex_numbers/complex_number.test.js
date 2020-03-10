@@ -66,4 +66,12 @@ describe('ComplexNumber', () => {
     expect(result.re).toBe(-7 / 41);
     expect(result.im).toBe(22 / 41);
   });
+
+  it('calculates radius', () => {
+    const complexNumber = new ComplexNumber({re: 2, im: 4});
+
+    const result = complexNumber.getRadius();
+
+    expect(result).toBe(Math.sqrt((2 ** 2) + (4 ** 2)));
+  })
 });

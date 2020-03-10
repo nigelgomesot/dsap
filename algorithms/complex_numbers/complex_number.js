@@ -46,4 +46,8 @@ export default class ComplexNumber {
 			im: (finalDivident.im / finalDivider)
 		});
 	}
+
+	getRadius() {
+		return Math.sqrt((this.re ** 2) + (this.im ** 2));
+	}
 }
