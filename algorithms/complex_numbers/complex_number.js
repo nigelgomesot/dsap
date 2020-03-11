@@ -50,4 +50,28 @@ export default class ComplexNumber {
 	getRadius() {
 		return Math.sqrt((this.re ** 2) + (this.im ** 2));
 	}
+
+	getPhase() {
+		let phase = Math.atan(Math.abs(this.im) / Math.abs(this.re));
+
+		if (this.re < 0 && this.im > 0) {
+			phase = Math.PI - phase;
+		} else if (this.re < 0 && this.im < 0) {
+			phase = -(Math.PI - phase);
+		} else if (this.re > 0 && this.im < 0) {
+			phase = -phase;
+		} else if (this.re === 0 && this.im > 0) {
+			phase = Math.PI / 2;
+		} else if (this.re === 0 && this.im < 0) {
+			phase = -(Math.PI / 2);
+		} else if (this.re < 0 && this.im === 0) {
+			phase = Math.PI;
+		} else if (this.re > 0 && this.im === 0) {
+			phase = 0;
+		} else if (this.re === 0 && this.im === 0) {
+			phase = 0;
+		}
+
+		return phase;
+	}
 }
