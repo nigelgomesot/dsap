@@ -73,5 +73,48 @@ describe('ComplexNumber', () => {
     const result = complexNumber.getRadius();
 
     expect(result).toBe(Math.sqrt((2 ** 2) + (4 ** 2)));
-  })
+  });
+
+  it('returns polar form', () => {
+    const complexNumber1 = new ComplexNumber({re: 3, im: 3});
+    expect(complexNumber1.getPolarForm().radius).toBe(Math.sqrt((3 ** 2) + (3 ** 2)));
+    expect(complexNumber1.getPolarForm().phase).toBe(Math.PI / 4);
+
+    const complexNumber2 = new ComplexNumber({ re: -3, im: 3 });
+    expect(complexNumber2.getPolarForm().radius).toBe(Math.sqrt((3 ** 2) + (3 ** 2)));
+    expect(complexNumber2.getPolarForm().phase).toBe(3 * (Math.PI / 4));
+
+    const complexNumber3 = new ComplexNumber({ re: -3, im: -3 });
+    expect(complexNumber3.getPolarForm().radius).toBe(Math.sqrt((3 ** 2) + (3 ** 2)));
+    expect(complexNumber3.getPolarForm().phase).toBe(-3 * (Math.PI / 4));
+
+    const complexNumber4 = new ComplexNumber({ re: 3, im: -3 });
+    expect(complexNumber4.getPolarForm().radius).toBe(Math.sqrt((3 ** 2) + (3 ** 2)));
+    expect(complexNumber4.getPolarForm().phase).toBe(-1 * (Math.PI / 4));
+
+    const complexNumber5 = new ComplexNumber({ re: 5, im: 7 });
+    expect(complexNumber5.getPolarForm().radius).toBeCloseTo(8.60);
+    expect(complexNumber5.getPolarForm().phase).toBeCloseTo(0.95);
+
+    const complexNumber6 = new ComplexNumber({ re: 0, im: 0.25 });
+    expect(complexNumber6.getPolarForm().radius).toBeCloseTo(0.25);
+    expect(complexNumber6.getPolarForm().phase).toBeCloseTo(1.57);
+
+    const complexNumber7 = new ComplexNumber({ re: 0, im: -0.25 });
+    expect(complexNumber7.getPolarForm().radius).toBeCloseTo(0.25);
+    expect(complexNumber7.getPolarForm().phase).toBeCloseTo(-1.57);
+
+
+    const complexNumber8 = new ComplexNumber({ re: -0.25, im: 0 });
+    expect(complexNumber8.getPolarForm().radius).toBeCloseTo(0.25);
+    expect(complexNumber8.getPolarForm().phase).toBeCloseTo(Math.PI);
+
+    const complexNumber9 = new ComplexNumber({ re: 0.25, im: 0 });
+    expect(complexNumber9.getPolarForm().radius).toBeCloseTo(0.25);
+    expect(complexNumber9.getPolarForm().phase).toBeCloseTo(0);
+
+    const complexNumber10 = new ComplexNumber({ re: 0, im: 0 });
+    expect(complexNumber10.getPolarForm().radius).toBeCloseTo(0);
+    expect(complexNumber10.getPolarForm().phase).toBeCloseTo(0);
+  });
 });

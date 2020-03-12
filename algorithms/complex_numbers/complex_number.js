@@ -74,4 +74,12 @@ export default class ComplexNumber {
 
 		return phase;
 	}
+
+	getPolarForm() {
+		return {
+			radius: this.getRadius(),
+			phase: this.getPhase()
+		};
+	}
+
 }
