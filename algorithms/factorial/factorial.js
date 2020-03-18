@@ -9,3 +9,7 @@ export function iterative(number) {
 
 	return result;
 }
+
+export function recursive(number) {
+	return number > 1 ? number * recursive(number - 1) : 1;
+}
