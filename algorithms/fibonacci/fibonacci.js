@@ -47,3 +47,10 @@ export function numberAt(position) {
 
 	return currentValue;
 }
+
+export function numberAtViaClosedForm(position) {
+	const sqrt5 = Math.sqrt(5);
+	const phi = (1 + sqrt5) / 2;
+
+	return Math.floor((phi ** position) / sqrt5 + 0.5);
+}

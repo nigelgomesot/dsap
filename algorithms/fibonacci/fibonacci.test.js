@@ -14,5 +14,12 @@ describe('Fibonacci', () => {
 		expect(Fibonacci.numberAt(2)).toEqual(1);
 		expect(Fibonacci.numberAt(6)).toEqual(8);
 		expect(Fibonacci.numberAt(8)).toEqual(21);
-	})
+	});
+
+	it('returns fibonacci number at specified position via Closed Form', () => {
+		expect(Fibonacci.numberAtViaClosedForm(1)).toEqual(1);
+		expect(Fibonacci.numberAtViaClosedForm(2)).toEqual(1);
+		expect(Fibonacci.numberAtViaClosedForm(6)).toEqual(8);
+		expect(Fibonacci.numberAtViaClosedForm(8)).toEqual(21);
+	});
 });
