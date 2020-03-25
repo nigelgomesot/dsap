@@ -1,6 +1,6 @@
 // REF: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/math/fourier-transform
 
-import ComplexNumber from '../complex_numbers/complex_number.js';
+import ComplexNumber from './complexNumber.js';
 
 export function discrete(inputAmplitudes) {
 	const N = inputAmplitudes.length;
@@ -23,6 +23,21 @@ export function discrete(inputAmplitudes) {
 
 			frequencySignal = frequencySignal.add(dataPointContribution);
 		}
-		// PENDING:
+		
+		if (Math.abs(frequencySignal.re) < zeroThreshold) {
+			frequencySignal.re = 0;
+		}
+
+		if (Math.abs(frequencySignal.im) < zeroThreshold) {
+			frequencySignal.im = 0;
+		}
+
+		const nComplexNumber = new ComplexNumber({re: N});
+
+		frequencySignal = frequencySignal.divide(nComplexNumber);
+
+		signals[frequency] = frequencySignal;
 	}
+
+	return signals;
 }

@@ -31,16 +31,16 @@ describe('FourierTransform', () => {
   			const { input, output: expectedOutput } = testCase;
 
   			const amplitudes = input.map(sample => sample.amplitude );
-  			const result = FourierTransform.discrete(result);
+  			const result = FourierTransform.discrete(amplitudes);
 
-  			result.forEach((expectedSignal, frequency) => {
+  			expectedOutput.forEach((expectedSignal, frequency) => {
   				const currentSignal = result[frequency];
   				const currentPolarSignal = currentSignal.getPolarForm();
 
   				expect(currentSignal.re).toBeCloseTo(expectedSignal.re, 4);
   				expect(currentSignal.im).toBeCloseTo(expectedSignal.im, 4);
-  				expect(currentSignal.phase).toBeCloseTo(expectedSignal.phase, 4);
-   				expect(currentSignal.amplitude).toBeCloseTo(expectedSignal.amplitude, 4);
+  				expect(currentPolarSignal.phase).toBeCloseTo(expectedSignal.phase, 4);
+   				expect(currentPolarSignal.radius).toBeCloseTo(expectedSignal.amplitude, 4);
   			});
   		});
 
