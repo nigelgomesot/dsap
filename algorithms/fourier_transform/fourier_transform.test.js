@@ -22,7 +22,7 @@ describe('FourierTransform', () => {
 			      { frequency: 0, amplitude: 2.5, phase: 0, re: 2.5, im: 0, },
 			      { frequency: 1, amplitude: 0.70710, phase: 135, re: -0.5, im: 0.49999, },
 			      { frequency: 2, amplitude: 0.5, phase: 180, re: -0.5, im: 0, },
-			      { frequency: 3, amplitude: 0.70710, phase: -134.99999, re: -0.49999, im: -0.5, },
+			      { frequency: 3, amplitude: 0.70710, phase: -135, re: -0.49999, im: -0.5, },
 			    ],
 			},
   		]
@@ -39,7 +39,9 @@ describe('FourierTransform', () => {
 
   				expect(currentSignal.re).toBeCloseTo(expectedSignal.re, 4);
   				expect(currentSignal.im).toBeCloseTo(expectedSignal.im, 4);
-  				expect(currentPolarSignal.phase).toBeCloseTo(expectedSignal.phase, 4);
+
+				const phaseInDegree = currentPolarSignal.phase * (180 / Math.PI);
+				expect(phaseInDegree).toBeCloseTo(expectedSignal.phase, 4);
    				expect(currentPolarSignal.radius).toBeCloseTo(expectedSignal.amplitude, 4);
   			});
   		});
