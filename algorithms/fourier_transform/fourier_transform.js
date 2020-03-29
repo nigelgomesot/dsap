@@ -53,7 +53,21 @@ export function fast(inputData, inverse = false) {
 
 	const output = [];
 
-	// PENDING
+	for (let index = 0; index < N; index++) {
+		output[index] = inputData[reverseBits(index, bitCount)];
+	}
+
+	for (let blockLength = 2; blockLength <= N; blockLength *= 2) {
+		const imSign = inverse ? -1 : 1;
+
+		const phaseStep = new ComplexNumber({
+			re: Math.cos(2 * Math.PI / blockLength),
+			im: (imSign * Math.sin(2 * Math.PI / blockLength))
+		});
+
+		// PENDING
+	}
+
 }
 
 function reverseBits(input, bitCount) {
