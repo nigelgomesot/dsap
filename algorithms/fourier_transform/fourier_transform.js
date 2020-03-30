@@ -65,12 +65,33 @@ export function fast(inputData, inverse = false) {
 			im: (imSign * Math.sin(2 * Math.PI / blockLength))
 		});
 
-		// PENDING
+		for (let blockStart = 0; blockStart < N; blockStart += blockLength) {
+			let phase = new ComplexNumber({re: 1, im: 0});
+
+			for (let signalId = blockStart; signalId < (blockStart + blockLength / 2); signalId++) {
+				const component = output[signalId + blockLength / 2].multiply(phase);
+
+				const upd1 = output[signalId].add(component);
+				const upd2 = output[signalId].subtract(component);
+
+				output[signalId] = upd1;
+				output[signalId + blockLength / 2] = upd2;
+
+				phase = phase.multiply(phaseStep);
+			}
+		}
 	}
 
+	if (inverse) {
+		for (let signalId = 0; signalId < N; signalId++) {
+			output[signalId] /= N;
+		}
+	}
+
+	return output;
 }
 
-function reverseBits(input, bitCount) {
+export function reverseBits(input, bitCount) {
 	let reversedBits = 0;
 
 	for(let bitIndex = 0; bitIndex < bitCount; bitIndex++) {
