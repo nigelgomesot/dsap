@@ -67,6 +67,9 @@ describe('FourierTransform', () => {
 
 	});
 
+	// REF: Debugging: https://medium.com/@alex.wasik/how-to-debug-jest-tests-with-chrome-c3d7e9edf82d
+	// 1) Open chrome://inspect, 2) Click on “Open dedicated DevTools for Node”
+	// 3) Add debugger statement, 4) Run `node --inspect node_modules/.bin/jest --runInBand fourier_transform.test.js`
 	it('performs FFT', () => {
 		const input = [
 			new ComplexNumber({re: 1, im: 2}),

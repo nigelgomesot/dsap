@@ -83,8 +83,10 @@ export function fast(inputData, inverse = false) {
 	}
 
 	if (inverse) {
+		const nComplexNumber = new ComplexNumber({re: N});
+
 		for (let signalId = 0; signalId < N; signalId++) {
-			output[signalId] /= N;
+			output[signalId] = output[signalId].divide(nComplexNumber);
 		}
 	}
 
