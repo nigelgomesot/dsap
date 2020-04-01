@@ -87,7 +87,7 @@ describe('FourierTransform', () => {
 		const delta = 1e-6;
 
 		const output = FourierTransform.fast(input);
-		const invertedOutput = FourierTransform.fast(input, true);
+		const invertedOutput = FourierTransform.fast(output, true);
 
 		expect(sequenceApproxEquals(expectedOutput, output, delta)).toBe(true);
 		expect(sequenceApproxEquals(input, invertedOutput, delta)).toBe(true);
