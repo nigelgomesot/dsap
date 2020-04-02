@@ -72,9 +72,10 @@ describe('FourierTransform', () => {
 	// 3) Add debugger statement, 4) Run `node --inspect node_modules/.bin/jest --runInBand fourier_transform.test.js`
 	it('performs FFT', () => {
 		const input = [
-			new ComplexNumber({re: 1, im: 2}),
-			new ComplexNumber({re: 2, im: 3}),
-			new ComplexNumber({re: 8, im: 4}),
+			{ frequency: 0, amplitude: 2.5, phase: 0, re: 2.5, im: 0, },
+      		{ frequency: 1, amplitude: 0.70710, phase: 135, re: -0.5, im: 0.49999, },
+      		{ frequency: 2, amplitude: 0.5, phase: 180, re: -0.5, im: 0, },
+      		{ frequency: 3, amplitude: 0.70710, phase: -135, re: -0.49999, im: -0.5, },
 		];
 
 		const expectedOutput = [
@@ -91,6 +92,39 @@ describe('FourierTransform', () => {
 
 		expect(sequenceApproxEquals(expectedOutput, output, delta)).toBe(true);
 		expect(sequenceApproxEquals(input, invertedOutput, delta)).toBe(true);
+	});
+
+	it('performs IFT', () => {
+		const inputFrequencies = [
+			{re: 11, im: 9},
+			{re: -10, im: 0},
+			{re: 7, im: 3},
+			{re: -4, im: -4},
+		];
+
+		const expectedOutput = [
+			{ amplitude: 1 },
+	      	{ amplitude: 2 },
+	      	{ amplitude: 3 },
+	      	{ amplitude: 4 }
+		];
+
+		const formattedInput = inputFrequencies.map(frequency => {
+			return new ComplexNumber({
+				re: frequency.re,
+				im: frequency.im
+			});
+		});
+
+		const output = FourierTransform.inverse(formattedInput);
+
+		expect(output.length).toBeLessThanOrEqual(formattedInput.length);
+
+		expectedOutput.forEach((expectedAmplitudes, timer) => {
+			const amplitude = output[timer];
+
+			expect(amplitude).toBeCloseTo(expectedAmplitudes.amplitude, 4);
+		});
 	});
 
 });
