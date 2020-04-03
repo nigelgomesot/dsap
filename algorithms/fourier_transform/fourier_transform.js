@@ -106,3 +106,28 @@ export function reverseBits(input, bitCount) {
 
 	return reversedBits;
 }
+
+export function inverse(frequencies) {
+	const N = frequencies.length;
+	const zeroThreshold = 1e-10;
+	const amplitudes = [];
+
+	for (let timer = 0; timer < N; timer++) {
+		let amplitude = new ComplexNumber();
+
+		for (let index = 0; index < N; index++) {
+			let frequency = frequencies[index];
+
+			const rotationAngle = (2 * Math.PI) * frequency * (timer / N);
+
+			const frequencyContribution = new ComplexNumber({
+				re: Math.cos(rotationAngle),
+				im: Math.sin(rotationAngle)
+			}).multiply(frequency);
+
+			amplitude = amplitude.add(frequencyContribution);
+		}
+
+		// PENDING:
+	}
+}
