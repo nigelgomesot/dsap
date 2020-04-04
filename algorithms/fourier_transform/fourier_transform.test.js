@@ -83,7 +83,7 @@ describe('FourierTransform', () => {
 			new ComplexNumber({re: -10, im: 0}),
 			new ComplexNumber({re: 7, im: 3}),
 			new ComplexNumber({re: -4, im: -4}),
-		]
+		];
 
 		const delta = 1e-6;
 
@@ -96,10 +96,10 @@ describe('FourierTransform', () => {
 
 	it('performs IFT', () => {
 		const inputFrequencies = [
-			{re: 11, im: 9},
-			{re: -10, im: 0},
-			{re: 7, im: 3},
-			{re: -4, im: -4},
+			{ frequency: 0, amplitude: 2.5, phase: 0, re: 2.5, im: 0, },
+	      	{ frequency: 1, amplitude: 0.70710, phase: 135, re: -0.5, im: 0.49999, },
+	      	{ frequency: 2, amplitude: 0.5, phase: 180, re: -0.5, im: 0, },
+	      	{ frequency: 3, amplitude: 0.70710, phase: -135, re: -0.49999, im: -0.5, },
 		];
 
 		const expectedOutput = [

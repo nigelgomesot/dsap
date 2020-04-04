@@ -69,7 +69,7 @@ export function fast(inputData, inverse = false) {
 			let phase = new ComplexNumber({re: 1, im: 0});
 
 			for (let signalId = blockStart; signalId < (blockStart + blockLength / 2); signalId++) {
-				const component = output[signalId + blockLength / 2].multiply(phase);
+				const component = (output[signalId + blockLength / 2]).multiply(phase);
 
 				const upd1 = output[signalId].add(component);
 				const upd2 = output[signalId].subtract(component);
@@ -115,10 +115,10 @@ export function inverse(frequencies) {
 	for (let timer = 0; timer < N; timer++) {
 		let amplitude = new ComplexNumber();
 
-		for (let index = 0; index < N; index++) {
-			let frequency = frequencies[index];
+		for (let frequencyIndex = 0; frequencyIndex < N; frequencyIndex++) {
+			let frequency = frequencies[frequencyIndex];
 
-			const rotationAngle = (2 * Math.PI) * frequency * (timer / N);
+			const rotationAngle = (2 * Math.PI) * frequencyIndex * (timer / N);
 
 			const frequencyContribution = new ComplexNumber({
 				re: Math.cos(rotationAngle),
@@ -128,6 +128,16 @@ export function inverse(frequencies) {
 			amplitude = amplitude.add(frequencyContribution);
 		}
 
-		// PENDING:
+		if (Math.abs(amplitude.re) < zeroThreshold) {
+			amplitude.re = 0;
+		}
+
+		if (Math.abs(amplitude.im) < zeroThreshold) {
+			amplitude.im = 0;
+		}
+
+		amplitudes[timer] = amplitude.re;
 	}
+
+	return amplitudes;
 }
