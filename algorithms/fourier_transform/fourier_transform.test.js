@@ -72,11 +72,10 @@ describe('FourierTransform', () => {
 	// 3) Add debugger statement, 4) Run `node --inspect node_modules/.bin/jest --runInBand fourier_transform.test.js`
 	it('performs FFT', () => {
 		const input = [
-			{ frequency: 0, amplitude: 2.5, phase: 0, re: 2.5, im: 0, },
-      		{ frequency: 1, amplitude: 0.70710, phase: 135, re: -0.5, im: 0.49999, },
-      		{ frequency: 2, amplitude: 0.5, phase: 180, re: -0.5, im: 0, },
-      		{ frequency: 3, amplitude: 0.70710, phase: -135, re: -0.49999, im: -0.5, },
-		];
+	      new ComplexNumber({ re: 1, im: 2 }),
+	      new ComplexNumber({ re: 2, im: 3 }),
+	      new ComplexNumber({ re: 8, im: 4 }),
+	    ];
 
 		const expectedOutput = [
 			new ComplexNumber({re: 11, im: 9}),
