@@ -1,4 +1,4 @@
-import ComplexNumber from './complex_number.js';
+import ComplexNumber from './ComplexNumber.js';
 
 describe('ComplexNumber', () => {
 	it('creates complex number', () => {
