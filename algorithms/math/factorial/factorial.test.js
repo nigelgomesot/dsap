@@ -1,4 +1,4 @@
-import * as Factorial from './factorial';
+import * as Factorial from './factorial.js';
 
 describe('Factorial', () => {
 

@@ -1,4 +1,4 @@
-import * as Fibonacci from './fibonacci';
+import * as Fibonacci from './fibonacci.js';
 
 describe('Fibonacci', () => {
 

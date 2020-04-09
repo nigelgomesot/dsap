@@ -1,4 +1,4 @@
-import * as FourierTransform from './fourier_transform';
+import * as FourierTransform from './fourier_transform.js';
 import ComplexNumber from './complexNumber.js';
 
 function sequenceApproxEquals(sequence1, sequence2, delta) {
