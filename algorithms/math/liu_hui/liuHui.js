@@ -13,6 +13,12 @@ function getNGonSideLength(sideLength, splitCounter) {
 	return getNGonSideLength(splitSideLength, splitCounter - 1);
 }
 
+function getNGonSideCount(splitCount) {
+	const hexagonSideCount = 6;
+
+	return (hexagonSideCount * (splitCount ? 2 ** splitCount : 1));
+}
+
 export default function liuHui(splitCount) {
 
 }
