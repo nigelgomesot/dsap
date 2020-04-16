@@ -1,5 +1,7 @@
 // REF: https://github.com/trekhleb/javascript-algorithms/tree/master/src/algorithms/math/liu-hui
 
+const circleRadius = 1;
+
 function getNGonSideLength(sideLength, splitCounter) {
 	if (splitCounter <= 0) {
 		return sideLength;
@@ -20,5 +22,10 @@ function getNGonSideCount(splitCount) {
 }
 
 export default function liuHui(splitCount) {
+	const nGonSideLength = getNGonSideLength(circleRadius, splitCount - 1);
+	const nGonSideCount = getNGonSideCount(splitCount - 1);
+	const nGonPerimeter = nGonSideLength * nGonSideCount;
+	const approximateCircleArea = (nGonPerimeter / 2) * circleRadius;
 
+	return approximateCircleArea / (circleRadius ** 2);
 }
