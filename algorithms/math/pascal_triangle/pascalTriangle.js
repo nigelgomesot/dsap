@@ -11,3 +11,23 @@ export function iterative(lineNumber) {
 
 	return currentLine;
 }
+
+export function recursive(lineNumber) {
+	if (lineNumber === 0) {
+		return [1];
+	}
+
+	const currentLine = [];
+	const currentLineSize = lineNumber;
+	const previousLineSize = currentLineSize - 1;
+
+	const previousLine = recursive(lineNumber - 1);
+
+	for (let i = 0; i <= currentLineSize; i++) {
+		const leftCoefficient = (i - 1) >= 0 ? previousLine[i - 1] : 0;
+		const rightCoefficient = i <= previousLineSize ? previousLine[i] : 0;
+		currentLine[i] = leftCoefficient + rightCoefficient;
+	}
+
+	return currentLine;
+}
