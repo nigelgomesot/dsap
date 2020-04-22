@@ -3,3 +3,7 @@
 export function toDegree(radian) {
 	return radian * (180 / Math.PI);
 }
+
+export function toRadian(degree) {
+	return degree * (Math.PI / 180);
+}
