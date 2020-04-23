@@ -1,0 +1,5 @@
+// REF: https://exercism.io/tracks/javascript/exercises/armstrong-numbers/solutions/08b19bc54532479dba617c3d96d6d38c
+
+export function verify(number) {
+
+}
