@@ -80,12 +80,89 @@
   
   // TinyTest END
 
+  class Node {
+    constructor(value, next = null) {
+      this.value = value;
+      this.next = next;
+    }
+  };
+  
+  class LinkedList {
+    constructor() {
+      this.length = 0;
+      this.head = null;
+    }
+    
+    size() {
+      return this.length;
+    }
+    
+    isEmpty() {
+      return this.size() === 0;
+    }
+    
+    append(value) {
+      node = new Node(value);
+      let curr = this.head;
+      
+      if(!curr) {
+        this.head = node;
+        this.length++;
+        return;
+      }
+  
+      while(curr.next) {
+        curr = curr.next;
+      }
+      
+      curr.next = node;
+      this.length++;
+    }
+
+    // TODO: need to fix.
+    find({ value = undefined, callback = undefined }) {
+      if (!this.head) {
+        return null;
+      }
+
+      let currentNode = this.head;
+
+      while (currentNode) {
+        // If callback is specified then try to find node by callback.
+        if (callback && callback(currentNode.value)) {
+          return currentNode;
+        }
+
+        // If value is specified then try to compare by value..
+        if (value !== undefined && this.compare.equal(currentNode.value, value)) {
+          return currentNode;
+        }
+
+        currentNode = currentNode.next;
+      }
+
+      return null;
+    }
+  }
+
+  class HashTable {
+    constructor(size = 32) {
+      this.buckets = Array(size).fill(null).map(() => new LinkedList());
+
+      this.keys = {};
+    }
+  }
 
   console.clear();
 
   tests({
-    '': function() {
-      eq(true, false);
+    'it creates hash table with buckets of specified size': function() {
+      let hashTable;
+      hashTable = new HashTable();
+      eq(hashTable.buckets.length, 32);
+
+      hashTable = new HashTable(64);
+      eq(hashTable.buckets.length, 64);
     }
 
   });
