@@ -151,18 +151,35 @@
 
       this.keys = {};
     }
+
+    hash(key) {
+      const hash = Array.from(key).reduce(
+        (accumulator, symbol) => (accumulator + symbol.charCodeAt(0)),
+        0
+      );
+
+      return hash % this.buckets.length;
+    }
   }
 
   console.clear();
 
   tests({
-    'it creates hash table with buckets of specified size': function() {
+    'it creates hashtable object with buckets of specified size': function() {
       let hashTable;
       hashTable = new HashTable();
       eq(hashTable.buckets.length, 32);
 
       hashTable = new HashTable(64);
       eq(hashTable.buckets.length, 64);
+    },
+    'it computes hash for a specified key': function() {
+      const hashTable = new HashTable();
+
+      eq(hashTable.hash('a'), 1);
+      eq(hashTable.hash('b'), 2);
+      eq(hashTable.hash('c'), 3);
+      eq(hashTable.hash('abc'), 6);
     }
 
   });
