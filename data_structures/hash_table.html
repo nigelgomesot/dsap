@@ -85,6 +85,10 @@
       this.value = value;
       this.next = next;
     }
+
+    toString(callback) {
+      return callback ? callback(this.value) : `${this.value}`;
+    }
   };
   
   class LinkedList {
@@ -102,7 +106,7 @@
     }
     
     append(value) {
-      node = new Node(value);
+      let node = new Node(value);
       let curr = this.head;
       
       if(!curr) {
@@ -134,7 +138,7 @@
         }
 
         // If value is specified then try to compare by value..
-        if (value !== undefined && this.compare.equal(currentNode.value, value)) {
+        if (value !== undefined && (currentNode.value === value)) {
           return currentNode;
         }
 
@@ -142,6 +146,22 @@
       }
 
       return null;
+    }
+
+    toArray() {
+      const nodes = [];
+
+      let currentNode = this.head;
+      while (currentNode) {
+        nodes.push(currentNode);
+        currentNode = currentNode.next;
+      }
+
+      return nodes;
+    }
+
+    toString(callback) {
+      return this.toArray().map(node => node.toString(callback)).toString();
     }
   }
 
@@ -159,6 +179,20 @@
       );
 
       return hash % this.buckets.length;
+    }
+
+    set(key, value) {
+      const keyHash = this.hash(key);
+      this.keys[key] = keyHash;
+      const bucketLinkedList = this.buckets[keyHash];
+
+      const node = bucketLinkedList.find({callback: node => node.key === key});
+
+      if (!node) {
+        bucketLinkedList.append({key: key, value: value});
+      } else {
+        node.value.value = value;
+      }
     }
   }
 
@@ -180,6 +214,24 @@
       eq(hashTable.hash('b'), 2);
       eq(hashTable.hash('c'), 3);
       eq(hashTable.hash('abc'), 6);
+    },
+    'it sets key value': function() {
+      const hashTable = new HashTable();
+
+      hashTable.set('a', 'a value');
+      hashTable.set('b', 'b value');
+      hashTable.set('c', 'c value');
+      hashTable.set('abc', 'abc value');
+
+      const stringifier = str => `${str.key}:${str.value}`;
+
+      eq(hashTable.buckets[1].toString(stringifier), 'a:a value');
+      eq(hashTable.buckets[2].toString(stringifier), 'b:b value');
+      eq(hashTable.buckets[3].toString(stringifier), 'c:c value');
+      eq(hashTable.buckets[6].toString(stringifier), 'abc:abc value');
+
+      hashTable.set('a', 'a value');
+      eq(hashTable.buckets[1].toString(stringifier), 'a:a value');
     }
 
   });
