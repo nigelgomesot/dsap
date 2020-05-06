@@ -1,6 +1,6 @@
 import TwoRowTiling from './02_2_row_tiling.js';
 
-describe('TwoTiling', () => {
+describe('TwoRowTiling', () => {
   it('returns number of ways', () => {
     const twoRowTiling = new TwoRowTiling();
 

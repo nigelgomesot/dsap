@@ -1,6 +1,4 @@
 export default class TwoRowTiling {
-  constructor() {}
-
   build(tiles) {
     if (tiles === 0) return 0;
     if (tiles === 1) return 1;
