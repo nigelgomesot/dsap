@@ -1,4 +1,4 @@
-import subsetSum from './12_subset_sum.js';
+import { subsetSum, subsetSumPath } from './12_subset_sum.js';
 
 describe('subsetSum', () => {
   it('checks if subset of numbers equals to sum', () => {
@@ -7,3 +7,10 @@ describe('subsetSum', () => {
   });
 });
 
+describe('subsetSumPath', () => {
+  it('returns subset of numbers equals to sum', () => {
+    console.log('result', subsetSumPath([1, 2, 3, 7], 6));
+    expect(subsetSumPath([1, 2, 3, 7], 6)).toBe([1,2,3]);
+    expect(subsetSumPath([1, 2, 3, 7], 14)).toBe([]);
+  });
+});
