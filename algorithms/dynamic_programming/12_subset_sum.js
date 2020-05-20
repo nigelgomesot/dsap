@@ -29,7 +29,7 @@ export function subsetSum(array, sum) {
 
 export function subsetSumPath(array, sum) {
   const arrayLength = array.length;
-  const booleanMatrix = new Array(arrayLength + 1).fill(null).map(() => Array(sum + 1).fill(null));
+  const booleanMatrix = new Array(arrayLength + 1).fill(null).map(() => Array(sum + 1));
   const result = [];
 
   for (let row = 0; row <= array.length; row++) {
@@ -43,14 +43,17 @@ export function subsetSumPath(array, sum) {
   for (let row = 1; row <= array.length; row++) {
     for (let col = 1; col <= sum; col++) {
       // exclude current element
-      booleanMatrix[row][col] = booleanMatrix[row - 1][col];
-
-      // include current element
-      booleanMatrix[row][col] = booleanMatrix[row][col] || booleanMatrix[row - 1][col - array[row - 1]];
+      if (col < array[row - 1]) {
+        booleanMatrix[row][col] = booleanMatrix[row - 1][col];
+      } else {
+        // include current element
+        booleanMatrix[row][col] = booleanMatrix[row - 1][col] || booleanMatrix[row - 1][col - array[row - 1]];
+      }
     }
   }
 
   console.log(booleanMatrix);
+
   // if (booleanMatrix[arrayLength][sum]) {
   //   let row = arrayLength;
   //   let col = sum + 1;
