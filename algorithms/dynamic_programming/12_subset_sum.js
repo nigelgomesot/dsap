@@ -54,15 +54,6 @@ export function subsetSumPath(array, sum) {
 
   console.log(booleanMatrix);
 
-  // if (booleanMatrix[arrayLength][sum]) {
-  //   let row = arrayLength;
-  //   let col = sum + 1;
-  //   result.push(array[row - 1]);
-
-  //   while (true) {
-  //     break;
-  //   }
-  // }
-
+  // PENDING
   return result;
 }
