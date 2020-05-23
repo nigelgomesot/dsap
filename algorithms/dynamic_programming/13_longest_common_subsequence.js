@@ -1,4 +1,4 @@
-export default function lcs(str1, str2) {
+function buildMatrix(str1, str2) {
   const rowLength = str1.length;
   const colLength = str2.length;
 
@@ -26,5 +26,37 @@ export default function lcs(str1, str2) {
   }
 
   console.log(matrix);
-  return matrix[rowLength][colLength];
+
+  return matrix;
+}
+
+export function lcsCount(str1, str2) {
+  const matrix = buildMatrix(str1, str2);
+
+  return matrix[str1.length][str2.length];
+}
+
+export function lcsElements(str1, str2) {
+  const matrix = buildMatrix(str1, str2);
+  const rowLength = str1.length;
+  const colLength = str2.length;
+  let row = rowLength;
+  let col = colLength;
+  const elements = [];
+
+  while (row > 0 && col > 0) {
+    if (str1.charAt(row - 1) === str2.charAt(col - 1)) {
+      elements.push(str1.charAt(row - 1));
+      row -= 1;
+      col -= 1;
+    } else {
+      if (matrix[row - 1][col] > matrix[row][col - 1]) {
+        row -= 1;
+      } else {
+        col -= 1;
+      }
+    }
+  }
+
+  return elements.reverse();
 }
