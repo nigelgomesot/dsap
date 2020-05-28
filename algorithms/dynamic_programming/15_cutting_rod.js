@@ -8,18 +8,18 @@ export function getMaxProfit(values, rodLength) {
     matrix[row][0] = 0;
   }
 
-  for (let col = 0; col < colLength; col++) {
-    matrix[0][col] = values[col];
+  for (let col = 1; col < colLength; col++) {
+    matrix[0][col] = 0;
   }
 
   for (let row = 1; row < rowLength; row++) {
     for (let col = 1; col < colLength; col++) {
-      if (values[row] > col) {
+      if (row > col) {
         matrix[row][col] = matrix[row - 1][col];
       } else {
         matrix[row][col] = Math.max(
           matrix[row - 1][col],
-          values[row] + matrix[row][col - values[row]],
+          values[row - 1] + matrix[row][col - row],
         );
       }
     }
@@ -27,5 +27,5 @@ export function getMaxProfit(values, rodLength) {
 
   console.log(matrix);
 
-  return matrix[rowLength][colLength];
+  return matrix[rowLength - 1][colLength - 1];
 }

@@ -5,12 +5,16 @@ describe('Cutting Rod', () => {
     let values;
     let rodLength;
 
-    values = [0, 2, 5, 7, 8];
+    values = [2,5,7,8];
     rodLength = 5;
     expect(getMaxProfit(values, rodLength)).toBe(12);
 
-    // values = [0, 1, 5, 8, 9, 10, 17, 17, 20];
-    // length = 4;
-    // expect(getMaxProfit(values, rodLength)).toBe(10);
+    values = [2,5,9,6];
+    rodLength = 5;
+    expect(getMaxProfit(values, rodLength)).toBe(14);
+
+    values = [1,5,8,9,10,17,17,20];
+    rodLength = 4;
+    expect(getMaxProfit(values, rodLength)).toBe(10);
   });
 });
