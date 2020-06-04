@@ -30,3 +30,19 @@ export function getLPSLength(str) {
 
   return matrix[0][strLength - 1];
 }
+
+function getLPS(str) {
+  const strLength = str.length;
+  const lps = new Array(strLength);
+  const matrix = new Array(strLength).fill(null).map(() => Array(strLength));
+
+  for (let i = 0; i < strLength; i++) {
+    matrix[i][i] = 1;
+  }
+
+  lps[0] = 'a';
+
+  for (let length = 2; length < strLength; length++) {
+    // PENDING
+  }
+}

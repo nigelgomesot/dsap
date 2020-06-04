@@ -12,5 +12,18 @@ describe('LPS', () => {
 
     str = 'abcdef';
     expect(getLPSLength(str)).toBe(1);
-  })
+  });
+
+  it('returns longest palindrome subsequence', () => {
+    let str;
+
+    str = 'agbdba';
+    expect(getLPS(str)).toEqual(['a','b','d','b','a']);
+
+    str = 'bbbabcbcab';
+    expect(getLPS(str)).toEqual(['b','a',,'c','b','c','a','b']);
+
+    str = 'abcdef';
+    expect(getLPS(str)).toEqual(['1']);
+  });
 });
