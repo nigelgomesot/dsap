@@ -21,7 +21,7 @@ describe('LPS', () => {
     expect(getLPS(str)).toEqual(['a','b','d','b','a']);
 
     str = 'bbbabcbcab';
-    expect(getLPS(str)).toEqual(['b','a',,'c','b','c','a','b']);
+    expect(getLPS(str)).toEqual(['b','a','c','b','c','a','b']);
 
     str = 'abcdef';
     expect(getLPS(str)).toEqual(['1']);
