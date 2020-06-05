@@ -1,4 +1,4 @@
-import { getLPSLength } from './17_longest_palindrome_subsequence.js';
+import { getLPSLength, getLPS } from './17_longest_palindrome_subsequence.js';
 
 describe('LPS', () => {
   it('returns longest palindrome subsequence length', () => {
@@ -24,6 +24,6 @@ describe('LPS', () => {
     expect(getLPS(str)).toEqual(['b','a','c','b','c','a','b']);
 
     str = 'abcdef';
-    expect(getLPS(str)).toEqual(['1']);
+    expect(getLPS(str)).toEqual(['f']);
   });
 });
