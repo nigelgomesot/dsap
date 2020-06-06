@@ -2,17 +2,19 @@ import { minEggDrops } from './18_egg_drops.js';
 
 describe('Egg Drop', () => {
   it('returns minimum drops for an egg to break', () => {
-    let floors = 6;
     let eggs;
+    let floors;
 
     eggs = 1;
-    expect(minEggDrops(floors, eggs)).toBe(6);
+    floors = 6;
+    expect(minEggDrops(eggs, floors)).toBe(6);
 
     eggs = 2;
-    expect(minEggDrops(floors, eggs)).toBe(3);
+    floors = 6;
+    expect(minEggDrops(eggs, floors)).toBe(3);
 
+    eggs = 2;
     floors = 36;
-    eggs = 2;
-    expect(minEggDrops(floors, eggs)).toBe(8);
+    expect(minEggDrops(eggs, floors)).toBe(8);
   })
 });
