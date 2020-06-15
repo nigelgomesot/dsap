@@ -4,9 +4,6 @@ describe('Matrix Chain Multiplication', () => {
   it ('returns minimum operations required', () => {
     let dimensions;
 
-    dimensions = [10];
-    expect(minMCM(dimensions)).toBe(0);
-
     dimensions = [10, 30, 5, 60];
     expect(minMCM(dimensions)).toBe(4500);
 
