@@ -7,7 +7,7 @@ export function isPartitionEqualSum(array) {
   }
 
   const rowLength = array.length;
-  const colLength = sum;
+  const colLength = sum/2;
 
   const matrix = Array.from(Array(rowLength + 1), () => Array(colLength + 1));
 
