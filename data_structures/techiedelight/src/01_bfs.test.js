@@ -1,23 +1,6 @@
 // REF: https://www.techiedelight.com/breadth-first-search/
 
-class Queue {
-  constructor() {
-    this.items = [];
-  }
-
-  enqueue(item) {
-    this.items.push(item);
-  }
-
-  dequeue(item) {
-    return this.items.shift();
-  }
-
-  size() {
-    return this.items.length;
-  }
-}
-
+import Graph from './graph.js';
 
 describe('Breadth First Search', () => {
   it('iterates nodes in BFS order', () => {
@@ -27,12 +10,12 @@ describe('Breadth First Search', () => {
 
     elementCount = 4;
     edges = [
-      [0, 1],
-      [0, 2],
-      [1, 2],
-      [2, 0],
-      [2, 3],
-      [3, 3]
+      {source: 0, destination: 1},
+      {source: 0, destination: 2},
+      {source: 1, destination: 2},
+      {source: 2, destination: 0},
+      {source: 2, destination: 3},
+      {source: 3, destination: 3}
     ]
     graph = new Graph(elementCount);
     graph.addEdges(edges);
@@ -40,17 +23,17 @@ describe('Breadth First Search', () => {
 
     elementCount = 15;
     edges = [
-      [1, 2],
-      [1, 3],
-      [1, 4],
-      [2, 5],
-      [2, 6],
-      [5, 9],
-      [5, 10],
-      [4, 7],
-      [4, 8],
-      [7, 11],
-      [7, 12],
+      {source: 1, destination: 2},
+      {source: 1, destination: 3},
+      {source: 1, destination: 4},
+      {source: 2, destination: 5},
+      {source: 2, destination: 6},
+      {source: 5, destination: 9},
+      {source: 5, destination: 10},
+      {source: 4, destination: 7},
+      {source: 4, destination: 8},
+      {source: 7, destination: 11},
+      {source: 7, destination: 12},
     ]
     graph = new Graph(elementCount);
     graph.addEdges(edges);
