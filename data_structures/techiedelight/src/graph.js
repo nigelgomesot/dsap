@@ -25,8 +25,17 @@ export default class Graph {
 
   addEdge(source, destination, cost = 1) {
     const node = new AdjNode(source, destination, cost);
-    node.next = this.list[source].head;
-    this.list[source].head = node;
+    let head = this.list[source].head;
+
+    if (!head) {
+      this.list[source].head = node;
+      return;
+    } else {
+      while (head.next) {
+        head = head.next;
+      }
+      head.next = node;
+    }
   }
 
   addEdges(edges) {

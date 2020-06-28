@@ -1,6 +1,38 @@
 // REF: https://www.techiedelight.com/breadth-first-search/
 
 import Graph from './graph.js';
+import Queue from './queue.js';
+
+function bfs(graph, startIndex) {
+  const visited = new Array(graph.size).fill(false);
+  const traversed = new Array();
+  let q = new Queue();
+
+  visited[startIndex] = true;
+  q.enqueue(startIndex);
+
+  while (q.size() > 0) {
+    console.log(`q size start ${q.size()}`);
+    console.dir(q);
+    const nodeIndex = q.dequeue();
+    let head = graph.list[nodeIndex].head;
+    traversed.push(head.source);
+
+    while (head) {
+      if (!visited[head.destination]) {
+        visited[head.destination] = true;
+        q.enqueue(head.destination);
+      }
+
+      head = head.next;
+    }
+    console.log(`q size end ${q.size()}`);
+    console.dir(q);
+
+  }
+
+  return traversed;
+}
 
 describe('Breadth First Search', () => {
   it('iterates nodes in BFS order', () => {
@@ -19,7 +51,8 @@ describe('Breadth First Search', () => {
     ]
     graph = new Graph(elementCount);
     graph.addEdges(edges);
-    expect(graph.bfs).toBe([0, 1, 2, 3]);
+    //expect(bfs(graph, 0)).toEqual([0, 1, 2, 3]);
+   expect(bfs(graph, 2)).toEqual([2, 0, 3, 1]);
 
     elementCount = 15;
     edges = [
@@ -37,6 +70,6 @@ describe('Breadth First Search', () => {
     ]
     graph = new Graph(elementCount);
     graph.addEdges(edges);
-    expect(graph.bfs).toBe([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+    expect(bfs(graph, 0)).toBe([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
   });
 });
