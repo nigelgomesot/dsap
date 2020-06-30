@@ -14,4 +14,8 @@ export default class Queue {
   size() {
     return this.items.length;
   }
+
+  isEmpty() {
+    return this.size() === 0;
+  }
 }
