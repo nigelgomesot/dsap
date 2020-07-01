@@ -13,8 +13,11 @@ function bfs(graph, startIndex) {
 
   while (!q.isEmpty()) {
     const nodeIndex = q.dequeue();
+    traversed.push(nodeIndex);
     let head = graph.list[nodeIndex].head;
-    traversed.push(head.source);
+    if(!head) {
+      continue;
+    }
 
     while (head) {
       if(!visited[head.destination]) {
@@ -62,9 +65,16 @@ describe('Breadth First Search', () => {
       {source: 4, destination: 8},
       {source: 7, destination: 11},
       {source: 7, destination: 12},
+      {source: 0, destination: 0},
+      {source: 13, destination: 13},
+      {source: 14, destination: 14},
     ]
     graph = new Graph(elementCount);
     graph.addEdges(edges);
-    expect(bfs(graph, 1)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+    expect(bfs(graph,0)).toEqual([0]);
+    expect(bfs(graph,1)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    expect(bfs(graph,5)).toEqual([5, 9, 10]);
+    expect(bfs(graph,13)).toEqual([13]);
+    expect(bfs(graph,14)).toEqual([14]);
   });
 });
