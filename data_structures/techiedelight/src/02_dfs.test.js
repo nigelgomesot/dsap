@@ -2,6 +2,37 @@
 
 import Graph from './graph.js';
 
+function dfs(graph, startIndex) {
+  const visited = Array(graph.size).fill(false);
+  const traversed = new Array();
+  const stack = new Array();
+
+  stack.push(startIndex);
+
+  while (stack.length > 0) {
+    const nodeIndex = stack.pop();
+
+    if (visited[nodeIndex]) {
+      continue;
+    }
+
+    visited[nodeIndex] = true;
+    traversed.push(nodeIndex);
+
+    let head = graph.list[nodeIndex].head;
+
+    while (head) {
+      if (!visited[head.destination]) {
+        stack.push(head.destination);
+      }
+
+      head = head.next;
+    }
+  }
+
+  return traversed;
+}
+
 describe('Depth First Search', () => {
   it('iterates nodes in DFS order', () => {
     let elementCount;
