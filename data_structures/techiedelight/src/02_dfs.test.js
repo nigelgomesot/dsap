@@ -39,19 +39,18 @@ describe('Depth First Search', () => {
     let edges;
     let graph;
 
-    elementCount = 15;
+    elementCount = 5;
     edges = [
-      {source: 0, destination: 1},
+      {source: 1, destination: 0},
       {source: 0, destination: 2},
-      {source: 1, destination: 2},
-      {source: 2, destination: 0},
-      {source: 2, destination: 3},
-      {source: 3, destination: 3},
+      {source: 2, destination: 1},
+      {source: 0, destination: 3},
+      {source: 1, destination: 4},
     ]
     graph = new Graph(elementCount);
     graph.addEdges(edges);
-    expect(dfs(graph,0)).toEqual([0, 1, 2, 3]);
-    expect(dfs(graph,2)).toEqual([2, 0, 1, 3]);
+    expect(dfs(graph,0)).toEqual([0, 3, 2, 1, 4]);
+    expect(dfs(graph,2)).toEqual([2, 1, 4, 0, 3]);
 
     elementCount = 13;
     edges = [
@@ -70,6 +69,6 @@ describe('Depth First Search', () => {
     graph = new Graph(elementCount);
     graph.addEdges(edges);
     expect(dfs(graph, 0)).toEqual([0]);
-    expect(dfs(graph, 1)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    expect(dfs(graph, 1)).toEqual([1,8,12,9,11,10,7,2,6,3,5,4]);
   });
 });
