@@ -8,18 +8,19 @@ class AdjNode {
 }
 
 class AdjList {
-  constructor() {
+  constructor(insertAtHead) {
     this.head = null;
+    this.insertAtHead = insertAtHead;
   }
 }
 
 export default class Graph {
-  constructor(elementCount) {
+  constructor(elementCount, insertAtHead = false) {
     this.size = elementCount;
     this.list = new Array(elementCount);
 
     for (let i = 0; i < elementCount; i++) {
-      this.list[i] = new AdjList();
+      this.list[i] = new AdjList(insertAtHead);
     }
   }
 
@@ -31,10 +32,15 @@ export default class Graph {
       this.list[source].head = node;
       return;
     } else {
-      while (head.next) {
-        head = head.next;
+      if (this.list[source].insertAtHead) {
+        node.next = head;
+        this.list[source].head = node;
+      } else {
+        while (head.next) {
+          head = head.next;
+        }
+        head.next = node;
       }
-      head.next = node;
     }
   }
 

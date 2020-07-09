@@ -1,4 +1,5 @@
 // REF: https://www.techiedelight.com/arrival-departure-time-vertices-dfs/
+// REF: https://medium.com/@kumarrocky436/dfs-time-stamp-on-nodes-da76a51a50cb
 
 import Graph from './graph.js';
 
@@ -10,7 +11,7 @@ function dfsTravelTime(graph, startIndex) {
   const stack = new Array();
   let time = -1;
 
-
+  arrivalTime[startIndex] = ++time;
   stack.push(startIndex);
 
   while (stack.length > 0) {
@@ -20,21 +21,19 @@ function dfsTravelTime(graph, startIndex) {
       continue;
     }
     visited[nodeIndex] = true;
-    arrivalTime[nodeIndex] = time++;
+    departureTime[nodeIndex] = ++time;
     traversed.push(nodeIndex);
 
     let head = graph.list[nodeIndex].head;
 
     while (head) {
       if (!visited[head.destination]) {
+        arrivalTime[head.destination] = ++time;
         stack.push(head.destination);
-        arrivalTime[head.destination] = time++;
       }
 
       head = head.next;
     }
-
-    departureTime[nodeIndex] = time++;
   }
 
   return {
@@ -61,10 +60,10 @@ describe('DFS Travel Time', () => {
       {source: 4, destination: 5},
       {source: 6, destination: 7},
     ]
-    graph = new Graph(elementCount);
+    graph = new Graph(elementCount, true);
     graph.addEdges(edges);
     const travelTimes = dfsTravelTime(graph, 0);
-    console.log('traversed', travelTimes['traversed']);
+    console.dir('travelTimes', travelTimes);
     expect(travelTimes['arrivalTime']).toEqual([0, 1, 3, 4, 8, 5, 12, 13]);
     expect(travelTimes['departureTime']).toEqual([11, 2, 10, 7, 9, 6, 15, 14]);
   });
