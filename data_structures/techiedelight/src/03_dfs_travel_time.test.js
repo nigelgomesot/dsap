@@ -3,15 +3,15 @@
 
 import Graph from './graph.js';
 
-function dfsTravelTime(graph, startIndex) {
+function dfsTravelTimeIterative(graph, startIndex) {
   const visited = Array(graph.size).fill(false);
   const arrivalTime = Array(graph.size).fill(-1);
   const departureTime = Array(graph.size).fill(-1);
   const traversed = new Array();
   const stack = new Array();
-  let time = -1;
+  let time = 0;
 
-  arrivalTime[startIndex] = ++time;
+  arrivalTime[startIndex] = time;
   stack.push(startIndex);
 
   while (stack.length > 0) {
@@ -21,7 +21,7 @@ function dfsTravelTime(graph, startIndex) {
       continue;
     }
     visited[nodeIndex] = true;
-    departureTime[nodeIndex] = ++time;
+    //departureTime[nodeIndex] = ++time;
     traversed.push(nodeIndex);
 
     let head = graph.list[nodeIndex].head;
@@ -43,12 +43,40 @@ function dfsTravelTime(graph, startIndex) {
   };
 }
 
+function dfsTravelTime(graph, startIndex) {
+  const visited = Array(graph.size).fill(false);
+  const arrivalTime = Array(graph.size).fill(-1);
+  const departureTime = Array(graph.size).fill(-1);
+  let time = -1;
+
+  dfsTravelTimeRecursive(graph, startIndex, visited, arrivalTime, departureTime, time);
+}
+
+function dfsTravelTimeRecursive(graph, nodeIndex, visited, arrivalTime, departureTime, time) {
+  // PENDING
+}
+
 describe('DFS Travel Time', () => {
   it('returns arrival & departure time for each node', () => {
     let elementCount;
     let edges;
     let graph;
+    let travelTimes;
 
+    elementCount = 5;
+    edges = [
+      {source: 0, destination: 1},
+      {source: 1, destination: 2},
+      {source: 2, destination: 3},
+      {source: 3, destination: 4},
+    ]
+    graph = new Graph(elementCount, true);
+    graph.addEdges(edges);
+    travelTimes = dfsTravelTime(graph, 0);
+    console.dir('travelTimes', travelTimes);
+    expect(travelTimes['arrivalTime']).toEqual([0, 1, 2, 3, 4]);
+    expect(travelTimes['departureTime']).toEqual([9, 8, 7, 6, 5]);
+    return;
     elementCount = 8;
     edges = [
       {source: 0, destination: 1},
@@ -62,7 +90,7 @@ describe('DFS Travel Time', () => {
     ]
     graph = new Graph(elementCount, true);
     graph.addEdges(edges);
-    const travelTimes = dfsTravelTime(graph, 0);
+    travelTimes = dfsTravelTime(graph, 0);
     console.dir('travelTimes', travelTimes);
     expect(travelTimes['arrivalTime']).toEqual([0, 1, 3, 4, 8, 5, 12, 13]);
     expect(travelTimes['departureTime']).toEqual([11, 2, 10, 7, 9, 6, 15, 14]);
