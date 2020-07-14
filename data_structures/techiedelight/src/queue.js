@@ -7,7 +7,7 @@ export default class Queue {
     this.items.push(item);
   }
 
-  dequeue(item) {
+  dequeue() {
     return this.items.shift();
   }
 
