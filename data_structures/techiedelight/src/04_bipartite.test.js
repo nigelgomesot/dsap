@@ -35,7 +35,7 @@ function bfs(graph, startIndex) {
 }
 
 function dfs(graph, startIndex) {
-  const visited = new Array(graph.size).fill(-1);
+  const visited = new Array(graph.size).fill(false);
   const colored = new Array(graph.size).fill(null);
   visited[startIndex] = true;
   colored[startIndex] = true;
@@ -46,6 +46,10 @@ function dfs(graph, startIndex) {
 }
 
 function dfsRecursive(graph, nodeIndex, visited, colored) {
+  if (!graph.list[nodeIndex]) {
+    return true;
+  }
+
   let head = graph.list[nodeIndex].head;
 
   while (head) {
@@ -59,7 +63,7 @@ function dfsRecursive(graph, nodeIndex, visited, colored) {
         return false;
       }
     }
-  
+
     if (colored[head.source] === colored[head.destination]) {
       return false;
     }
@@ -102,6 +106,17 @@ describe('Bipartite Graph', () => {
     let edges;
     let graph;
 
+
+    elementCount = 3;
+    edges = [
+      {source: 1, destination: 2},
+      {source: 1, destination: 3},
+      {source: 2, destination: 3}
+    ];
+    graph = new Graph(elementCount);
+    graph.addEdges(edges);
+    expect(dfs(graph, 1)).toBe(false);
+
     elementCount = 10;
     edges = [
       {source: 1, destination: 2},
@@ -117,9 +132,9 @@ describe('Bipartite Graph', () => {
     graph.addEdges(edges);
     expect(dfs(graph, 1)).toBe(true);
 
-    // edges.push({source: 2, destination: 4})
-    // graph = new Graph(elementCount);
-    // graph.addEdges(edges);
-    // expect(dfs(graph, 1)).toBe(false);
+    edges.push({source: 2, destination: 4})
+    graph = new Graph(elementCount);
+    graph.addEdges(edges);
+    expect(dfs(graph, 1)).toBe(false);
   });
 });
