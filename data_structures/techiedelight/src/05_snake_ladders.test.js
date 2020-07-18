@@ -3,12 +3,43 @@
 import Graph from './graph.js';
 import Queue from './queue.js';
 
+function bfs(graph, startIndex) {
+
+}
+
 function getMinThrows(snakes, ladders) {
+  const elementCount = 10*10;
+  const edges = [];
+
+  for (let i = 0; i < elementCount; i++) {
+    for (let j = 1; j <= 6 && i + j < elementCount; j++) {
+      const source = i;
+      let destination;
+
+      const snake = snakes[i + j] != null ? snakes[i + j] : null;
+      const ladder = ladders[i + j] != null ? ladders[i + j] : null;
+
+      if (snake || ladder) {
+        destination = snake || ladder;
+      } else {
+        destination = source + j;
+      }
+
+      edges.push({
+        source: source, destination: destination
+      });
+    }
+  }
+
+  const graph = new Graph(elementCount);
+  graph.addEdges(edges);
+  console.dir(graph);
+  return bfs(graph, 0);
 }
 
 describe('Snakes & Ladders', () => {
   it('returns minimum throws required to win the game', () => {
-    const elementCount = 10*10;
+
     const snakes = {
       17: 7,
       54: 34,

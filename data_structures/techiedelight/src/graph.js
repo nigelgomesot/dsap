@@ -1,9 +1,16 @@
-class AdjNode {
+class Edge {
   constructor(source, destination, cost = 1) {
     this.source = source;
     this.destination = destination;
     this.cost = cost;
     this.next = null;
+  }
+}
+
+class Node {
+  constructor(vertex, minimumDistance = 0) {
+    this.vertex = vertex;
+    this.minimumDistance = minimumDistance;
   }
 }
 
@@ -25,7 +32,7 @@ export default class Graph {
   }
 
   addEdge(source, destination, cost = 1) {
-    const node = new AdjNode(source, destination, cost);
+    const node = new Edge(source, destination, cost);
     let head = this.list[source].head;
 
     if (!head) {
