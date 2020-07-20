@@ -7,13 +7,6 @@ class Edge {
   }
 }
 
-class Node {
-  constructor(vertex, minimumDistance = 0) {
-    this.vertex = vertex;
-    this.minimumDistance = minimumDistance;
-  }
-}
-
 class AdjList {
   constructor(insertAtHead) {
     this.head = null;

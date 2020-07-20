@@ -3,8 +3,40 @@
 import Graph from './graph.js';
 import Queue from './queue.js';
 
-function bfs(graph, startIndex) {
+class Node {
+  constructor(vertex, minimumDistance = 0) {
+    this.vertex = vertex;
+    this.minimumDistance = minimumDistance;
+  }
+}
 
+function bfs(graph, startIndex) {
+  const visited = new Array(graph.size + 1).fill(false);
+  const queue = new Queue();
+
+  visited[startIndex] = true;
+  const startNode = new Node(startIndex, 0);
+  queue.enqueue(startNode);
+
+  while (!queue.isEmpty()) {
+    const node = queue.dequeue();
+    console.log('reached node', node);
+    if (node.vertex === 100) {
+      return node.minimumDistance;
+    }
+
+    let head = graph.list[node.vertex].head;
+    //console.log(`head`, head);
+    while (head) {
+      if (!visited[head.destination]) {
+        visited[head.destination] = true;
+        const nextNode = new Node(head.destination, node.minimumDistance + 1);
+        queue.enqueue(nextNode);
+      }
+
+      head = head.next;
+    }
+  }
 }
 
 function getMinThrows(snakes, ladders) {
@@ -33,7 +65,7 @@ function getMinThrows(snakes, ladders) {
 
   const graph = new Graph(elementCount);
   graph.addEdges(edges);
-  console.dir(graph);
+
   return bfs(graph, 0);
 }
 
