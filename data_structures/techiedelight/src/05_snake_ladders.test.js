@@ -44,7 +44,7 @@ function getMinThrows(snakes, ladders) {
   const edges = [];
 
   for (let i = 0; i < elementCount; i++) {
-    for (let j = 1; j <= 6 && i + j < elementCount; j++) {
+    for (let j = 1; j <= 6 && i + j <= elementCount; j++) {
       const source = i;
       let destination;
 
@@ -71,8 +71,11 @@ function getMinThrows(snakes, ladders) {
 
 describe('Snakes & Ladders', () => {
   it('returns minimum throws required to win the game', () => {
+    let snakes = {};
+    let ladders = {};
+    expect(getMinThrows(snakes, ladders)).toEqual(17); // 17*6 + 1*4
 
-    const snakes = {
+    snakes = {
       17: 7,
       54: 34,
       62: 19,
@@ -82,7 +85,7 @@ describe('Snakes & Ladders', () => {
       95: 75,
       98: 79,
     };
-    const ladders = {
+    ladders = {
       1: 38,
       4: 14,
       9: 31,
@@ -92,7 +95,6 @@ describe('Snakes & Ladders', () => {
       72: 91,
       80: 99,
     };
-
     expect(getMinThrows(snakes, ladders)).toEqual(7);
   });
 });
