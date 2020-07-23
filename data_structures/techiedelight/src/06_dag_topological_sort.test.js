@@ -14,8 +14,14 @@ function topologicalSort(graph) {
     }
   }
 
-  // TODO: fix departure.
-  return departure;
+  const vertices = [];
+  for (let i = 0; i < graph.size; i++) {
+    const vertex = departure.indexOf(Math.max(...departure));
+    departure.splice(vertex, 1, -1);
+    vertices.push(vertex);
+  }
+
+  return vertices;
 }
 
 function dfs(graph, nodeIndex, visited, departure, time) {
