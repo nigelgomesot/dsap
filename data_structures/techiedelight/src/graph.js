@@ -49,4 +49,11 @@ export default class Graph {
       this.addEdge(edge.source, edge.destination);
     });
   }
+
+  addBiEdges(edges) {
+    edges.forEach(edge => {
+      this.addEdge(edge.source, edge.destination);
+      this.addEdge(edge.destination, edge.source);
+    });
+  }
 }
