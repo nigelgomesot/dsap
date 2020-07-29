@@ -39,6 +39,31 @@ function bfs(graph, startIndex) {
   return false;
 }
 
+function dfs(graph, startIndex) {
+  const visited = new Array(graph.size).fill(false);
+  const parent = -1;
+
+  return dfsRecursive(graph, visited, startIndex, parent);
+}
+
+function dfsRecursive(graph, visited, nodeIndex, parent) {
+  visited[nodeIndex] = true;
+
+  let head = graph.list[nodeIndex].head;
+
+  while (head) {
+    if (!visited[head.destination]) {
+      dfsRecursive(graph, visited, head.destination, nodeIndex);
+    } else if (head.destination != parent) {
+
+      return true;
+    }
+
+    head = head.next;
+  }
+
+  return false;
+}
 
 describe('Verify Cycles', () => {
   it('verifies cycles in a graph via BFS', () => {
@@ -78,5 +103,44 @@ describe('Verify Cycles', () => {
     graph = new Graph(elementCount);
     graph.addBiEdges(edges);
     expect(bfs(graph, 1)).toEqual(true);
+  });
+
+  it('verifies cycles in a graph via DFS', () => {
+    let edges;
+    let elementCount;
+    let graph;
+
+    edges = [
+      {source: 1, destination: 2},
+      {source: 2, destination: 3},
+      {source: 3, destination: 1},
+    ];
+    elementCount = 4;
+    graph = new Graph(elementCount);
+    graph.addBiEdges(edges);
+    expect(dfs(graph, 1)).toEqual(true);
+
+    edges = [
+      {source: 1, destination: 2},
+      {source: 1, destination: 7},
+      {source: 1, destination: 8},
+      {source: 2, destination: 3},
+      {source: 2, destination: 6},
+      {source: 3, destination: 4},
+      {source: 3, destination: 5},
+      {source: 8, destination: 9},
+      {source: 8, destination: 12},
+      {source: 9, destination: 10},
+      {source: 9, destination: 11},
+    ];
+    elementCount = 13;
+    graph = new Graph(elementCount);
+    graph.addBiEdges(edges);
+    expect(dfs(graph, 1)).toEqual(false);
+
+    edges.push({source: 11, destination: 12});
+    graph = new Graph(elementCount);
+    graph.addBiEdges(edges);
+    expect(dfs(graph, 1)).toEqual(true);
   });
 });
