@@ -41,20 +41,21 @@ function bfs(graph, startIndex) {
 
 function dfs(graph, startIndex) {
   const visited = new Array(graph.size).fill(false);
-  const parent = -1;
+  const parentIndex = -1;
 
-  return dfsRecursive(graph, visited, startIndex, parent);
+  return dfsRecursive(graph, visited, startIndex, parentIndex);
 }
 
-function dfsRecursive(graph, visited, nodeIndex, parent) {
+function dfsRecursive(graph, visited, nodeIndex, parentIndex) {
   visited[nodeIndex] = true;
 
   let head = graph.list[nodeIndex].head;
 
   while (head) {
     if (!visited[head.destination]) {
-      dfsRecursive(graph, visited, head.destination, nodeIndex);
-    } else if (head.destination != parent) {
+      if (dfsRecursive(graph, visited, head.destination, nodeIndex))
+        return true;
+    } else if (head.destination != parentIndex) {
 
       return true;
     }
