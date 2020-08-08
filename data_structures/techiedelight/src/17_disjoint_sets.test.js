@@ -17,17 +17,31 @@ class DisjointSet {
     const sets = [];
     universe.forEach(element => {
       const set = this.find(element);
-      if (set) sets.push(set);
+      sets.push(set);
     });
 
     return sets;
   }
 
   find(element) {
-    if (this.parent[element] === element) return element;
+    if (this.parent[element] !== element)
+      this.parent[element] = this.find(this.parent[element]);
 
-    this.parent[element] = find(parent[element]);
     return this.parent[element];
+  }
+
+  union(element1, element2) {
+    const root1 = this.find(element1);
+    const root2 = this.find(element2);
+
+    if (root1 === root2) return;
+
+    if (this.rank[root1] > this.rank[root2]) this.parent[root2] = root1
+    else if (this.rank[root1] < this.rank[root2]) this.parent[root1] = root2
+    else {
+      this.parent[root1] = root2;
+      this.rank[root2] += 1;
+    }
   }
 }
 
