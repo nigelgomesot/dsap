@@ -46,14 +46,14 @@ export default class Graph {
 
   addEdges(edges) {
     edges.forEach(edge => {
-      this.addEdge(edge.source, edge.destination);
+      this.addEdge(edge.source, edge.destination, edge.cost);
     });
   }
 
   addBiEdges(edges) {
     edges.forEach(edge => {
-      this.addEdge(edge.source, edge.destination);
-      this.addEdge(edge.destination, edge.source);
+      this.addEdge(edge.source, edge.destination, edge.cost);
+      this.addEdge(edge.destination, edge.source, edge.cost);
     });
   }
 }
