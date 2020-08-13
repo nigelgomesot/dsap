@@ -1,4 +1,5 @@
-export default class PriorityQueue {
+//export default class PriorityQueue {
+class PriorityQueue {
   constructor(comparator) {
     this.list = [];
     this.length = 0;
@@ -14,9 +15,9 @@ export default class PriorityQueue {
   }
 
   enqueue(item) {
-    this.list.push(item);
+    this.list[this.length] = item;
     this.length++;
-
+    console.log(this.length)
     this.percolateUp(this.length - 1);
   }
 
@@ -80,18 +81,23 @@ export default class PriorityQueue {
 // console.log(pq.dequeue())
 
 
-// const a = [
-//   {k: 10, cost: 3.5},
-//   {k: 20, cost: 3.45},
-//   {k: 30, cost: 0},
-// ]
-// function comparator(item1, item2) {
-//   return item1.cost > item2.cost
-// }
-// const pq = new PriorityQueue(comparator)
-// pq.enqueue(a[0])
-// pq.enqueue(a[1])
-// pq.enqueue(a[2])
+const a = [
+  {k: 10, cost: 3},
+  {k: 20, cost: 2},
+  {k: 30, cost: 1},
+]
+function comparator(item1, item2) {
+  return item1.cost > item2.cost
+}
+const pq = new PriorityQueue(comparator)
+pq.enqueue(a[0])
+pq.enqueue(a[1])
+pq.enqueue(a[2])
+console.log('pq', pq)
+
 // console.log(pq.dequeue())
+// //console.log('pq', pq)
 // console.log(pq.dequeue())
+// //console.log('pq', pq)
 // console.log(pq.dequeue())
+// console.log('pq', pq)
