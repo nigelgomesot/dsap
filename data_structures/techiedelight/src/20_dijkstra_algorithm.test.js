@@ -24,21 +24,16 @@ function dijkstra(graph) {
   pq.enqueue(startNode);
 
   while (!pq.isEmpty()) {
-    console.log('pq', pq)
     const dequeuedNode = pq.dequeue();
-    console.log('dequeuedNode', dequeuedNode)
-    console.log('graph.list', graph.list)
     let head = graph.list[dequeuedNode.vertex].head;
 
     while (head) {
-      console.log('head', head)
       const altDistance = distance[dequeuedNode.vertex] + head.cost;
       if (altDistance < distance[head.destination]) {
         distance[head.destination] = altDistance;
         previous[head.destination] = head.source;
 
         const enqueuedNode =  new Node(head.destination, altDistance);
-        console.log('enqueuedNode', enqueuedNode)
         pq.enqueue(enqueuedNode);
       }
 
@@ -46,10 +41,16 @@ function dijkstra(graph) {
     }
   }
 
-  console.log('distances', distance);
-  console.log('previous', previous);
+  const result = [];
+  for(let i = 0; i < graph.size; i++) {
+    result.push({
+      destination: i,
+      distance: distance[i],
+      previous: previous[i],
+    })
+  }
 
-  return null
+  return result;
 }
 
 describe('Dijkstra Algorithm', () => {
@@ -74,10 +75,11 @@ describe('Dijkstra Algorithm', () => {
     graph = new Graph(elementCount);
     graph.addEdges(edges);
     const expectedOutput = [
-      {destination: 1, cost: 4, route: [0,4,1]},
-      {destination: 2, cost: 6, route: [0,4,1,2]},
-      {destination: 3, cost: 5, route: [0,4,3]},
-      {destination: 4, cost: 3, route: [0,4]}
+      {destination: 0, distance: 0, previous: -1},
+      {destination: 1, distance: 4, previous: 4},
+      {destination: 2, distance: 6, previous: 1},
+      {destination: 3, distance: 5, previous: 4},
+      {destination: 4, distance: 3, previous: 0}
     ];
     expect(dijkstra(graph)).toEqual(expectedOutput);
   });
