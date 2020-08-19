@@ -28,36 +28,42 @@ function floyWarshall(adjMatrix) {
           cost[i][j] = altCost;
           path[i][j] = path[k][j];
         }
+
+        if (cost[i][i] < 0)
+          return
       }
     }
   }
 
-  console.log('cost', cost)
-  console.log('path', path)
+  // console.log('cost', cost)
+  // console.log('path', path)
 
   for (let i = 0; i < length; i++) {
     for (let j = 0; j < length; j++) {
-      const route = [];
-      route = getRoute(i, j, route, path);
+      if (i !== j && path[i][j] !== -1) {
+        let route = [i];
+        route = getRoute(i, j, route, path);
+        route.push(j)
 
-      result.push({
-        source: i,
-        destination: j,
-        route: route
-      })
+        result.push({
+          source: i,
+          destination: j,
+          route: route
+        })
+      }
     }
   }
 
-  console.log('result', result);
+  // console.log('result', result);
   return result;
 }
 
 function getRoute(v1, v2, route, path) {
-  if (v1 === v2)
+  if (path[v1][v2] == v1)
     return route;
 
-  route.push(v1);
   route = getRoute(v1, path[v1][v2], route, path);
+  route.push(path[v1][v2]);
 
   return route;
 }
