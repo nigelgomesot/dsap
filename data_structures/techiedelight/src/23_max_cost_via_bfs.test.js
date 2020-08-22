@@ -20,24 +20,20 @@ function bfs(graph, source, costThreshold) {
 
   while (!q.isEmpty()) {
     const dequeuedNode = q.dequeue();
-    console.log('dequeued:', dequeuedNode);
 
     if (dequeuedNode.cost > costThreshold) {
-      console.log('resetting maxCost', maxCost, dequeuedNode.cost);
       maxCost = Math.max(maxCost, dequeuedNode.cost);
     }
 
     let head = graph.list[dequeuedNode.vertex].head;
-    console.log('head:', head);
 
     while (head) {
       if (!dequeuedNode.vertices.includes(head.destination)) {
-        const vertices = dequeuedNode.vertices;
+        const vertices = [...dequeuedNode.vertices];
         vertices.push(head.destination);
         const cost = dequeuedNode.cost + head.cost;
 
         const enqueuedNode = new Node(head.destination, cost, vertices);
-        console.log('enqueued:', enqueuedNode);
         q.enqueue(enqueuedNode);
       }
 
@@ -72,7 +68,7 @@ describe('Maximum Cost Via BFS', () => {
       {source: 7, destination: 6, cost: 9},
       {source: 7, destination: 1, cost: 6},
     ];
-    elementCount = 9;
+    elementCount = 8;
     graph = new Graph(elementCount);
     graph.addBiEdges(edges);
     costThreshold = 50;
