@@ -2,6 +2,46 @@
 
 import Graph from './graph';
 
+const COLORS = ["", 'b', 'g', 'r'];
+
+function isSafe(graph, vertex, colors, color) {
+  let head = graph.list[vertex].head;
+
+  while (head) {
+    if (colors[head.destination] === color)
+      return false;
+
+    head = head.next;
+  }
+
+  return true;
+}
+
+function kColorable(graph, vertex, colorCount, colors, result) {
+  if (vertex == graph.size) {
+    const row = [];
+
+    for (let i = 0; i < graph.size; i++) {
+      row.push(COLORS[colors[i]]);
+    }
+    result.push(row);
+
+    return;
+  }
+
+  for (let color = 1; color <= colorCount; color++) {
+    if (isSafe(graph, vertex, colors, color)) {
+      colors[vertex] = color;
+
+      kColorable(graph, vertex + 1, colorCount, colors, result);
+
+      colors[vertex] = 0;
+    }
+  }
+
+  return result;
+}
+
 describe('Vertex Coloring', () => {
   it('returns all k-colorable assignments', () => {
     let graph,
@@ -9,6 +49,7 @@ describe('Vertex Coloring', () => {
         elementCount,
         colorCount,
         colors,
+        result,
         expectedColors;
 
     edges = [
@@ -25,10 +66,9 @@ describe('Vertex Coloring', () => {
 
     graph = new Graph(elementCount);
     graph.addBiEdges(edges);
-    colors = [];
     colorCount = 3;
-
-    graph.kColorable(0, colors, colorCount);
+    colors = new Array(graph.size).fill(0);
+    result = [];
 
     expectedColors = [
       ['b', 'g', 'b', 'r', 'r', 'g'],
@@ -53,6 +93,6 @@ describe('Vertex Coloring', () => {
       ['r', 'g', 'r', 'b', 'b', 'g'],
     ];
 
-    expect(graph.kColorable(0, colors, colorCount)).toEqual(expectedColors);
+    expect(kColorable(graph, 0, colorCount, colors, result)).toEqual(expectedColors);
   });
 });
