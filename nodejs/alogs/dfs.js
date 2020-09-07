@@ -47,6 +47,27 @@ class Graph {
   }
 }
 
+const dfs = graph => {
+  const visited = new Array(graph).fill(false)
+  const result = []
+
+  for (let vertex = 0; vertex < graph.nodeCount; vertex++)
+    if (!visited[vertex])
+      dfsRecursive(graph, vertex, visited, result)
+
+  return result
+}
+
+const dfsRecursive = (graph, vertex, visited, result) => {
+  visited[vertex] = true
+  result.push(vertex)
+
+  for (let edge of graph.list[vertex]) {
+    if (!visited[edge.destination])
+      dfsRecursive(graph, edge.destination, visited, result)
+  }
+}
+
 let nodeCount,
     graph,
     edges
@@ -68,3 +89,4 @@ edges = [
 ]
 graph.addEdges(edges)
 assert.deepEqual(dfs(graph), [0,1,2,3,4,5,6,7,8,9,10,11,12])
+console.log('passed.')
