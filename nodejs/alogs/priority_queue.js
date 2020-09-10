@@ -91,4 +91,6 @@ assert.deepEqual(dequeued, 2)
 dequeued = pq.dequeue()
 assert.deepEqual(dequeued, 3)
 
-console.log('passed.')
+console.log('pq passed.')
+
+module.exports = PriorityQueue
