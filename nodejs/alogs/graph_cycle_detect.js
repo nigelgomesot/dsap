@@ -9,23 +9,37 @@ const cycleDetect = graph => {
   let time = 0
 
   for (let vertex = 0; vertex < graph.nodeCount; vertex++) {
-    if (!visited)
-      dfs(graph, visited, departures, vertex, time)
+    if (!visited[vertex])
+      time = dfs(graph, visited, departures, vertex, time)
   }
 
   for (let vertex = 0; vertex < graph.nodeCount; vertex++) {
     const edges = graph.list[vertex]
 
     for (edge of edges) {
-      if (departures[edge.source] < departures[edge.destination])
+      if (departures[vertex] <= departures[edge.destination]) {
         return true
+      }
     }
   }
 
   return false
 }
 
-// PENDING: dfs
+const dfs = (graph, visited, departures, vertex, time) => {
+  visited[vertex] = true
+  const edges = graph.list[vertex]
+
+  for (edge of edges) {
+    const adjVertex = edge.destination
+    if (!visited[adjVertex])
+      time = dfs(graph, visited, departures, adjVertex, time)
+  }
+
+  departures[vertex] = time++
+
+  return time
+}
 
 let nodeCount,
     graph,
@@ -51,3 +65,4 @@ edges.push({source: 3, destination: 0})
 graph = new Graph(7)
 graph.addEdges(edges)
 assert.equal(cycleDetect(graph), true)
+console.log('completed')
