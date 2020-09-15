@@ -6,7 +6,7 @@ const Graph = require('./graph')
 const topologicalSort = graph => {
   const visited = new Array(graph.nodeCount).fill(false)
   const departures = new Array(graph.nodeCount).fill(-1)
-  const result = []
+  const vertices = []
   let time = 0
 
   for (let vertex = 0; vertex < graph.nodeCount; vertex++) {
@@ -14,17 +14,18 @@ const topologicalSort = graph => {
       time = dfs(graph, visited, departures, vertex, time)
   }
 
-  for (let vertex = (2 * graph.nodeCount - 1); vertex >= 0; vertex--) {
-    if (departures[vertex] > -1)
-      result.push(departures[vertex])
+  for (let i = 0; i < graph.nodeCount; i++) {
+    const vertex = departures.indexOf(Math.max(...departures));
+    departures.splice(vertex, 1, -1);
+    vertices.push(vertex);
   }
 
-  console.log('departures', departures)
-  return result
+  return vertices
 }
 
 const dfs = (graph, visited, departures, vertex, time) => {
   visited[vertex] = true
+  time++
   const edges = graph.list[vertex]
 
   for (const edge of edges) {
@@ -59,3 +60,4 @@ edges = [
 graph = new Graph(nodeCount)
 graph.addEdges(edges)
 assert.deepEqual(topologicalSort(graph),[7,5,3,1,4,2,0,6])
+console.log('passed')
