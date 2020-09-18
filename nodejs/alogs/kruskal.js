@@ -1,59 +1,66 @@
 // REF: https://www.techiedelight.com/kruskals-algorithm-for-finding-minimum-spanning-tree/
 
 const assert = require('assert')
-const Graph = require('./graph')
+const DisjoinSet = require('./disjoint_set')
+const DisjointSet = require('./disjoint_set')
 
-class DisjointSet {
-  constructor() {
-    this.parent = {}
-  }
+const kruskal = (edges, nodeCount) => {
+  const mst = []
+  const ds = new DisjointSet()
 
-  makeSet(universe) {
-    for (const element of universe) {
-      this.parent[element] = element
+  edges.sort((a, b) => a.cost - b.cost)
+
+  const nodes = []
+  for (let node = 0; node < nodeCount; node++)
+    nodes.push(node)
+
+  ds.makeSet(edges)
+
+  let index = 0
+
+  while (index < nodeCount) {
+    const edge = edges[index]
+
+    const sourceParent = ds.find(edge.source)
+    const destinationParent = ds.find(edge.destination)
+
+    if (sourceParent !== destinationParent) {
+      mst.push(edge)
+      ds.union(sourceParent, destinationParent)
     }
+
+    index++
   }
 
-  getSets(universe) {
-    const sets = []
-
-    for (const element of universe) {
-      const parent = this.find(element)
-
-      sets.push(parent)
-    }
-
-    return sets
-  }
-
-  find(element) {
-    if (this.parent[element] === element)
-      return element
-
-    return this.find(this.parent[element])
-  }
-
-  union(element1, element2) {
-    const parent1 = this.find(element1)
-    const parent2 = this.find(element2)
-
-    if (parent1 !== parent2)
-      this.parent[parent1] = parent2
-  }
+  return mst
 }
 
-const disjointSet = new DisjointSet()
-const universe = [1,2,3,4,5]
+let edges,
+    nodeCount,
+    expectedEdges
 
-disjointSet.makeSet(universe)
-assert.deepEqual(disjointSet.getSets(universe), [1,2,3,4,5])
+edges = [
+  {source: 0, destination: 1, cost: 7},
+  {source: 1, destination: 2, cost: 8},
+  {source: 0, destination: 3, cost: 5},
+  {source: 1, destination: 3, cost: 9},
+  {source: 1, destination: 4, cost: 7},
+  {source: 2, destination: 4, cost: 5},
+  {source: 3, destination: 4, cost: 15},
+  {source: 3, destination: 5, cost: 6},
+  {source: 4, destination: 5, cost: 8},
+  {source: 4, destination: 6, cost: 9},
+  {source: 5, destination: 6, cost: 11},
+]
+nodeCount = 7
 
-disjointSet.union(4,3)
-assert.deepEqual(disjointSet.getSets(universe), [1,2,3,3,5])
-
-disjointSet.union(2,1)
-assert.deepEqual(disjointSet.getSets(universe), [1,1,3,3,5])
-
-disjointSet.union(1,3)
-assert.deepEqual(disjointSet.getSets(universe), [3,3,3,3,5])
+expectedEdges = [
+  {source: 0, destination: 3, cost: 5},
+  {source: 2, destination: 4, cost: 5},
+  {source: 3, destination: 5, cost: 6},
+  {source: 0, destination: 1, cost: 7},
+  {source: 1, destination: 4, cost: 7},
+  {source: 4, destination: 6, cost: 9},
+]
+assert.deepEqual(kruskal(edges, nodeCount),expectedEdges)
 console.log('passed')
