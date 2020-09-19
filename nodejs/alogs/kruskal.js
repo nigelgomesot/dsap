@@ -14,16 +14,15 @@ const kruskal = (edges, nodeCount) => {
   for (let node = 0; node < nodeCount; node++)
     nodes.push(node)
 
-  ds.makeSet(edges)
+  ds.makeSet(nodes)
 
   let index = 0
 
-  while (index < nodeCount) {
+  while (mst.length != nodeCount - 1) {
     const edge = edges[index]
 
     const sourceParent = ds.find(edge.source)
     const destinationParent = ds.find(edge.destination)
-
     if (sourceParent !== destinationParent) {
       mst.push(edge)
       ds.union(sourceParent, destinationParent)
