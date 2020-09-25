@@ -88,3 +88,48 @@ expected = [
 ]
 assert.deepEqual(permutationWithRepetition(options, r), expected)
 console.log('passed')
+
+
+const permutationWithoutRepetition =  options => {
+  const permutations = []
+
+  if (options.length === 1) {
+    permutations.push(options)
+
+    return permutations
+  }
+
+  const smallerPermutations = permutationWithoutRepetition(options.slice(1))
+  const firstOption = options[0]
+
+  for (const smallerPermutation of smallerPermutations) {
+
+    for (let i = 0; i <= smallerPermutation.length; i++) {
+      const left = smallerPermutation.slice(0, i)
+      const right = smallerPermutation.slice(i)
+
+      const permutation = left.concat([firstOption], right)
+      permutations.push(permutation)
+    }
+  }
+
+  return permutations
+}
+
+options = ['A', 'B']
+expected = [
+  ['A', 'B'],
+  ['B', 'A'],
+]
+assert.deepEqual(permutationWithoutRepetition(options), expected)
+
+options = ['A', 'B', 'C']
+expected = [
+  ['A', 'B', 'C'],
+  ['B', 'A', 'C'],
+  ['B', 'C', 'A'],
+  ['A', 'C', 'B'],
+  ['C', 'A', 'B'],
+  ['C', 'B', 'A'],
+]
+assert.deepEqual(permutationWithoutRepetition(options), expected)
