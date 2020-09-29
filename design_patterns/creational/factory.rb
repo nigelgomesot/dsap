@@ -46,6 +46,6 @@ def client(factory)
   factory.operation
 end
 
-assert client(ConcreteFactory1.new), "Product 1 operation"
-assert client(ConcreteFactory2.new), "Product 2 operation"
+assert_equal client(ConcreteFactory1.new), "Product 1 operation"
+assert_equal client(ConcreteFactory2.new), "Product 2 operation"
 puts "done"
