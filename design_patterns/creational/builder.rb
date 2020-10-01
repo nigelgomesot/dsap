@@ -3,6 +3,8 @@
 # Problem: Initialization of a object with multiple fields, objects
 # Solution: allows constructing object step by step
 
+require 'test/unit/assertions'
+include Test::Unit::Assertions
 
 class Builder
 
@@ -47,4 +49,35 @@ class ConcreteBuilder1 < Builder
   end
 end
 
-# PENDING:
+class Product1
+  def initialize
+    @parts = []
+  end
+
+  def add(part)
+    @parts << part
+  end
+
+  def list_parts
+    @parts.join(',')
+  end
+end
+
+builder1 = ConcreteBuilder1.new
+
+def minimal_viable_product_client(builder)
+  builder.produce_part_a
+  builder.product.list_parts
+end
+
+def full_featured_product_client(builder)
+  builder.produce_part_a
+  builder.produce_part_b
+  builder.produce_part_c
+  builder.product.list_parts
+end
+
+assert_equal minimal_viable_product_client(builder1), 'PartA1'
+assert_equal full_featured_product_client(builder1), 'PartA1,PartB1,PartC1'
+
+puts 'done'
