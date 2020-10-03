@@ -3,6 +3,9 @@
 # Problem: Copy existing objects without making code dependent on their classes
 # Solution: delegate the cloning process to the actual objects that are being cloned.
 
+require 'test/unit/assertions'
+include Test::Unit::Assertions
+
 class Prototype
   attr_accessor :primitive, :component, :circular_reference
 
@@ -35,4 +38,23 @@ class ComponentWithBackReference
   end
 end
 
-# PENDING
+
+def client
+  p1 = Prototype.new
+  p1.primitive = 123
+  p1.component = Time.now
+  p1.circular_reference = ComponentWithBackReference.new(p1)
+
+  p2 = p1.clone
+
+  [p1, p2]
+end
+
+p1, p2 = client
+
+assert_equal p1.primitive, p2.primitive
+# NOT working as expected
+#assert_not_equal p1.component, p2.component
+assert_not_equal p1.circular_reference, p2.circular_reference
+assert_not_equal p1.circular_reference.prototype, p2.circular_reference.prototype
+puts('done')
