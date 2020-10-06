@@ -3,6 +3,9 @@
 # Problem: Ensure only 1 object of a class exists & provide a single point of access to all other other
 # Solution: Make constructor priate & specify a specialized method which creates or returns only 1 object.
 
+require 'test/unit/assertions'
+include Test::Unit::Assertions
+
 class Singleton
   attr_reader :value
 
@@ -23,7 +26,19 @@ class Singleton
 
     @instance
   end
-
-  # PENDING
 end
 
+@result = []
+
+def client(value)
+  @result.push(Singleton.instance(value))
+end
+
+process1 = Thread.new { client('foo') }
+process2 = Thread.new { client('bar') }
+process1.join
+process2.join
+
+assert_equal @result.length, 2
+assert_equal @result[0], @result[1]
+puts('done')
