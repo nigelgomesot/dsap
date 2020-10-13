@@ -3,6 +3,9 @@
 # Problem: composing objects in a tree like structure & access them uniformly
 # Solution: Break down model into simple elements & containers(complex elements) & define common methods to acces both of them & manage child elements.
 
+require 'test/unit/assertions'
+include Test::Unit::Assertions
+
 class Component
   def parent
     @parent
@@ -41,7 +44,7 @@ class Composite < Component
   end
 
   def add(component)
-    @children.append(component)
+    @children.push(component)
     component.parent = self
   end
 
@@ -57,11 +60,29 @@ class Composite < Component
   def operation
     result = []
     @children.each do |child|
-      result.append(child.operation)
+      result.push(child.operation)
     end
 
-    "Branch: #{result.join('+')}"
+    "Branch(#{result.join('+')})"
   end
 end
 
-# PENDING
+def client(component)
+  component.operation
+end
+
+tree = Composite.new
+
+branch1 = Composite.new
+branch1.add(Leaf.new)
+branch1.add(Leaf.new)
+
+branch2 = Composite.new
+branch2.add(Leaf.new)
+branch2.add(Leaf.new)
+
+tree.add(branch1)
+tree.add(branch2)
+
+assert_equal client(tree), 'Branch(Branch(Leaf+Leaf)+Branch(Leaf+Leaf))'
+puts('done.')
