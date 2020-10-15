@@ -3,6 +3,9 @@
 # Problem: need to alter an object's behavior without extending it
 # Solution: attach new behavior to objectss by placing these objects insside special wrapper objects that contain new behaviors
 
+require 'test/unit/assertions'
+include Test::Unit::Assertions
+
 class Component
   def operation
     raise NotImplementedError
@@ -43,5 +46,11 @@ def client(component)
   component.operation
 end
 
-# PENDING:
+simple = ConcreteComponent.new()
+decorator1 = ConcreteDecoratorA.new(simple)
+decorator2 = ConcreteDecoratorB.new(decorator1)
 
+assert_equal client(simple), 'Concrete Component'
+assert_equal client(decorator1), 'Concrete Decorator A (Concrete Component)'
+assert_equal client(decorator2), 'Concrete Decorator B (Concrete Decorator A (Concrete Component))'
+puts('done.')
