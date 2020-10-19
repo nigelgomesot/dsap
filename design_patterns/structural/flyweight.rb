@@ -1,0 +1,25 @@
+# REF: https://refactoring.guru/design-patterns/flyweight/ruby/example
+
+# Problem: allow programs to suppport vast quantities of objects by keeping their memory consumption low
+# Solution: Share parts of objects between multiple objects(intrinsic data), & expose methods to compute extrinsic data.
+
+class Flyweight
+  def initialize(shared_state)
+    @shared_state = shared_state
+  end
+
+  def operation
+    {shared: @shared_state, unique: @unique_state}
+  end
+end
+
+class FlyweightFactory
+  def initialize(initial_flyweights)
+    @flyweights = {}
+    initial_flyweights.each do |state|
+      @flyweights[get_key(state)] = Flyweight.new(state)
+    end
+  end
+
+  # PENDING
+end
