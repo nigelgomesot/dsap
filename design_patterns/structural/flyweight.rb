@@ -21,5 +21,23 @@ class FlyweightFactory
     end
   end
 
-  # PENDING
+  def get_key(state)
+    state.sort.join('_')
+  end
+
+  def get_flyweight(shared_state)
+    key = get_key(shared_state)
+
+    if !@flyweights.key?(key)
+      @flyweights[key] = Flyweight.new(shared_state)
+    end
+
+    @flyweights[key]
+  end
+
+  def list_flyweights
+    @flyweights.keys.join(',')
+  end
 end
+
+# PENDING
