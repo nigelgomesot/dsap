@@ -40,4 +40,12 @@ class FlyweightFactory
   end
 end
 
+def client_add_car_to_db(factory, plates, owner, brand, model, color)
+  flyweight = factory.get_flyweight([brand, model, color])
+
+  flyweight.operation([plates, owner])
+end
+
+
+
 # PENDING
