@@ -3,6 +3,9 @@
 # Problem: provide an object thats acts as a subsitutue/placeholder for another object
 # Solution: Define a proxy object that has the same interface as the service, receives client request, does some additional work & then passes request to actual object
 
+require 'test/unit/assertions'
+include Test::Unit::Assertions
+
 class Subject
   def request
     raise NotImplementedError
@@ -22,7 +25,7 @@ class Proxy < Subject
   end
 
   def request
-    return unless check_acces
+    return unless check_access
 
     @result.push(@real_subject.request)
     log_access
@@ -39,4 +42,18 @@ class Proxy < Subject
   end
 end
 
-# PENDING.
+def client(subject)
+  subject.request
+end
+
+real_subject = RealSubject.new()
+assert_equal client(real_subject), 'real subject request'
+
+proxy_subject = Proxy.new(real_subject)
+expected_request = [
+  'check access',
+  'real subject request',
+  'log access',
+]
+assert_equal client(proxy_subject), expected_request
+puts('done.')
