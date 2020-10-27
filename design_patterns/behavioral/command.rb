@@ -28,10 +28,35 @@ class ComplexCommand < Command
 
   def execute
     [
-      'eexecute complex payload',
+      'execute complex payload',
       @receiver.do_something(@a),
       @receiver.do_something(@b)
     ]
+  end
+end
+
+class Receiver
+  def do_something(task)
+    "receiver do something #{task}"
+  end
+end
+
+class Invoker
+  def on_start=(command)
+    @on_start = command
+  end
+
+  def on_finish=(command)
+    @on_finish = command
+  end
+
+  def do_somethng_important
+    @results = []
+    @results.push(@on_start.execute) if @on_start.is_a? Command
+    @results.push('do something important')
+    @results.push(@on_finish.execute) if @on_finish.is_a? Command
+
+    @results
   end
 end
 
