@@ -3,6 +3,9 @@
 # Problem: supporting mulltple request types
 # Solution: convert requests into objects
 
+require 'test/unit/assertions'
+include Test::Unit::Assertions
+
 class Command
   def execute
     raise NotImplementedError
@@ -60,4 +63,19 @@ class Invoker
   end
 end
 
-# PENDING:
+def client
+  invoker = Invoker.new
+  invoker.on_start = SimpleCommand.new('simple command')
+  receiver = Receiver.new
+  invoker.on_finish = ComplexCommand.new(receiver, 'complex command a', 'complex command b')
+
+  invoker
+end
+
+expected_result = [
+  ["execute simple payload", "simple command"],
+  "do something important",
+  ["execute complex payload", "receiver do something complex command a", "receiver do something complex command b"]
+]
+assert_equal client.do_somethng_important, expected_result
+puts('done.')
