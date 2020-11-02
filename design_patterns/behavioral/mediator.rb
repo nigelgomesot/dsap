@@ -18,21 +18,45 @@ class ConcreteMediator < Mediator
   end
 
   def notify(_sender, event)
+    result = []
+
     case event
     when 'A'
-      @component2.do_c
+      result.push @component2.do_c
     when 'D'
-      @component1.do_b
-      @component2.do_c
+      result.push @component1.do_b
+      result.push @component2.do_c
     end
+
+    result
   end
 end
 
 class BaseComponent
-  attr_accessor :mediator
+  attr_accessor :mediator, :results
 
   def initialize(mediator=nil)
     @mediator = mediator
+  end
+end
+
+class Component1 < BaseComponent
+  def do_a
+    results.push @mediator.notify(self, 'A')
+  end
+
+  def do_b
+    results.push @mediator.notify(self, 'B')
+  end
+end
+
+class Component2 < BaseComponent
+  def do_c
+    results.push @mediator.notify(self, 'C')
+  end
+
+  def do_d
+    @mediator.notify(self, 'D')
   end
 end
 
