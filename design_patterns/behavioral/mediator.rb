@@ -3,6 +3,9 @@
 # Problem: Reduce coupling between independent objects by reducing direct communication
 # Solution: Introduce an object which helps the objects to communicatae indirectly via itself.
 
+require 'test/unit/assertions'
+include Test::Unit::Assertions
+
 class Mediator
   def notify(_sender, _event)
     raise NotImplementedError
@@ -18,17 +21,13 @@ class ConcreteMediator < Mediator
   end
 
   def notify(_sender, event)
-    result = []
-
     case event
     when 'A'
-      result.push @component2.do_c
+      @component2.do_c
     when 'D'
-      result.push @component1.do_b
-      result.push @component2.do_c
+      @component1.do_b
+      @component2.do_c
     end
-
-    result
   end
 end
 
@@ -42,22 +41,44 @@ end
 
 class Component1 < BaseComponent
   def do_a
-    results.push @mediator.notify(self, 'A')
+    $results.push 'component1:do_a'
+    $results.push @mediator.notify(self, 'A')
   end
 
   def do_b
-    results.push @mediator.notify(self, 'B')
+    $results.push 'component1:do_b'
+    $results.push @mediator.notify(self, 'B')
   end
 end
 
 class Component2 < BaseComponent
   def do_c
-    results.push @mediator.notify(self, 'C')
+    $results.push 'component2:do_c'
+    $results.push @mediator.notify(self, 'C')
   end
 
   def do_d
-    @mediator.notify(self, 'D')
+    $results.push 'component2:do_d'
+    $results.push @mediator.notify(self, 'D')
   end
 end
+
+def client
+  c1 = Component1.new
+  c2 = Component2.new
+  ConcreteMediator.new(c1, c2)
+
+  [c1, c2]
+end
+
+c1, c2 = *client
+
+$results = []
+c1.do_a
+assert_equal $results, []
+
+$results = []
+c2.do_d
+assert_equal $results, []
 
 # PENDING
