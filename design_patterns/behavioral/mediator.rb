@@ -23,9 +23,12 @@ class ConcreteMediator < Mediator
   def notify(_sender, event)
     case event
     when 'A'
+      $results.push('mediator')
       @component2.do_c
     when 'D'
+      $results.push('mediator')
       @component1.do_b
+      $results.push('mediator')
       @component2.do_c
     end
   end
@@ -41,25 +44,25 @@ end
 
 class Component1 < BaseComponent
   def do_a
-    $results.push 'component1:do_a'
-    $results.push @mediator.notify(self, 'A')
+    $results.push('component1:do_a')
+    @mediator.notify(self, 'A')
   end
 
   def do_b
-    $results.push 'component1:do_b'
-    $results.push @mediator.notify(self, 'B')
+    $results.push('component1:do_b')
+    @mediator.notify(self, 'B')
   end
 end
 
 class Component2 < BaseComponent
   def do_c
-    $results.push 'component2:do_c'
-    $results.push @mediator.notify(self, 'C')
+    $results.push('component2:do_c')
+    @mediator.notify(self, 'C')
   end
 
   def do_d
-    $results.push 'component2:do_d'
-    $results.push @mediator.notify(self, 'D')
+    $results.push('component2:do_d')
+    @mediator.notify(self, 'D')
   end
 end
 
@@ -75,10 +78,23 @@ c1, c2 = *client
 
 $results = []
 c1.do_a
-assert_equal $results, []
+
+expected_results = [
+  "component1:do_a",
+  "mediator",
+  "component2:do_c",
+]
+assert_equal $results, expected_results
 
 $results = []
 c2.do_d
-assert_equal $results, []
 
-# PENDING
+expected_results = [
+  "component2:do_d",
+  "mediator",
+  "component1:do_b",
+  "mediator",
+  "component2:do_c"
+]
+assert_equal $results, expected_results
+puts('done.')
