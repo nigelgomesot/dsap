@@ -22,8 +22,8 @@ class Originator
     ConcreteMemento.new(@state)
   end
 
-  def restore
-    @state = @memento.state
+  def restore(memento)
+    @state = memento.state
   end
 end
 
