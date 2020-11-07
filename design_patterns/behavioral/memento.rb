@@ -5,6 +5,8 @@
 
 
 require 'securerandom'
+require 'test/unit/assertions'
+include Test::Unit::Assertions
 
 class Originator
   attr_accessor :state
@@ -12,6 +14,10 @@ class Originator
 
   def initialize(state)
     @state = state
+  end
+
+  def get_state
+    @state
   end
 
   def do_something
@@ -37,7 +43,7 @@ class Memento
   end
 end
 
-class ConcreteMemeno < Memento
+class ConcreteMemento < Memento
   attr_reader :state, :date
 
   def initialize(state)
@@ -77,4 +83,31 @@ class Caretaker
   end
 end
 
-# PENDING.
+originator = Originator.new('originator')
+caretaker = Caretaker.new(originator)
+
+caretaker.backup
+assert_equal originator.get_state, 'originator'
+previous_state = originator.get_state
+originator.do_something
+assert_match previous_state, caretaker.get_history.last
+
+caretaker.backup
+previous_state = originator.get_state
+originator.do_something
+assert_match previous_state, caretaker.get_history.last
+
+caretaker.backup
+previous_state = originator.get_state
+originator.do_something
+assert_match previous_state, caretaker.get_history.last
+
+previous_state = caretaker.get_history.last
+caretaker.undo
+assert_match originator.get_state, previous_state
+
+previous_state = caretaker.get_history.last
+caretaker.undo
+assert_match originator.get_state, previous_state
+
+puts('done.')
