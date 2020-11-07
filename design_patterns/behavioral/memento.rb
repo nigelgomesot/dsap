@@ -37,4 +37,44 @@ class Memento
   end
 end
 
-# PENDING
+class ConcreteMemeno < Memento
+  attr_reader :state, :date
+
+  def initialize(state)
+    @state = state
+    @date = Time.now.strftime('%F %T')
+  end
+
+  def name
+    "#{date}/#{@state}"
+  end
+end
+
+class Caretaker
+  def initialize(originator)
+    @mementos = []
+    @originator = originator
+  end
+
+  def backup
+    @mementos << @originator.save
+  end
+
+  def undo
+    return if @mementos.empty?
+
+    memento = @mementos.pop
+
+    begin
+      @originator.restore(memento)
+    rescue StandardError
+      undo
+    end
+  end
+
+  def get_history
+    @mementos.map {|memento| memento.name}
+  end
+end
+
+# PENDING.
