@@ -3,6 +3,9 @@
 # Problem: Allow to interchange the underlying algorithms of an object
 # Solution: Define a family of algorithms, put them in separate classes & make their objects interchangeable.
 
+require 'test/unit/assertions'
+include Test::Unit::Assertions
+
 class Context
   attr_writer :strategy
 
@@ -37,4 +40,10 @@ class ConcreteStrategyB < Strategy
   end
 end
 
-# PENDING
+context = Context.new(ConcreteStrategyA.new)
+assert_equal context.do_something, %w[a b c d e]
+
+context.strategy = ConcreteStrategyB.new
+assert_equal context.do_something, %w[e d c b a]
+
+puts('done.')
