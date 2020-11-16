@@ -3,6 +3,9 @@
 # Problem: Allow to separate algorithms from objects on which they operate
 # Solution: Declare visitor interface with 1 concrete method for each class, add a accept method in each existing class & call the visitor concrete method by passing class object
 
+require 'test/unit/assertions'
+include Test::Unit::Assertions
+
 class Component
   def accept(_visitor)
     raise NotImplementedError
@@ -68,4 +71,12 @@ def client_code(components, visitor)
   results
 end
 
-# PENDING
+components = [ConcreteComponentA.new, ConcreteComponentB.new]
+
+visitor1 = ConcreteVisitor1.new
+assert_equal client_code(components, visitor1), [["A", "1"], ["B", "1"]]
+
+visitor2 = ConcreteVisitor2.new
+assert_equal client_code(components, visitor2), [["A", "2"], ["B", "2"]]
+
+puts('done.')
