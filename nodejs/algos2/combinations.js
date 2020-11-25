@@ -35,3 +35,36 @@ expected = [
 ]
 assert.deepEqual(combinationWithRepetition(array, r), expected)
 console.log('combinationWithRepetition done.')
+
+
+const combinationWithoutRepetition = (array, r) => {
+  const result = []
+  const temp = []
+
+  backtrackCombinationWithoutRepetition(array, r, result, temp, 0)
+
+  return result
+}
+
+const backtrackCombinationWithoutRepetition = (array, r, result, temp, startIndex) => {
+  if (temp.length === r)
+    return result.push(temp.slice())
+
+  for (let index = startIndex; index < array.length; index++) {
+    const element = array[index]
+
+    temp.push(element)
+    backtrackCombinationWithoutRepetition(array, r, result, temp, index + 1)
+    temp.pop()
+  }
+}
+
+options = ['A', 'B', 'C']
+r = 2
+expected = [
+  ['A', 'B'],
+  ['A', 'C'],
+  ['B', 'C'],
+]
+assert.deepEqual(combinationWithoutRepetition(options, r), expected)
+console.log('combinationWithoutRepetition done.')
