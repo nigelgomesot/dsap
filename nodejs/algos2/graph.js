@@ -68,7 +68,7 @@ graph.list.forEach((edges) => {
 expectedResult = items
 assert.deepEqual(result, expectedResult)
 
-
+result = []
 graph = new Graph(3, true)
 graph.addEdges(items)
 
@@ -81,10 +81,10 @@ graph.list.forEach((edges) => {
 })
 expectedResult = [
   {source: 0, destination: 1, cost: 100},
-  {source: 1, destination: 0, cost: 100},
   {source: 0, destination: 2, cost: 300},
-  {source: 2, destination: 0, cost: 300},
+  {source: 1, destination: 0, cost: 100},
   {source: 1, destination: 2, cost: 200},
+  {source: 2, destination: 0, cost: 300},
   {source: 2, destination: 1, cost: 200}
 ]
 assert.deepEqual(result, expectedResult)
