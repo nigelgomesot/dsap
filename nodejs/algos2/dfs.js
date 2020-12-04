@@ -67,6 +67,38 @@ const dfsRecursiveUtil = (graph, vertex, visited, result) => {
   }
 }
 
+
+const dfsIterative = graph => {
+  const visited = new Array(graph.nodeCount).fill(false)
+  const result = []
+  const stack = []
+
+  for (let vertex = 0; vertex < graph.nodeCount; vertex++) {
+    if (!visited[vertex]) {
+      stack.push(vertex)
+      dfsIterativeUtil(graph, result, visited, stack)
+    }
+  }
+
+  return result
+}
+
+const dfsIterativeUtil = (graph, result, visited, stack) => {
+  while (stack.length) {
+    const vertex = stack.pop()
+
+    if (!visited[vertex]) {
+      visited[vertex] = true
+      result.push(vertex)
+    }
+
+    for (const edge of graph.list[vertex]) {
+      if (!visited[edge.destination])
+        stack.push(edge.destination)
+    }
+  }
+}
+
 let nodeCount,
     graph,
     edges
@@ -89,3 +121,6 @@ edges = [
 graph.addEdges(edges)
 assert.deepEqual(dfsRecursive(graph), [0,1,2,3,4,5,6,7,8,9,10,11,12])
 console.log('dfsRecursive done.')
+
+assert.deepEqual(dfsIterative(graph), [0,1,2,3,4,5,6,7,8,9,10,11,12])
+console.log('dfsIterative done.')
