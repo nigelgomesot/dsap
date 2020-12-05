@@ -89,4 +89,6 @@ expectedResult = [
 ]
 assert.deepEqual(result, expectedResult)
 
-console.log('done')
+console.log('Graph done')
+
+module.exports = { Graph, Edge }

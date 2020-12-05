@@ -1,50 +1,7 @@
 const assert = require('assert')
+const { Graph, Edge } = require('./graph')
 
-class Edge {
-  constructor(source, destination, cost) {
-    this.source = source
-    this.destination = destination
-    this.cost = cost
-  }
-}
-
-class Graph {
-  constructor(nodeCount, undirected = false) {
-    this.nodeCount = nodeCount
-    this.undirected = undirected
-
-    this.list = new Array(nodeCount).fill(null).map(() => new Array())
-  }
-
-  addEdges(items) {
-    for (const item of items) {
-      this.addEdge(
-        item.source,
-        item.destination,
-        item.cost
-      )
-
-      if (this.undirected)
-        this.addEdge(
-          item.destination,
-          item.source,
-          item.cost
-        )
-    }
-  }
-
-  addEdge(source, destination, cost) {
-    const edge = new Edge(
-      source,
-      destination,
-      cost || 1
-    )
-
-    const vertex = this.list[source]
-    vertex.push(edge)
-  }
-}
-
+// Reecursive
 const dfsRecursive = graph => {
   const visited = new Array(graph.nodeCount).fill(false)
   const result = []
@@ -67,7 +24,7 @@ const dfsRecursiveUtil = (graph, vertex, visited, result) => {
   }
 }
 
-
+// Iterative
 const dfsIterative = graph => {
   const visited = new Array(graph.nodeCount).fill(false)
   const result = []
@@ -92,7 +49,9 @@ const dfsIterativeUtil = (graph, result, visited, stack) => {
       result.push(vertex)
     }
 
-    for (const edge of graph.list[vertex]) {
+    const edges = graph.list[vertex]
+    edges.reverse()
+    for (const edge of edges) {
       if (!visited[edge.destination])
         stack.push(edge.destination)
     }
