@@ -88,4 +88,6 @@ assert.equal(pq.dequeue(), 3)
 assert.deepEqual(pq.list, [])
 assert.equal(pq.dequeue(), null)
 assert.deepEqual(pq.list, [])
-console.log('done.')
+console.log('PriorityQueue done.')
+
+module.exports = PriorityQueue
