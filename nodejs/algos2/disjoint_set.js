@@ -54,3 +54,7 @@ assert.deepEqual(ds.getSets(universe), [1,1,3,3,5])
 
 ds.union(1,3)
 assert.deepEqual(ds.getSets(universe), [3,3,3,3,5])
+
+console.log('DisjointSet done')
+
+module.exports = DisjointSet
