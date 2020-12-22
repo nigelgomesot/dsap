@@ -45,6 +45,7 @@ assert.strictEqual(quickSelectRecursive(array, position), 6)
 console.log('quickSelectRecursive done.')
 
 
+// REF: https://www.geeksforgeeks.org/quickselect-a-simple-iterative-implementation/
 const quickSelectIterative = (array, position) => {
   return quickSelectIterativeUtil(array, position - 1)
 }
