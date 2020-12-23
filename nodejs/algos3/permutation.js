@@ -1,5 +1,9 @@
 const assert = require('assert')
 
+let options,
+    r,
+    expected
+
 const permutationWithRepetition = (array, r) => {
   const result = [],
         temp = []
@@ -39,3 +43,43 @@ expected = [
 ]
 assert.deepEqual(permutationWithRepetition(options, r), expected)
 console.log('permutationWithRepetition done.')
+
+
+const permutationWithoutRepetition = (array) => {
+  const result = [],
+        temp = []
+
+  backtrackPermutationWithoutRepetition(array, result, temp)
+
+  return result
+}
+
+const backtrackPermutationWithoutRepetition = (array, result, temp) => {
+  if (temp.length === array.length) {
+    result.push(temp.slice())
+    return
+  }
+
+  for (let i = 0; i < array.length; i++) {
+    const element = array[i]
+
+    if (temp.includes(element))
+      continue
+
+    temp.push(element)
+    backtrackPermutationWithoutRepetition(array, result, temp)
+    temp.pop()
+  }
+}
+
+options = ['A', 'B', 'C']
+expected = [
+  ['A', 'B', 'C'],
+  ['A', 'C', 'B'],
+  ['B', 'A', 'C'],
+  ['B', 'C', 'A'],
+  ['C', 'A', 'B'],
+  ['C', 'B', 'A'],
+]
+assert.deepEqual(permutationWithoutRepetition(options), expected)
+console.log('permutationWithoutRepetition done.')
