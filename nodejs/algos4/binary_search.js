@@ -22,3 +22,25 @@ const binarySearchRecursiveUtil = (array, value, left, right) => {
 assert.strictEqual(binarySearchRecursive(array, 4), true)
 assert.strictEqual(binarySearchRecursive(array, 6), false)
 console.log('binarySearchRecursive done.')
+
+const binarySearchIterative = (array, value) => {
+  let left = 0,
+      right = array.length - 1
+
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2)
+
+    if (array[mid] === value)
+      return true
+    else if (array[mid] < value)
+      left = mid + 1
+    else
+      right = mid - 1
+  }
+
+  return false
+}
+
+assert.strictEqual(binarySearchIterative(array, 4), true)
+assert.strictEqual(binarySearchIterative(array, 6), false)
+console.log('binarySearchIterative done.')
