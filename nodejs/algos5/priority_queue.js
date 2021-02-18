@@ -35,6 +35,42 @@ class PriorityQueue {
       this.percolateUp(parent)
     }
   }
+
+  isEmpty() {
+    return this.list.length === 0
+  }
+
+  dequeue() {
+    if (this.isEmpty())
+      return
+
+    const dequeued = this.list[0]
+    this.list[0] = this.list[this.length - 1]
+    this.list.pop()
+    this.length--
+
+    this.percolateDown(0)
+
+    return dequeued
+  }
+
+  percolateDown(parent) {
+    let lChild = parent * 2 + 1,
+        rChild = lChild + 1,
+        child = -1
+
+    if (lChild <= this.length)
+      child = lChild
+
+    if (rChild <= this.length && this.compare(lChild, rChild))
+      child = rChild
+
+    if (child != -1 && this.compare(parent, child)) {
+      swap(parent, child)
+
+      this.percolateDown(child)
+    }
+  }
 }
 
 const pq = new PriorityQueue()
@@ -44,3 +80,15 @@ pq.enqueue(3)
 pq.enqueue(2)
 pq.enqueue(1)
 assert.deepEqual(pq.list, [1,3,2])
+
+assert.equal(pq.dequeue(), 1)
+assert.deepEqual(pq.list, [2,3])
+assert.equal(pq.dequeue(), 2)
+assert.deepEqual(pq.list, [3])
+assert.equal(pq.dequeue(), 3)
+assert.deepEqual(pq.list, [])
+assert.equal(pq.dequeue(), null)
+assert.deepEqual(pq.list, [])
+console.log('PriorityQueue done.')
+
+module.exports = PriorityQueue
