@@ -92,3 +92,73 @@ assert.deepEqual(pq.list, [])
 console.log('PriorityQueue done.')
 
 module.exports = PriorityQueue
+
+class PriorityQueue {
+  constructor(compareFn) {
+    this.list = []
+    this.compare = compareFn
+  }
+    
+  size() {
+    return this.list.length
+  }
+    
+  isEmpty() {
+    return this.size() === 0
+  }
+
+  enqueue(item) {
+    this.list[this.size()] = item
+
+    this.percolateUp(this.size() - 1)
+  }
+
+  percolateUp(child) {
+    const parent = Math.floor((child - 1) / 2)
+
+    if (parent < 0)
+      return
+
+    if (this.compare(this.list[parent], this.list[child])) {
+      const temp = this.list[parent]
+      this.list[parent] = this.list[child]
+      this.list[child] = temp
+
+      this.percolateUp(parent)
+    }
+  }
+
+  dequeue() {
+    if (this.isEmpty())
+      return
+
+    const dequeued = this.list[0]
+    this.list[0] = this.list[this.size() - 1]
+    this.list.pop()
+
+    this.percolateDown(0)
+
+    return dequeued
+  }
+
+  percolateDown(parent) {
+    const lChild = (parent * 2) + 1,
+          rChild = lChild + 1
+    let child = -1
+
+    if (lChild < this.size())
+      child = lChild
+
+    if (rChild < this.size() && this.compare(this.list[lChild], this.list[rChild]))
+      child = rChild
+
+    if (child !== -1 && this.compare(this.list[parent], this.list[child])) {
+      const temp = this.list[parent]
+      this.list[parent] = this.list[child]
+      this.list[child] = temp
+
+      this.percolateDown(child)
+    }
+  }
+}
+
