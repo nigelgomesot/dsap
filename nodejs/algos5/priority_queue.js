@@ -66,7 +66,7 @@ class PriorityQueue {
       child = rChild
 
     if (child != -1 && this.compare(parent, child)) {
-      swap(parent, child)
+      this.swap(parent, child)
 
       this.percolateDown(child)
     }
@@ -93,7 +93,7 @@ console.log('PriorityQueue done.')
 
 module.exports = PriorityQueue
 
-class PriorityQueue {
+class PriorityQueueNew {
   constructor(compareFn) {
     this.list = []
     this.compare = compareFn
