@@ -6,6 +6,8 @@ let nodeCount,
     edges,
     expectedResult
 
+// REF: https://www.techiedelight.com/arrival-departure-time-vertices-dfs/
+
 const dfsTravelTime = graph => {
   const visited = new Array(graph.nodeCount).fill(false),
         arrivals = new Array(graph.nodeCount).fill(-1),
