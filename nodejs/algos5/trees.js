@@ -66,6 +66,22 @@ class Tree {
       this.fetchPreOrderUtil(node.right, result)
     }
   }
+
+  fetchPostOrder() {
+    const result = []
+
+    this.fetchPostOrderUtil(this.root, result)
+
+    return result
+  }
+
+  fetchPostOrderUtil(node, result) {
+    if (node) {
+      this.fetchPostOrderUtil(node.left, result)
+      this.fetchPostOrderUtil(node.right, result)
+      result.push(node.value)
+    }
+  }
 }
 
 let tree
@@ -87,5 +103,13 @@ tree.setBinaryLevelOrder(values)
 
 expectedResult = [1,2,4,5,3]
 assert.deepEqual(tree.fetchPreOrder(), expectedResult)
+
+// post order
+tree = new Tree()
+tree.setBinaryLevelOrder(values)
+
+expectedResult = [4,5,2,3,1 ]
+assert.deepEqual(tree.fetchPostOrder(), expectedResult)
+
 
 console.log('Tree done.')
