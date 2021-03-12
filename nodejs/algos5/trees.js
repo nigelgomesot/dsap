@@ -156,6 +156,27 @@ class Tree {
     return result
   }
 
+  fetchBFS() {
+    const result = [],
+          queue = []
+
+    queue.push(this.root)
+
+    while (queue.length) {
+      const node = queue.shift()
+
+      result.push(node.value)
+
+      if (node.left)
+        queue.push(node.left)
+
+      if (node.right)
+        queue.push(node.right)
+    }
+
+    return result
+  }
+
   trim(minValue, maxValue) {
     return this.trimUtil(this.root, minValue, maxValue)
   }
@@ -211,7 +232,6 @@ tree.setBinaryLevelOrder(values)
 expectedResult = [4,2,5,1,3]
 assert.deepEqual(tree.fetchInOrder(), expectedResult)
 
-
 // tree depth
 tree = new Tree()
 tree.setBinaryLevelOrder(values)
@@ -228,6 +248,11 @@ tree.setBinaryLevelOrder(values)
 expectedResult = [1,2,4,5,3]
 assert.deepEqual(tree.fetchDFS(), expectedResult)
 
+// BFS
+tree = new Tree()
+tree.setBinaryLevelOrder(values)
+expectedResult = [1,2,3,4,5]
+assert.deepEqual(tree.fetchBFS(), expectedResult)
 
 // trim tree
 // PENDING
