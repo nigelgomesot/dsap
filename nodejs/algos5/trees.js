@@ -177,24 +177,21 @@ class Tree {
     return result
   }
 
-  trim(minValue, maxValue) {
-    return this.trimUtil(this.root, minValue, maxValue)
+  leafCount() {
+    return this.leafCountUtil(this.root)
   }
 
-  trimUtil(node, minValue, maxValue) {
+  leafCountUtil(node) {
     if (!node)
-      return null
+      return 0
 
-    node.lChild = this.trimUtil(node.lChild, minValue, maxValue)
-    node.rChild = this.trimUtil(node.rChild, minValue, maxValue)
+    if (!node.left && !node.right)
+      return 1
 
-    if (node.value > maxValue)
-      return node.lChild
+    const leftCount = this.leafCountUtil(node.left),
+          rightCount = this.leafCountUtil(node.right)
 
-    if (node.value < minValue)
-      return node.rChild
-
-    return node
+    return (leftCount + rightCount)
   }
 }
 
@@ -254,7 +251,10 @@ tree.setBinaryLevelOrder(values)
 expectedResult = [1,2,3,4,5]
 assert.deepEqual(tree.fetchBFS(), expectedResult)
 
-// trim tree
+// leaf count
+tree = new Tree()
+tree.setBinaryLevelOrder(values)
+assert.equal(tree.leafCount(), 3)
 // PENDING
 
 console.log('Tree done.')
