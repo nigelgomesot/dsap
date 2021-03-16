@@ -1,7 +1,7 @@
 const assert = require('assert')
 
 const mergeSort = array => {
-  const temp = []
+  const temp = [] // O(n)
 
   mergeSortUtil(array, temp, 0, array.length - 1)
 
@@ -12,12 +12,12 @@ const mergeSortUtil = (array, temp, leftStart, rightEnd) => {
   if (leftStart >= rightEnd)
     return
 
-  const mid = Math.floor((leftStart + rightEnd) / 2)
+  const mid = Math.floor((leftStart + rightEnd) / 2) // O(1)
 
-  mergeSortUtil(array, temp, leftStart, mid)
+  mergeSortUtil(array, temp, leftStart, mid) // log(n)
   mergeSortUtil(array, temp, mid + 1, rightEnd)
 
-  merge(array, temp, leftStart, mid, rightEnd)
+  merge(array, temp, leftStart, mid, rightEnd) // O(n)
 }
 
 const merge = (array, temp, leftStart, mid, rightEnd) => {
@@ -59,4 +59,6 @@ const expected = [1,2,3,4,5]
 assert.deepEqual(mergeSort(array), expected)
 console.log('done.')
 
-// PENDING: Complexity
+// REF: https://www.khanacademy.org/computing/computer-science/algorithms/merge-sort/a/analysis-of-merge-sort
+// Time Complexity: O(n * logn)
+// Space Complexity: O(n)
