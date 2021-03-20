@@ -24,5 +24,10 @@ assert.strictEqual(binarySearchRecursive(array, 4), true)
 assert.strictEqual(binarySearchRecursive(array, 6), false)
 console.log('binarySearchRecursive done.')
 
-// PENDING: Complexity
-
+// REF: https://www.techiedelight.com/binary-search/
+// Time Complexity: O(logn)
+//                  space search reduces by 1/2, so n -> n/2 -> n/4 -> ... -> 1
+//                  after k steps if search space is 1 then n/2^k = 1
+//                  n = 2^k
+//                  k = logn
+// Space Complexity: O(logn) (for recursive stack)
