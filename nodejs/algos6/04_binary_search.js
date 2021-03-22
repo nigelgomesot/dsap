@@ -31,3 +31,33 @@ console.log('binarySearchRecursive done.')
 //                  n = 2^k
 //                  k = logn
 // Space Complexity: O(logn) (for recursive stack)
+
+const binarySearchIterative = (array, target) => {
+  return binarySearchIterativeUtil(array, target)
+}
+
+const binarySearchIterativeUtil = (array, target) => {
+  let left = 0,
+      right = array.length - 1
+
+
+  while (left <= right) {
+    const mid = Math.floor((left + right)/ 2) // O(1)
+
+    if (array[mid] === target)
+      return true
+    else if (array[mid] < target)
+      left = mid + 1
+    else
+      right = mid - 1
+  }
+
+  return false
+}
+
+assert.strictEqual(binarySearchIterative(array, 4), true)
+assert.strictEqual(binarySearchIterative(array, 6), false)
+console.log('binarySearchIterative done.')
+
+// Time Complexity: O(logn)
+// Space Complexity: O(1)
