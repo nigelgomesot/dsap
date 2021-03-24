@@ -40,3 +40,7 @@ assert.strictEqual(quickSelectRecursive(array, position), 6)
 position = 10
 assert.strictEqual(quickSelectRecursive(array, position), -1)
 console.log('quickSelectRecursive done.')
+
+// REF: https://www.geeksforgeeks.org/quickselect-algorithm/
+// Time Complexity: O(n)
+// Space Complexity: O(n) (for recursive stack)
