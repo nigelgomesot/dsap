@@ -89,3 +89,6 @@ assert.strictEqual(quickSelectIterative(array, position), 6)
 position = 10
 assert.strictEqual(quickSelectIterative(array, position), -1)
 console.log('quickSelectIterative done.')
+
+// Time Complexity: O(n)
+// Space Complexity: O(1)
