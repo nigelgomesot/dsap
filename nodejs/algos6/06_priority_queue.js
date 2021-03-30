@@ -87,3 +87,11 @@ assert.deepEqual(pq.list, [])
 console.log('PriorityQueue done.')
 
 module.exports = PriorityQueue
+
+// REF: https://en.wikipedia.org/wiki/Binary_heap
+// Time Complexity:
+                    // Since binary heap:
+                    // enqueue: O(logn)
+                    // dequeue: O(logn)
+                    // peek: O(1)
+// Space Complexity: O(n)
