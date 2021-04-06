@@ -20,18 +20,47 @@ class Tree {
   setBinaryLevelOrderUtil(values, nodeIndex) {
     const len = values.length
 
-    const node = Node.new(values[nodeIndex]),
+    const node = new Node(values[nodeIndex]),
           leftIndex = 2 * nodeIndex + 1,
           rightIndex = leftIndex + 1
 
     if (leftIndex < len)
-      node.left = setBinaryLevelOrderUtil(values, leftIndex)
+      node.left = this.setBinaryLevelOrderUtil(values, leftIndex)
 
     if (rightIndex < len)
-      node.right = setBinaryLevelOrderUtil(values, rightIndex)
+      node.right = this.setBinaryLevelOrderUtil(values, rightIndex)
 
     return node
   }
+
+  fetchPreOrder() {
+    const result = []
+
+    this.fetchPreOrderUtil(result, this.root)
+
+    return result
+  }
+
+  fetchPreOrderUtil(result, node) {
+    if (node) {
+      result.push(node.value)
+      this.fetchPreOrderUtil(result, node.left)
+      this.fetchPreOrderUtil(result, node.right)
+    }
+  }
 }
 
+const values = [1,2,3,4,5]
+let tree,
+    expectedResult
 
+tree = new Tree()
+
+// pre order
+tree = new Tree()
+tree.setBinaryLevelOrder(values)
+expectedResult = [1,2,4,5,3]
+assert.deepEqual(tree.fetchPreOrder(), expectedResult)
+
+
+console.log('Tree done.')
