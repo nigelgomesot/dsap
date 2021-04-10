@@ -95,6 +95,24 @@ class Tree {
 
     return maxDepth + 1
   }
+
+  diameter() {
+    return this.diameterUtil(this.root)
+  }
+
+  diameterUtil(node) {
+    if (!node)
+      return 0
+
+    const lDepth = this.depthUtil(node.left),
+          rDepth = this.depthUtil(node.right),
+          diameter = lDepth + rDepth + 1
+
+    const lDiameter = this.diameterUtil(node.left),
+          rDiameter = this.diameterUtil(node.right)
+
+    return Math.max(diameter, lDiameter, rDiameter)
+  }
 }
 
 const values = [1,2,3,4,5]
@@ -125,5 +143,10 @@ assert.deepEqual(tree.fetchInOrder(), expectedResult)
 tree = new Tree()
 tree.setBinaryLevelOrder(values)
 assert.equal(tree.depth(), 3)
+
+// tree diameter
+tree = new Tree()
+tree.setBinaryLevelOrder(values)
+assert.equal(tree.diameter(), 4)
 
 console.log('Tree done.')
