@@ -113,6 +113,27 @@ class Tree {
 
     return Math.max(diameter, lDiameter, rDiameter)
   }
+
+  fetchDFS() {
+    const result = [],
+          stack = []
+
+    stack.push(this.root)
+
+    while (stack.length) {
+      const node = stack.pop()
+
+      result.push(node.value)
+
+      if (node.right)
+        stack.push(node.right)
+
+      if (node.left)
+        stack.push(node.left)
+    }
+
+    return result
+  }
 }
 
 const values = [1,2,3,4,5]
@@ -148,5 +169,11 @@ assert.equal(tree.depth(), 3)
 tree = new Tree()
 tree.setBinaryLevelOrder(values)
 assert.equal(tree.diameter(), 4)
+
+// DFS
+tree = new Tree()
+tree.setBinaryLevelOrder(values)
+expectedResult = [1,2,4,5,3]
+assert.deepEqual(tree.fetchDFS(), expectedResult)
 
 console.log('Tree done.')
