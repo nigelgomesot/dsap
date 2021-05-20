@@ -18,4 +18,23 @@ const quickSelectRecursiveUtil = (array, targetIndex, left, right) => {
     return quickSelectRecursiveUtil(array, targetIndex, pivotIndex + 1, right)
 }
 
-// PENDING
+const partition = (array, left, right) => {
+  const pivot =  array[right]
+  let pivotIndex = left
+
+  for (i = left; i <= right; i++) {
+    if (array[i] < pivot)
+      [array[i], array[pivotIndex]] = [array[pivotIndex], array[i]]
+  }
+
+  [array[right], array[pivotIndex]] = [array[pivotIndex], array[right]]
+
+  return pivotIndex
+}
+
+array = [10, 4, 5, 8, 6, 11, 26]
+position = 3
+assert.strictEqual(quickSelectRecursive(array, position), 6)
+position = 10
+assert.strictEqual(quickSelectRecursive(array, position), -1)
+console.log('quickSelectRecursive done.')
