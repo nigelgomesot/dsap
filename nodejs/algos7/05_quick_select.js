@@ -38,3 +38,29 @@ assert.strictEqual(quickSelectRecursive(array, position), 6)
 position = 10
 assert.strictEqual(quickSelectRecursive(array, position), -1)
 console.log('quickSelectRecursive done.')
+
+const quickSelectIterative = (array, position) => {
+  const targetIndex = position - 1
+  let left = 0,
+      right = array.length - 1
+
+  while (left <= right) {
+    const pivotIndex = partition(array, left, right)
+
+    if (pivotIndex === targetIndex)
+      return array[pivotIndex]
+    else if (pivotIndex > targetIndex)
+      right = pivotIndex - 1
+    else
+      left = pivotIndex + 1
+  }
+
+  return -1
+}
+
+array = [10, 4, 5, 8, 6, 11, 26]
+position = 3
+assert.strictEqual(quickSelectIterative(array, position), 6)
+position = 10
+assert.strictEqual(quickSelectIterative(array, position), -1)
+console.log('quickSelectIterative done.')
