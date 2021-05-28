@@ -41,3 +41,41 @@ expected = [
 ]
 assert.deepEqual(permutationWithRepetition(array, r), expected)
 console.log('permutationWithRepetition done.')
+
+const permutationWithoutRepetition = (array, r) => {
+  let result = [],
+      temp = []
+
+  backtrackPermutationWithoutRepetition(array, r, result, temp)
+
+  return result
+}
+
+const backtrackPermutationWithoutRepetition = (array, r, result, temp) => {
+  if (temp.length === r)
+    return result.push(temp.slice())
+
+  for (let i = 0; i < array.length; i++) {
+    const element = array[i]
+
+    if (temp.includes(element))
+      continue
+
+    temp.push(element)
+    backtrackPermutationWithoutRepetition(array, r, result, temp)
+    temp.pop()
+  }
+}
+
+array = ['A', 'B', 'C']
+r = 3
+expected = [
+  ['A', 'B', 'C'],
+  ['A', 'C', 'B'],
+  ['B', 'A', 'C'],
+  ['B', 'C', 'A'],
+  ['C', 'A', 'B'],
+  ['C', 'B', 'A'],
+]
+assert.deepEqual(permutationWithoutRepetition(array, r), expected)
+console.log('permutationWithoutRepetition done.')
