@@ -80,6 +80,21 @@ class BinaryTree {
       this.fetchInOrderUtil(result, node.right)
     }
   }
+
+  depth() {
+    return this.depthUtil(this.root)
+  }
+
+  depthUtil(node) {
+    if (!node)
+      return 0
+
+    const lDepth = this.depthUtil(node.left),
+          rDepth = this.depthUtil(node.right),
+          maxDepth = Math.max(lDepth, rDepth)
+
+    return maxDepth + 1
+  }
 }
 
 const values = [1,2,3,4,5]
@@ -103,5 +118,10 @@ tree = new BinaryTree()
 tree.build(values)
 expectedResult = [4,2,5,1,3]
 assert.deepEqual(tree.fetchInOrder(), expectedResult)
+
+// tree depth
+tree = new BinaryTree()
+tree.build(values)
+assert.equal(tree.depth(), 3)
 
 console.log('BinaryTree done.')
