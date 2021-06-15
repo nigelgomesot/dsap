@@ -134,6 +134,27 @@ class BinaryTree {
 
     return result
   }
+
+  fetchBFS() {
+    const result = [],
+          queue = []
+
+    queue.push(this.root)
+
+    while (queue.length) {
+      const node = queue.shift()
+
+      result.push(node.value)
+
+      if (node.left)
+        queue.push(node.left)
+
+      if (node.right)
+        queue.push(node.right)
+    }
+
+    return result
+  }
 }
 
 const values = [1,2,3,4,5]
@@ -174,5 +195,10 @@ tree.build(values)
 expectedResult = [1,2,4,5,3]
 assert.deepEqual(tree.fetchDFS(), expectedResult)
 
+// tree BFS
+tree = new BinaryTree()
+tree.build(values)
+expectedResult = [1,2,3,4,5]
+assert.deepEqual(tree.fetchBFS(), expectedResult)
 
 console.log('BinaryTree done.')
