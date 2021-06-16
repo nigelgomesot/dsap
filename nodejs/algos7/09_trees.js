@@ -155,6 +155,23 @@ class BinaryTree {
 
     return result
   }
+
+  leafCount() {
+    return this.leafCountUtil(this.root)
+  }
+
+  leafCountUtil(node) {
+    if (!node)
+      return 0
+
+    if (!node.left && !node.right)
+      return 1
+
+    const leftLeafCount = this.leafCountUtil(node.left),
+          rightLeafCount = this.leafCountUtil(node.right)
+
+    return (leftLeafCount + rightLeafCount)
+  }
 }
 
 const values = [1,2,3,4,5]
@@ -200,5 +217,10 @@ tree = new BinaryTree()
 tree.build(values)
 expectedResult = [1,2,3,4,5]
 assert.deepEqual(tree.fetchBFS(), expectedResult)
+
+// tree leaf count
+tree = new BinaryTree()
+tree.build(values)
+assert.equal(tree.leafCount(), 3)
 
 console.log('BinaryTree done.')
