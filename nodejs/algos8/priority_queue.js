@@ -1,7 +1,8 @@
 'use strict'
 
 class MinHeap {
-    constructor(array) {
+    constructor(compareFn, array) {
+        this.compareFn = compareFn
         this.heap = this.buildHeap(array)
     }
 
@@ -23,12 +24,12 @@ class MinHeap {
             const child2 = child1 + 1 <= endIdx ? child1 + 1 : -1
             
             let swapIdx
-            if (child2 !== -1 && heap[child2] < heap[child1])
+            if (child2 !== -1 && this.compareFn(heap[child2], heap[child1]))
                 swapIdx = child2
             else
                 swapIdx = child1
 
-            if (heap[swapIdx] <= heap[currentIdx]) {
+            if (this.compareFn(heap[swapIdx], heap[currentIdx])) {
                 this.swap(heap, swapIdx, currentIdx)
                 currentIdx = swapIdx
                 child1 = currentIdx * 2 + 1
@@ -41,7 +42,7 @@ class MinHeap {
     percolateUp(heap, currentIdx) {
         let parentIdx = Math.floor((currentIdx - 1) / 2)
 
-        while (parentIdx >= 0 && heap[currentIdx] < heap[parentIdx]) {
+        while (parentIdx >= 0 && this.compareFn(heap[currentIdx], heap[parentIdx])) {
             this.swap(heap, currentIdx, parentIdx)
             currentIdx = parentIdx
             parentIdx = Math.floor((currentIdx - 1) / 2)

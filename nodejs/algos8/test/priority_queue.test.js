@@ -3,15 +3,15 @@
 const MinHeap = require('../priority_queue')
 
 test('creates a minHeap', () => {
+    const compareFn = (a, b) => { return a < b }
     const array = [5,4,3,2,1],
-          minHeap = new MinHeap(array),
+          minHeap = new MinHeap(compareFn, array),
           result = []
 
     minHeap.insert(-10)
     minHeap.insert(5)
     minHeap.insert(10)
 
-    console.log('>>>>>minHeap', minHeap)
     expect(minHeap.peek()).toBe(-10)
 
 
