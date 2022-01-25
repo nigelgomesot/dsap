@@ -41,6 +41,14 @@ class Heap {
         }
     }
 
+    remove() {
+        this.swap(this.heap, 0, this.heap.length - 1)
+        const removed = this.heap.pop()
+        this.percolateDown(this.heap, 0, this.heap.length - 1)
+
+        return removed
+    }
+
     swap(heap, idx1, idx2) {
         [heap[idx1], heap[idx2]] = [heap[idx2], heap[idx1]]
     }
