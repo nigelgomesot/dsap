@@ -20,7 +20,7 @@ test('creates a minHeap', () => {
     removed = minHeap.remove()
     expect(removed).toStrictEqual(3)
 
-    // minHeap.insert(-10)
-    // minHeap.insert(10)
-    // expect(minHeap.peek()).toBe(-10)
+    minHeap.insert(-10)
+    minHeap.insert(10)
+    expect(minHeap.peek()).toBe(-10)
 })

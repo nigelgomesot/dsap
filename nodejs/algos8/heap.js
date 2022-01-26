@@ -49,6 +49,21 @@ class Heap {
         return removed
     }
 
+    percolateUp(heap, child) {
+        let parent = Math.floor((child - 1) / 2)
+
+        while (parent >= 0 && this.compareFn(heap[child], heap[parent])) {
+            this.swap(heap, parent, child)
+            child = parent
+            parent = Math.floor((child - 1) / 2)
+        }
+    }
+
+    insert(item) {
+        this.heap.push(item)
+        this.percolateUp(this.heap, this.heap.length - 1)
+    }
+
     swap(heap, idx1, idx2) {
         [heap[idx1], heap[idx2]] = [heap[idx2], heap[idx1]]
     }
