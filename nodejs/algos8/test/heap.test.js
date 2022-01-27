@@ -23,4 +23,11 @@ test('creates a minHeap', () => {
     minHeap.insert(-10)
     minHeap.insert(10)
     expect(minHeap.peek()).toBe(-10)
+
+    expect(minHeap.isEmpty()).toBe(false)
+    minHeap.remove()
+    minHeap.remove()
+    minHeap.remove()
+    minHeap.remove()
+    expect(minHeap.isEmpty()).toBe(true)
 })

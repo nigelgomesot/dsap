@@ -49,6 +49,8 @@ class Heap {
         return removed
     }
 
+    // S: O(1)
+    // T: O(LogN)
     percolateUp(heap, child) {
         let parent = Math.floor((child - 1) / 2)
 
@@ -72,6 +74,10 @@ class Heap {
     // T: O(1)
     peek() {
         return this.heap[0]
+    }
+
+    isEmpty() {
+        return this.heap.length === 0
     }
 }
 
